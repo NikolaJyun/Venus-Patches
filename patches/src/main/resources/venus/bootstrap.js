@@ -35,7 +35,7 @@
     if (features.splitMessages) selectModules([1087, 1392, 2068, 7445, 9561]);
     if (features.translate) selectModules([584, 1392, 5532, 8013, 9978, 10692]);
     if (features.userNotif) selectModules([584, 1392, 2068, 2090, 2119, 2128, 4855, 5207, 7254, 10002, 14713, 14748]);
-    if (features.accountSwitcher) selectModules([584, 1392, 2049, 6194, 6900, 13073, 13074, 13075, 13076, 17076, 17520, 17538]);
+    if (features.accountSwitcher) selectModules([584, 1392, 2049, 6194, 6900, 13073, 13074, 13075, 13076, 13078, 17076, 17520, 17538]);
     if (features.appIcons) selectModules([1392, 4864, 9767, 15066, 16589, 16590, 18079, 18444]);
     if (features.nitroThemes) selectModules([584, 1392, 2049, 4864, 5032, 15066, 16326]);
     if (features.customThemes) selectModules([589, 590, 591, 1207, 4926, 4934, 11577, 10692]);
@@ -11847,7 +11847,7 @@
     // (YouBarNotificationsButton 17538 / YouBarButton 17537).
     const ACCOUNT_SWITCHER_DEFAULT_LIMIT = 5, ACCOUNT_SWITCHER_RAISED_LIMIT = 50;
     const accountSwitcher = {store:null, origUsers:null, origValidUsers:null, realMaxAccounts:ACCOUNT_SWITCHER_DEFAULT_LIMIT,
-        youBarParts:null, registering:false, pushOnlyCurrent:false};
+        youBarParts:null, registering:false, pushOnlyCurrent:false, checking:null};
     function multiAccountLimit() {
         // MultiAccountStore (13074) and PushNotificationActionCreators (12128) read MAX_ACCOUNTS /
         // MAX_PUSH_SYNC_ACCOUNTS once at module evaluation time during startup (before venus-patches.json
@@ -11925,7 +11925,15 @@
                     // only save a token no other saved account already uses.
                     const users = typeof store.getState === "function" && store.getState() && store.getState().users;
                     const usedByOther = Array.isArray(users) && users.some(u => u && u.id && u.id !== me.id && tokenMgr.getToken(u.id) === activeToken);
-                    if (typeof activeToken === "string" && activeToken && !tokenMgr.getToken(me.id) && !usedByOther)
+                    // A brand-new account (Add account, Create a new account) has no saved token yet, so the check above
+                    // can't catch a switch to it. AuthenticationStore (502) only knows who the token signed in as once
+                    // the gateway answered: the switch's LOGOUT clears its id, CONNECTION_OPEN sets the new one. Saving
+                    // only when that id is the account UserStore shows keeps the next account's token from being filed
+                    // under the last one, which made switching back connect as the wrong account and marked it expired.
+                    const auth = inspectedExport(502, "default");
+                    let session = null;
+                    try { session = auth && typeof auth.getId === "function" ? auth.getId() : null; } catch (_) {}
+                    if (typeof activeToken === "string" && activeToken && session === me.id && !tokenMgr.getToken(me.id) && !usedByOther)
                         tokenMgr.setToken(activeToken, me.id);
                 }
             } catch (_) {}
@@ -11985,6 +11993,63 @@
         if (!enabled("accountSwitcher") || settings.accountSwitcherNotify !== false) return orig.apply(self, args);
         accountSwitcher.pushOnlyCurrent = true;
         try { return orig.apply(self, args); } finally { accountSwitcher.pushOnlyCurrent = false; }
+    }
+    // Switching sends the account's saved token to Discord's gateway. When it has stopped working since it was last
+    // checked (changed password, signed out elsewhere, an old export), the gateway closes with 4004 and
+    // AuthenticationStore (502) signs you out of everything, not just that account (#137). Every switch (Venus
+    // settings, Discord's own account sheet, a notification from another account) goes through
+    // MultiAccountActionCreators.switchAccount (13078), so the token is checked there first, the way
+    // validateMultiAccountTokens does: GET /users/@me with it, and the same account has to answer. A token Discord
+    // refuses is marked expired (Discord's own MULTI_ACCOUNT_VALIDATE_TOKEN_FAILURE) and Add account opens to sign in
+    // again; no answer at all (offline) switches as before.
+    function accountSwitchCheck(userId, token) {
+        const http = inspectedExport(1297, "HTTP"), endpoints = inspectedExport(1087, "Endpoints");
+        if (!http || typeof http.get !== "function") return Promise.resolve("unknown");
+        let status = 0;
+        // Its own interceptResponse: Discord's global one (captcha, MFA screens) never sees this check.
+        const interceptResponse = (response, retry, cancel) => {
+            if (!response || response.ok || typeof cancel !== "function") return false;
+            status = response.status;
+            const error = new Error("HTTP " + response.status); error.status = response.status;
+            cancel(error);
+            return true;
+        };
+        const url = endpoints && endpoints.ME || "/users/@me";
+        return Promise.resolve().then(() => http.get({url, headers:{authorization:token}, interceptResponse})).then(
+            res => res && res.body && typeof res.body.id === "string" ? (res.body.id === userId ? "valid" : "invalid") : "unknown",
+            error => { const code = status || error && error.status; return code === 401 || code === 403 ? "invalid" : "unknown"; });
+    }
+    function accountSwitchChecked(orig, self, args) {
+        const userId = args[0];
+        if (!enabled("accountSwitcher") || typeof userId !== "string" || !userId) return orig.apply(self, args);
+        const me = currentUser();
+        if (me && me.id === userId) return orig.apply(self, args);
+        const tokens = accountTokens();
+        let token = null;
+        try { token = tokens && typeof tokens.getToken === "function" ? tokens.getToken(userId) : null; } catch (_) {}
+        // No saved token: Discord's own switchAccount already refuses and marks the account expired.
+        if (typeof token !== "string" || !token) return orig.apply(self, args);
+        if (accountSwitcher.checking === userId) return Promise.resolve();
+        accountSwitcher.checking = userId;
+        return accountSwitchCheck(userId, token).then(result => {
+            accountSwitcher.checking = null;
+            const now = currentUser();
+            if (now && now.id === userId) return undefined;
+            let still = null;
+            try { still = tokens.getToken(userId); } catch (_) {}
+            // Signed in to it again while the check ran: switch with the new token.
+            if (result !== "invalid" || still !== token) return orig.apply(self, args);
+            const d = inspectedExport(584, "default");
+            try { if (d && typeof d.dispatch === "function") d.dispatch({type:"MULTI_ACCOUNT_VALIDATE_TOKEN_FAILURE", userId}); } catch (_) {}
+            notify("accountSwitcher");
+            openAddAccountModal();
+            return undefined;
+        }, () => { accountSwitcher.checking = null; return orig.apply(self, args); });
+    }
+    function hookMultiAccountActions(exports) {
+        if (exports && typeof exports.switchAccount === "function") exports = hookExport(exports, "switchAccount", accountSwitchChecked);
+        if (exports && exports.default && typeof exports.default.switchAccount === "function") hookExport(exports.default, "switchAccount", accountSwitchChecked);
+        return exports;
     }
     function hookPushNotificationActions(exports) {
         const actions = exports && exports.default;
@@ -19294,6 +19359,7 @@
                 return features.customThemes ? hookComponent(exports, chatViewWrapperThemeBackground) : exports;
             case 13074: return features.accountSwitcher ? hookMultiAccountStore(exports) : exports;
             case 13073: return features.accountSwitcher ? hookPushNotificationActions(exports) : exports;
+            case 13078: return features.accountSwitcher ? hookMultiAccountActions(exports) : exports;
             case 6900: return features.accountSwitcher ? hookComponent(exports, addAccountLogin) : exports;
             case 17520: return features.accountSwitcher ? hookComponent(exports, manageAccountsModalWithRegister) : exports;
             case 17076: return features.accountSwitcher ? hookRegisterForMultiAccount(exports) : exports;
