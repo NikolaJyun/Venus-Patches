@@ -55,6 +55,9 @@
     if (features.silentLeave) selectModules([2068, 7290]);
     if (features.guildLurk) targetModules[13422] = 1;
     if (features.quietReplies) selectModules([1392, 5532, 9990]);
+    if (features.timeoutDuration) selectModules([2119, 2128, 8013]);
+    if (features.dndBanners) selectModules([6015, 13511, 13523]);
+    if (features.landscapeFull) targetModules[5075] = 1;
     if (features.removedAlerts) selectModules([584, 1392, 6377, 7293, 8910, 10002, 14713, 14748]);
     if (features.bulkDelete) selectModules([584, 1087, 1392, 2068, 2119, 4845, 5532, 7445, 8013, 9978, 10692, 11114]);
     if (features.experiments) selectModules([584, 1392, 1403]);
@@ -81,7 +84,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
@@ -98,7 +101,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
         }));
     }
     // Backup and restore (#68): when you last saved a backup, and whether a restore is being applied right now.
@@ -1120,7 +1123,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
+        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
         const slot = id + ":" + name;
@@ -1169,6 +1172,9 @@
         clickableMentions:["ClickableMentions", "Mentions", "Profile", "Message bar"],
         silentLeave:["SilentLeave", "Silent leave", "Group DM", "Leave group"],
         guildLurk:["GuildLurk", "Guild lurk", "Lurk", "Lurker", "Preview", "Invite link", "Server ID"],
+        timeoutDuration:["Timeout", "Timed out", "Muted", "Mute", "Communication disabled", "Moderation", "ShowTimeoutDuration"],
+        dndBanners:["Do Not Disturb", "DND", "Banner", "Banners", "In-app notifications", "Pop-up", "Focus"],
+        landscapeFull:["Landscape", "Sideways", "Rotate", "Full screen", "Sidebar", "Channel list"],
         quietReplies:["Ping", "Pings", "Mention", "Mentions", "Reply", "Replies", "@ ON", "@ OFF", "Notification", "Servers", "Group DMs", "When they mentioned you", "Silent replies", "No ping"],
         fullImages:["High-res profile pictures", "HighResProfileImages", "Avatars", "Profile pictures", "Banners", "Uncompressed", "Uncompressed images", "Original", "Full quality", "Lossless", "Compression", "Blurry", "Thumbnail", "Resolution", "Pictures", "Photos"],
         removedAlerts:["Removed", "Unfriend", "Friend", "Kicked", "Banned", "Server", "Left", "Alert", "Notifier", "Relationship", "Connection", "Removed connection alerts", "Relationship notifier", "Notify"],
@@ -1641,6 +1647,7 @@
         toggle("sending", "picker", "Show file sizes when attaching", "Photos and videos in the picker show their size.");
         toggle("sending", "anonFiles", "Anonymous file names", "Files you send get a random name instead of the one on your phone.");
         withOptions("sending", "quietReplies", "VENUS_QUIETREPLIES", "Reply without pinging", "Replies start with the ping off, so nobody gets pinged unless you turn it on.", "Reply without pinging", QuietRepliesSettings);
+        toggle("messages", "dndBanners", "Banners in Do Not Disturb", "New messages still pop up at the top while you're on Do Not Disturb, without a sound.");
         toggle("sending", "clickableMentions", "Tap mentions to open profiles", "Tap an @mention in the message bar to see who it is.");
         // People
         withOptions("people", "pastelize", "VENUS_PASTELIZE", "Pastel name colors", "Names without a role color get a soft pastel one.", "Pastel names",
@@ -1653,6 +1660,7 @@
              section("Avatars", [option("piHideMobile", "Hide the phone badge", "Avatars show a plain status dot, since the icons already show mobile.", "VENUS_PLATFORMINDICATORS")])]}));
         toggle("people", "validUser", "Fix unknown mentions", "Shows names instead of @unknown-user.");
         toggle("people", "copyBios", "Copy profile bios", "Hold a bio to select and copy it.");
+        toggle("people", "timeoutDuration", "Show timeout duration", "A tag next to timed-out people says how long until they can talk again.");
         toggle("people", "silentLeave", "Leave group DMs silently", "Leave group DMs without the \"left the group\" message.");
         withOptions("people", "reviewDB", "VENUS_REVIEWDB", "User and server reviews", "Read and write ReviewDB reviews on profiles and servers.", "Reviews", ReviewSettings);
         withOptions("people", "userNotif", "VENUS_USERNOTIF", "User activity notifications", "Get notified when chosen people change status, type or message.", "Activity notifications", UserNotifSettings);
@@ -1673,6 +1681,7 @@
         withOptions("appearance", "hideAnything", "VENUS_HIDEANYTHING", "Remove anything", "Tap a button you never use to remove it, right where it is.", "Remove anything", HideAnythingSettings);
         toggle("appearance", "youBarSettings", "Venus button on profile bar", "A shortcut to Venus next to the notifications bell.");
         toggle("appearance", "appIcons", "Unlock app icons", "Use any Discord app icon without Nitro.");
+        toggle("appearance", "landscapeFull", "Full-screen chat in landscape", "Chat fills the screen sideways. Swipe from the left for servers and channels.");
         toggle("appearance", "nitroThemes", "Unlock Nitro themes", "Use Discord's gradient themes without Nitro, on this phone.");
         withOptions("appearance", "materialYou", "VENUS_MATERIALYOU", "Material You colors", "Colors Discord to match your wallpaper, in light and dark.", "Material You", MaterialYouSettings);
         withOptions("appearance", "customThemes", "VENUS_CUSTOMTHEMES", "Custom themes", "Install Revenge and Vendetta color themes from a link.", "Custom themes", CustomThemesSettings);
@@ -7690,6 +7699,7 @@
             const reply = pastelReply(message.referencedMessage.message);
             if (reply !== message.referencedMessage.message) message = Object.assign({},message,{referencedMessage:Object.assign({},message.referencedMessage,{message:reply})});
         }
+        if (features.timeoutDuration && enabled("timeoutDuration")) message = timeoutTagMessage(message, row.message);
         if (features.staffTag && enabled("staffTag")) message = staffTagMessage(message, row.message);
         let next = message === result.message ? result : Object.assign({},result,{message});
         if (!translateOn && !features.translate && !(noDeleteOn && (edits.size || deleted.size)) && !highlightOn && !features.messageHighlight && !bulkOn) return next;
@@ -18256,6 +18266,94 @@
             footnote("note", "Tap @ on the reply bar to ping someone for just one reply.")];
         return settingsBody(ui, groups);
     }
+    // Show timeout duration (#125, after ShowTimeoutDuration): Discord marks a timed-out person with a small clock that
+    // says nothing about how long. Their member record (GuildMemberStore 2128) keeps communicationDisabledUntil, so their
+    // messages get the same native tag Discord draws for BOT and Venus draws for staff: "Timed out · 2h 14m", with the
+    // exact end time for screen readers. Rows aren't drawn again on their own, so while a tag shows, the open chat is
+    // redrawn once a minute: the tag counts down, and goes away when the timeout ends.
+    const timeoutTag = {members:null, shown:new Map(), timer:undefined};
+    function timeoutUntil(guildId, userId) {
+        const members = timeoutTag.members || (timeoutTag.members = inspectedExport(2128, "default"));
+        let member = null;
+        try { member = members && typeof members.getMember === "function" ? members.getMember(String(guildId), String(userId)) : null; } catch (_) {}
+        const raw = member && member.communicationDisabledUntil, until = raw ? Date.parse(raw) : NaN;
+        return Number.isFinite(until) && until > Date.now() ? until : 0;
+    }
+    // 45m, 3h 20m, 2d 5h: the two biggest units, rounded up so it never says 0m while the timeout is still on.
+    function timeoutLeft(ms) {
+        const minutes = Math.max(1, Math.ceil(ms / 60000)), days = Math.floor(minutes / 1440), hours = Math.floor(minutes % 1440 / 60), mins = minutes % 60;
+        if (days) return hours ? tr("{d}d {h}h", {d:days, h:hours}) : tr("{n}d", {n:days});
+        if (hours) return mins ? tr("{h}h {m}m", {h:hours, m:mins}) : tr("{n}h", {n:hours});
+        return tr("{n}m", {n:mins});
+    }
+    function timeoutTagMessage(message, source) {
+        if (!message || !message.guildId || !message.authorId || source && source.webhookId) return message;
+        const until = timeoutUntil(message.guildId, message.authorId);
+        if (!until) return message;
+        const text = highlightProcess("#f23f43"), tint = highlightProcess("#f23f4329");
+        if (text == null || tint == null) return message;
+        const copy = Object.assign({}, message);
+        copy.tagText = tr("Timed out \u00b7 {time}", {time:timeoutLeft(until - Date.now())});
+        copy.tagAccessibilityLabel = tr("Timed out until {time}", {time:logTime(until)});
+        copy.tagType = "timeout";
+        copy.tagVerified = false;
+        copy.tagTextColor = text;
+        copy.tagBackgroundColor = tint;
+        const channelId = String(message.channelId || source && (source.channel_id || source.channelId) || ""), id = String(message.id || source && source.id || "");
+        if (channelId && id) timeoutTagSeen(channelId, id);
+        return copy;
+    }
+    function timeoutTagSeen(channelId, id) {
+        let ids = timeoutTag.shown.get(channelId);
+        if (!ids) { if (timeoutTag.shown.size > 20) timeoutTag.shown.clear(); timeoutTag.shown.set(channelId, ids = new Set()); }
+        if (ids.size < 200) ids.add(id);
+        if (timeoutTag.timer === undefined) timeoutTag.timer = later(timeoutTagTick, 60000, false);
+    }
+    function timeoutTagTick() {
+        timeoutTag.timer = undefined;
+        if (!enabled("timeoutDuration") || !timeoutTag.shown.size) return;
+        const selected = inspectedExport(2119, "default");
+        let channelId = null;
+        try { channelId = selected && typeof selected.getChannelId === "function" ? String(selected.getChannelId()) : null; } catch (_) {}
+        const ids = channelId && timeoutTag.shown.get(channelId);
+        timeoutTag.shown.clear();
+        // Drawing them again puts back only the tags still timed out, which keeps the clock going.
+        if (ids && ids.size) bulkDeleteRedrawIds(channelId, Array.from(ids));
+    }
+    // Banners in Do Not Disturb (#125): Discord keeps its in-app banners (the message that slides down at the top) away
+    // while you're on Do Not Disturb, in one place: NotificationTextUtils.shouldNotify (13511) asks SelfPresenceStore
+    // (6015) for your status and stops at DND. While it decides, your status reads as online, so the banner shows the way
+    // it does for anyone else, with every other rule kept (muted chats, blocked people, Focus mode, the chat you have
+    // open). Its sound (playInAppMessageSound 13523) stays off: Do Not Disturb still means quiet. Push notifications come
+    // from Discord's servers and are never touched.
+    const dndBanners = {presence:null};
+    function dndIsOn() {
+        const store = dndBanners.presence || (dndBanners.presence = inspectedExport(6015, "default"));
+        try { return !!store && typeof store.getStatus === "function" && store.getStatus() === "dnd"; } catch (_) { return false; }
+    }
+    function dndShouldNotify(orig, self, args) {
+        if (!enabled("dndBanners") || !dndIsOn()) return orig.apply(self, args);
+        const store = dndBanners.presence, own = Object.prototype.hasOwnProperty.call(store, "getStatus") ? store.getStatus : undefined;
+        let swapped = false;
+        try { store.getStatus = function () { return "online"; }; swapped = true; } catch (_) {}
+        try { return orig.apply(self, args); }
+        finally { if (swapped) try { if (own === undefined) delete store.getStatus; else store.getStatus = own; } catch (_) {} }
+    }
+    function dndBannerSound(orig, self, args) { return enabled("dndBanners") && dndIsOn() ? undefined : orig.apply(self, args); }
+    // Full-screen chat in landscape (#125): Discord puts chat beside the server and channel lists whenever the window is
+    // 600dp wide or more (useChatLayout 5075, from useWindowSizeClassifier), so turning a phone sideways squeezes the chat
+    // into what's left. On a phone held sideways (its shorter side under 600dp) Venus reports the phone layout instead:
+    // the chat takes the whole width, and the lists slide in from the left edge, like the member list from the right.
+    // Tablets keep Discord's side-by-side layout.
+    const LANDSCAPE_PHONE_LAYOUT = Object.freeze({isChatBesideChannelList:false, isChatLockedOpen:false});
+    function landscapePhone() {
+        if (!enabled("landscapeFull") || !RN || !RN.Dimensions) return false;
+        try { const d = RN.Dimensions.get("window"); return d.width > d.height && d.height < 600; } catch (_) { return false; }
+    }
+    function landscapeChatLayout(orig, self, args) {
+        const layout = orig.apply(self, args);
+        return layout && layout.isChatBesideChannelList && landscapePhone() ? LANDSCAPE_PHONE_LAYOUT : layout;
+    }
     function AlwaysTrustSettings() {
         useSettings("alwaysTrust");
         const ui = reviewUI();
@@ -19397,7 +19495,10 @@
             case 10002: if ((features.quests || features.badges || features.userNotif || features.removedAlerts) && exports && exports.default) { bgKeepAlive.fg = exports.default; backgroundSync(); } return exports;
             case 14713: return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookGatewaySocket(exports) : exports;
             case 14748: return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookPauseGateway(exports) : exports;
-            case 6015: return features.badges ? hookSelfPresenceStore(exports) : exports;
+            case 6015: if (features.dndBanners && exports && exports.default) dndBanners.presence = exports.default; return features.badges ? hookSelfPresenceStore(exports) : exports;
+            case 13511: return features.dndBanners ? hookExport(exports, "shouldNotify", dndShouldNotify) : exports;
+            case 13523: return features.dndBanners ? hookExport(exports, "playInAppMessageSound", dndBannerSound) : exports;
+            case 5075: return features.landscapeFull ? hookExport(hookExport(exports, "default", landscapeChatLayout), "getChatLayout", landscapeChatLayout) : exports;
             case 8590: if (features.badges && exports && exports.default) badgesAttachStore(exports.default); return exports;
             case 9978:
                 if (features.translate) exports = hookComponent(exports, translateSheet);
@@ -19407,9 +19508,9 @@
             case 17538: return (features.youBarSettings || features.accountSwitcher) ? hookComponent(exports, youBarButtons) : exports;
             // MurmurHashV3 is CommonJS (module.exports=function), not an ES default export.
             case 1266: if (features.pastelize) pastelHash = typeof exports === "function" ? exports : exports.default; return exports;
-            case 2128: if (features.pastelize) guildMembers = exports.default; return exports;
+            case 2128: if (features.pastelize) guildMembers = exports.default; if (features.timeoutDuration && exports && exports.default) timeoutTag.members = exports.default; return exports;
             case 8013:
-                if ((features.pastelize || features.noDelete || features.translate || features.messageHighlight || features.bulkDelete || features.staffTag) && exports.default && exports.default.prototype)
+                if ((features.pastelize || features.noDelete || features.translate || features.messageHighlight || features.bulkDelete || features.staffTag || features.timeoutDuration) && exports.default && exports.default.prototype)
                     hookExport(exports.default.prototype, "generate", messageRow);
                 return exports;
             case 5207: if (features.platformIndicators || features.userNotif) { presenceStore = exports.default; if (features.userNotif) userNotifSeedStatuses(); } return exports;
