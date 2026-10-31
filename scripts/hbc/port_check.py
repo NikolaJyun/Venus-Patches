@@ -463,6 +463,9 @@ BOOTSTRAP_MODULES = [
     (8766, 'stores/MaskedLinkStore.tsx', ['default'], 'MaskedLinkStore (Always trust)'),
     (12337, 'modules/chat_input/native/ChatInputNativeComponent.tsx', ['displayName', 'default'], 'ChatInputNativeComponent (Tap mentions to open profiles)'),
     (9990, 'modules/replies/PendingReplyActionCreators.tsx', ['createPendingReply', 'createShallowPendingReply'], 'PendingReplyActionCreators (Reply without pinging)'),
+    (13511, 'modules/notifications/NotificationTextUtils.tsx', ['shouldNotify'], 'NotificationTextUtils (Banners in Do Not Disturb)'),
+    (13523, 'modules/notifications/native/playInAppMessageSound.tsx', ['playInAppMessageSound'], 'playInAppMessageSound (Banners in Do Not Disturb: no sound)'),
+    (5075, 'modules/chat/native/useChatLayout.tsx', ['default', 'getChatLayout'], 'useChatLayout (Full-screen chat in landscape)'),
 ]
 
 

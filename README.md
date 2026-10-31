@@ -33,6 +33,7 @@ Open **Discord Settings → Venus → Features** to turn things on or off at any
 | | Load full-quality images | Pictures in chat and full screen load the file that was uploaded instead of Discord's smaller, compressed copy. Choose chat, full screen or both, and whether GIFs load whole too. Profile pictures and banners load at a high resolution, so they stay sharp in profiles and full screen. Pictures over 16 megapixels stay as Discord sends them so the app doesn't run out of memory. Based on Uncompressed Discord Images by Knewest and HighResProfileImages by Kawtious |
 | | Skip delete confirmation | Messages and link previews are removed with no "Are you sure?" |
 | | Skip pin confirmation | Pinning and unpinning a message happen at once, with no "Are you sure?". Based on NoConfirmPin by Skamt |
+| | Banners in Do Not Disturb | New messages still slide down at the top while you're on Do Not Disturb, so you can glance at them without being disturbed: no sound and no buzz. Muted chats, blocked people and the chat you have open stay quiet, as usual. Phone notifications are unchanged |
 | | Always trust links and files | No "Leaving Discord" before opening links, and no "potentially dangerous download" warning before opening files, each with its own switch. Links Discord knows are harmful stay blocked. Based on AlwaysTrust by zt and Trwy |
 | | Jump to first message | A button to go straight to the start of a chat |
 | | Favourite any image or video | Star any image or video to keep it in your GIF favourites |
@@ -53,6 +54,7 @@ Open **Discord Settings → Venus → Features** to turn things on or off at any
 | | Fix unknown mentions | @unknown-user mentions show the person's name |
 | | Copy profile bios | Hold a bio to select and copy it |
 | | Leave group DMs silently | Leave a group DM without the "left the group" message the others would see. Works from every place you can leave: the group's menu, its header and `/leave`. Normal DMs are unchanged. Based on SilentLeave by coder.gg |
+| | Show timeout duration | A red tag next to a timed-out person's name in chat says how long until they can talk again ("Timed out · 2h 14m"), counting down until it ends. Screen readers read the exact time. Based on ShowTimeoutDuration by Ven |
 | | User and server reviews | Read and write reviews, from ReviewDB |
 | | User activity notifications | Shows a notice when chosen friends or users change status, start typing or send a message. Nothing shows for the chat you have open, and typing is announced once a minute per person and chat. An **Activity log** keeps what they did, by day, with search and filters; choose what it records separately from what notifies you |
 | | Account switcher | Switch between up to 50 Discord accounts from the profile bar or Venus settings. Add an account from the Account switcher page, where Discord's sign-in screen also has a Create a new account link, without logging out. Export your saved accounts to a file and import them on another phone or a fresh install, without signing in again. **Notifications from every account** (on by default) brings phone notifications for all your saved accounts, each labeled with its account; turn it off to only hear from the one you're using. Venus settings are shared by every account, and **Same theme on every account** makes your theme and Nitro theme follow you too |
@@ -68,6 +70,7 @@ Open **Discord Settings → Venus → Features** to turn things on or off at any
 | | Venus button on profile bar | A shortcut to Venus, next to the notifications bell |
 | | Unlock app icons | Use any Discord app icon in Settings without Nitro |
 | | Unlock Nitro themes | Use Discord's gradient themes in Settings > Appearance without Nitro. Each account keeps its own, so switching accounts never loses it. Only this phone sees them |
+| | Full-screen chat in landscape | Turn your phone sideways and the chat fills the whole screen, instead of sharing it with the server and channel lists. Swipe from the left edge to open them, like in portrait. Tablets keep Discord's side-by-side layout |
 | | Material You colors | Colors Discord to match your wallpaper, in light and dark, like Android 12+ apps. Or pick one of five colors or any color; choose how much the backgrounds take the tint. Wallpaper colors need Android 12 or newer |
 | | Custom themes | Install Revenge and Vendetta color themes from a link, then pick one from a gallery that previews each in its own colors |
 | | Icon packs | Replace Discord's icons across the app with built-in community icon packs (Rosiecord Plumpy, Rosiecord Iconsax, MD3, Solar, Deco, Material Two Tone, Iconsax Bulk) or a custom icon pack link |
