@@ -57,7 +57,11 @@ object MediaCompressor {
                 "release" -> {
                     val directory = File(context.cacheDir, "venus-compress")
                     val found = directory.listFiles()
-                    if (found != null) for (file in found) if (file.name.startsWith(id + ".")) file.delete()
+                    if (found != null) for (file in found) {
+                        val name = file.name
+                        // Kotlin startsWith emits the host's obfuscated text helper.
+                        if (name.length > id.length && name.substring(0, id.length + 1) == id + ".") file.delete()
+                    }
                     promise.resolve("released")
                 }
                 "prepare" -> {
