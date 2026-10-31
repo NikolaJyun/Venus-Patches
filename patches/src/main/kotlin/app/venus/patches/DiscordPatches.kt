@@ -74,7 +74,7 @@ private val runtimeAssets = rawResourcePatch {
             "{picker:$pickerSelected,voice:$voiceSelected,copyBios:$copyBiosSelected," +
                 "favouriteAnything:$favouriteAnythingSelected,freeNitro:$freeNitroSelected," +
                 listOf("noTyping", "quickDelete", "noDelete", "jumpToTop", "hiddenChannels", "pastelize", "platformIndicators", "reviewDB", "readAll", "quests", "badges", "systemFont",
-                    "systemEmoji", "gestures", "validUser", "youBarSettings", "splitMessages", "translate", "userNotif", "accountSwitcher", "appIcons", "nitroThemes", "customThemes", "materialYou", "iconPacks", "messageHighlight", "serverInfo", "serverEdit", "fixEmbeds", "tenorGifs", "hideBlocked", "bulkDelete", "experiments", "cleanChannels", "noHandsfree", "voiceOptions", "anonFiles", "staffTag", "removedAlerts", "fullImages", "hideAnything", "alwaysTrust", "noConfirmPin", "clickableMentions", "quietReplies", "silentLeave", "guildLurk", "timeoutDuration", "dndBanners", "landscapeFull")
+                    "systemEmoji", "gestures", "validUser", "youBarSettings", "splitMessages", "translate", "userNotif", "accountSwitcher", "appIcons", "nitroThemes", "customThemes", "materialYou", "iconPacks", "messageHighlight", "serverInfo", "serverEdit", "fixEmbeds", "tenorGifs", "hideBlocked", "bulkDelete", "experiments", "cleanChannels", "noHandsfree", "voiceOptions", "anonFiles", "staffTag", "removedAlerts", "fullImages", "hideAnything", "alwaysTrust", "noConfirmPin", "clickableMentions", "quietReplies", "silentLeave", "guildLurk", "compressUploads", "timeoutDuration", "dndBanners", "landscapeFull")
                     .joinToString(",") { "$it:${it in additionalSelections}" } + "}"
         )
         asset.writeText(selected)
@@ -445,6 +445,36 @@ internal fun voiceBridge(method: app.morphe.patcher.util.proxy.mutableTypes.Muta
     """)
 }
 
+internal const val MEDIA_COMPRESSOR = "Lapp/venus/compress/MediaCompressor;"
+/** Instructions [compressBridge] adds before Discord's own removeFile code, counting the nop its label lands on. */
+internal const val COMPRESS_BRIDGE_SIZE = 11
+
+/**
+ * Compress big files shrinks photos and audio natively. removeFile(storageDir, path, promise) is the one FileModule
+ * Promise method no other Venus feature guards: p1 carries the private prefix and the request, p3 is the Promise.
+ * Discord never passes a "venus-compress-v1:" folder, so its own calls fall straight through.
+ */
+internal fun compressBridge(method: app.morphe.patcher.util.proxy.mutableTypes.MutableMethod) {
+    if (method.parameterTypes.map { it.toString() } != listOf("Ljava/lang/String;", "Ljava/lang/String;", PROMISE) || method.returnType != "V" ||
+        (method.implementation?.registerCount ?: 0) - 4 < 2)
+        throw PatchException("FileModule.removeFile ABI changed")
+    requireUnpatched(method, "venus-")
+    method.addInstructions(0, """
+        const-string v0, "venus-compress-v1:"
+        invoke-virtual {p1, v0}, Ljava/lang/String;->startsWith(Ljava/lang/String;)Z
+        move-result v0
+        if-eqz v0, :venus_original_remove
+        invoke-virtual {p0}, Lcom/facebook/react/bridge/ReactContextBaseJavaModule;->getReactApplicationContext()Lcom/facebook/react/bridge/ReactApplicationContext;
+        move-result-object v0
+        invoke-static {p1, p3, v0}, $MEDIA_COMPRESSOR->dispatch(Ljava/lang/String;${PROMISE}Landroid/content/Context;)Z
+        move-result v1
+        if-eqz v1, :venus_original_remove
+        return-void
+        :venus_original_remove
+        nop
+    """)
+}
+
 /** Fails the patch, instead of freezing Discord, if another Venus prefix already sits in this method. */
 internal fun requireUnpatched(method: app.morphe.patcher.util.proxy.mutableTypes.MutableMethod, marker: String) {
     val strings = method.implementation?.instructions?.mapNotNull {
@@ -468,6 +498,26 @@ private fun bundledPlugin(key: String, title: String, summary: String) = rawReso
     section(PLUGINS)
     dependsOn(venusSettings)
     execute { additionalSelections += key }
+}
+
+@Suppress("unused")
+val compressUploads = bytecodePatch(
+    name = "Compress big files",
+    description = "Photos, videos and audio over Discord's file size limit are made smaller to fit as you send them, instead of being refused."
+) {
+    compatibleWith(discord)
+    section(PLUGINS)
+    dependsOn(venusSettings)
+    extendWith("extensions/compress.mpe")
+    execute {
+        additionalSelections += "compressUploads"
+        compressBridge(Fingerprint(
+            definingClass = FILE_MODULE,
+            name = "removeFile",
+            returnType = "V",
+            parameters = listOf("Ljava/lang/String;", "Ljava/lang/String;", PROMISE)
+        ).method)
+    }
 }
 
 @Suppress("unused")
