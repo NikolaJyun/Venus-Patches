@@ -12046,9 +12046,26 @@
             return undefined;
         }, () => { accountSwitcher.checking = null; return orig.apply(self, args); });
     }
+    // Removing a saved account runs TokenManager.removeToken(id) (MultiAccountStore 13074), which also clears the active
+    // sign-in when that account's saved token is the one in use. A list left with the active token under another
+    // account (the import and mid-switch mix-ups above, or Discord's own token collisions) then signed you out on the
+    // next start for removing someone else. The account still goes; your own sign-in is put back.
+    function accountRemoveKeepingSession(orig, self, args) {
+        const userId = args[0], me = currentUser(), tokens = accountTokens();
+        if (!enabled("accountSwitcher") || !tokens || typeof tokens.getToken !== "function" || !me || me.id === userId) return orig.apply(self, args);
+        let active = null;
+        try { active = tokens.getToken(); } catch (_) {}
+        try { return orig.apply(self, args); }
+        finally {
+            try { if (typeof active === "string" && active && tokens.getToken() !== active) tokens.setToken(active); } catch (_) {}
+        }
+    }
     function hookMultiAccountActions(exports) {
-        if (exports && typeof exports.switchAccount === "function") exports = hookExport(exports, "switchAccount", accountSwitchChecked);
-        if (exports && exports.default && typeof exports.default.switchAccount === "function") hookExport(exports.default, "switchAccount", accountSwitchChecked);
+        const hooks = [["switchAccount", accountSwitchChecked], ["removeAccount", accountRemoveKeepingSession]];
+        for (const [key, hook] of hooks) {
+            if (exports && typeof exports[key] === "function") exports = hookExport(exports, key, hook);
+            if (exports && exports.default && typeof exports.default[key] === "function") hookExport(exports.default, key, hook);
+        }
         return exports;
     }
     function hookPushNotificationActions(exports) {
