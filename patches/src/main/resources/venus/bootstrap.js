@@ -18286,6 +18286,12 @@
         if (hours) return mins ? tr("{h}h {m}m", {h:hours, m:mins}) : tr("{n}h", {n:hours});
         return tr("{n}m", {n:mins});
     }
+    // When it ends: the time today, or the date and time when that's another day.
+    function timeoutWhen(until) {
+        if (new Date(until).toDateString() === new Date().toDateString()) return logTime(until);
+        try { const text = new Date(until).toLocaleString(uiLanguage(), {month:"short", day:"numeric", hour:"numeric", minute:"2-digit"}); if (text && /\d/.test(text)) return text; } catch (_) {}
+        return new Date(until).toISOString().slice(0, 16).replace("T", " ");
+    }
     function timeoutTagMessage(message, source) {
         if (!message || !message.guildId || !message.authorId || source && source.webhookId) return message;
         const until = timeoutUntil(message.guildId, message.authorId);
@@ -18294,7 +18300,7 @@
         if (text == null || tint == null) return message;
         const copy = Object.assign({}, message);
         copy.tagText = tr("Timed out \u00b7 {time}", {time:timeoutLeft(until - Date.now())});
-        copy.tagAccessibilityLabel = tr("Timed out until {time}", {time:logTime(until)});
+        copy.tagAccessibilityLabel = tr("Timed out until {time}", {time:timeoutWhen(until)});
         copy.tagType = "timeout";
         copy.tagVerified = false;
         copy.tagTextColor = text;

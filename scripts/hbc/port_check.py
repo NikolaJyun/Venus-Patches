@@ -227,6 +227,7 @@ BOOTSTRAP_MODULES = [
     (11577, 'design/components/ThemeContextProvider/native/RootThemeContextProvider.native.tsx', ['RootThemeContextProvider', 'DisableCustomTheme'], 'RootThemeContextProvider (Custom themes re-keys its memoized context)'),
     (10692, 'modules/chat/native/ChatViewWrapper.tsx', ['default'], 'ChatViewWrapper'),
     (10654, 'design/components/Icon/native/redesign/generated/BellSlashIcon.tsx', ['BellSlashIcon'], 'BellSlashIcon'),
+    (13603, 'design/components/Icon/native/redesign/generated/BellZIcon.tsx', ['BellZIcon'], 'BellZIcon (Banners in Do Not Disturb)'),
     (9738, 'modules/double_tap_to_react/native/DoubleTapReminderToast.tsx', ['maybeShowDoubleTapReminderToast'], 'DoubleTapReminderToast'),
     (9851, 'design/components/Icon/native/redesign/generated/StarIcon.tsx', ['StarIcon'], 'StarIcon'),
     (9880, 'design/components/Icon/native/redesign/generated/BackspaceIcon.tsx', ['BackspaceIcon'], 'BackspaceIcon'),

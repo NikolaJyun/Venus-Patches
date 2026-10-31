@@ -62,6 +62,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 5032 | `modules/client_themes/ClientThemesBackgroundStore.tsx` | default | ClientThemesBackgroundStore (Unlock Nitro themes) |
 | 5072 | `modules/main_tabs_v2/helpers/NavigationRouteUtils.native.tsx` | navigateToChannel, navigateToRootTab, pushModal, popModal | ModalAPI |
 | 5073 | `modules/main_tabs_v2/RootNavigationRef.native.tsx` | getRootNavigationRef | RootNavigationRef |
+| 5075 | `modules/chat/native/useChatLayout.tsx` | default, getChatLayout | useChatLayout (Full-screen chat in landscape) |
 | 5112 | `modules/experiments/ExperimentStore.tsx` | default, registerExperiment | ExperimentStore (Unlock Discord experiments) |
 | 5116 | `stores/GuildMemberCountStore.tsx` | default, getMemberCount, getOnlineCount | GuildMemberCountStore |
 | 5131 | `design/components/Icon/native/redesign/generated/UserPlusIcon.tsx` | UserPlusIcon | UserPlusIcon |
@@ -338,6 +339,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 12935 | `modules/double_tap_to_react/native/DoubleTapToReactChatInputBanner.tsx` | DoubleTapToReactChatInputBanner | DoubleTapToReactChatInputBanner |
 | 12942 | `modules/channel_list_v2/native/components/GuildSearchAndInvite.tsx` | default | GuildSearchAndInvite (Remove anything: Search / Invite / Events) |
 | 13000 | `design/components/Icon/native/redesign/generated/TiktokNeutralIcon.tsx` | TiktokNeutralIcon | TiktokNeutralIcon (Fix link previews) |
+| 13073 | `actions/native/PushNotificationActionCreators.tsx` | default, setPushPermissionState | PushNotificationActionCreators |
 | 13074 | `modules/multi_account/MultiAccountStore.tsx` | INVALID, VALIDATING, VALID | MultiAccountStore |
 | 13075 | `modules/multi_account/Constants.tsx` | YOU_ACCOUNT_ACTION_SHEET, CHOOSE_ACCOUNT, MANAGE_ACCOUNTS_MODAL | MultiAccountConstants |
 | 13076 | `modules/user/isStaffFromRawUser.tsx` | default | isStaffFromRawUser |
@@ -350,7 +352,10 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 13217 | `design/components/Icon/native/redesign/generated/StickerIcon.tsx` | StickerIcon | StickerIcon |
 | 13268 | `design/components/Icon/native/redesign/generated/BoostTier1Icon.tsx` | BoostTier1Icon | BoostTier1Icon |
 | 13422 | `modules/accept_invite/native/InviteDetails.tsx` | ACCEPT, DECLINE, default | InviteDetails (Preview servers without joining: Preview button on the join screen) |
+| 13511 | `modules/notifications/NotificationTextUtils.tsx` | shouldNotify | NotificationTextUtils (Banners in Do Not Disturb) |
+| 13523 | `modules/notifications/native/playInAppMessageSound.tsx` | playInAppMessageSound | playInAppMessageSound (Banners in Do Not Disturb: no sound) |
 | 13531 | `design/components/Icon/native/redesign/generated/WaveformIcon.tsx` | WaveformIcon | WaveformIcon |
+| 13603 | `design/components/Icon/native/redesign/generated/BellZIcon.tsx` | BellZIcon | BellZIcon (Banners in Do Not Disturb) |
 | 13620 | `design/components/Icon/native/redesign/generated/ThemeDarkIcon.tsx` | ThemeDarkIcon | ThemeDarkIcon (Fix link previews, Dark Tumblr posts) |
 | 13747 | `design/components/Icon/native/redesign/generated/KeyboardIcon.tsx` | KeyboardIcon | KeyboardIcon |
 | 13759 | `modules/action_sheet/native/components/EmojiRow.tsx` | default | EmojiRow (Remove anything: quick reactions in the message menu) |
@@ -385,6 +390,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 15048 | `design/components/ContextMenu/native/ContextMenuPopout.native.tsx` | ContextMenuPopout | ContextMenuPopout |
 | 15066 | `modules/premium/ProductCatalog.tsx` | ANIMATED_EMOJIS, EMOJIS_EVERYWHERE, STICKERS_EVERYWHERE, CLIENT_THEMES | EmojiPermissions |
 | 15185 | `design/void/Status/native/Status.tsx` | default, StatusWithTyping | Status |
+| 15471 | `modules/notifications/native/NotificationTokenManager.tsx` | default | NotificationTokenManager |
 | 15590 | `components_native/AppContainer.tsx` | default | AppContainer (Remove anything: removal mode bar) |
 | 15600 | `modules/settings/native/renderer/SettingHookHarness.tsx` | default, getCachedSettingTitle, getCachedSettingSearchTerms | SettingHookHarness (Remove anything: setting titles) |
 | 15601 | `modules/settings/native/renderer/stores/SettingBlocklistStore.tsx` | default | SettingBlocklistStore (Remove anything: redraws Settings) |
