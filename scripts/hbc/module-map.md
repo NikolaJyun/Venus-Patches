@@ -180,7 +180,10 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 8013 | `modules/messages/native/renderer/RowGenerator.tsx` | default | RowGenerator |
 | 8023 | `lib/uploader/CloudUpload.tsx` | NOT_STARTED, STARTED, UPLOADING | CloudUpload |
 | 8026 | `utils/UploadUtils.tsx` | MAX_TOTAL_ATTACHMENT_SIZE, MAX_TOTAL_ATTACHMENT_SIZE_1GB, MAX_TOTAL_ATTACHMENT_SIZE_MB | AttachmentUtils |
+| 8046 | `modules/media_uploads/native/VideoUploadUtils.tsx` | calculateOptimalBitrate, calculateTargetDimensions, canSkipVideoTranscode | VideoUploadUtils (Compress big files: video bitrate and size) |
+| 8047 | `modules/media_uploads/UploadLimits.tsx` | FREE_UPLOAD_LIMIT_BYTES, getEffectiveUploadLimit | UploadLimits (Compress big files) |
 | 8056 | `lib/uploader/native/CloudUploaderUtils.tsx` | default, prepareMessagePayload, getUploadPayload | CloudUploaderUtils (Anonymous file names) |
+| 8057 | `lib/uploader/UploadTargets.tsx` | getUploadTarget | UploadTargets (Compress big files: the limit for this chat) |
 | 8254 | `modules/double_tap_to_react/native/DoubleTapToReactUtils.tsx` | getFallbackDoubleTapDisambiguatedEmoji, reactionEmojiFromSettingsValue, disambiguatedEmojiFromSettingsValue | DoubleTapToReactUtils |
 | 8261 | `modules/replies/canReplyToMessage.tsx` | useCanReplyToMessage, canReplyToMessage | canReplyToMessage |
 | 8294 | `utils/GuildBoostingUtils.tsx` | getMaxEmojiSlots, getTotalStickerCountForTier | GuildBoostingUtils (Clone emojis and stickers: free slots) |
@@ -260,6 +263,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 9988 | `modules/messages/native/long_press/LongPressMessageActionSheetUtils.tsx` | getContextBarCancelReason, handleEdit, handleCreateThread | LongPressMessageActionSheetUtils |
 | 9990 | `modules/replies/PendingReplyActionCreators.tsx` | createPendingReply, createShallowPendingReply | PendingReplyActionCreators (Reply without pinging) |
 | 10002 | `modules/foreground_service/mobile/ForegroundServiceManager.android.tsx` | default | ForegroundServiceManager |
+| 10006 | `lib/uploader/native/getPreCompressionFileSize.tsx` | getPreCompressionFileSize | getPreCompressionFileSize (Compress big files: size gate) |
 | 10023 | `design/components/Icon/native/redesign/generated/PencilIcon.tsx` | PencilIcon | PencilIcon |
 | 10035 | `actions/GIFPickerActionCreators.tsx` | trackSearchStart, trackSearchResultViewed, search | GIFPickerActionCreators |
 | 10036 | `modules/gif_picker/GifProvider.tsx` | GIF_PROVIDER, GIF_PROVIDER_EMBED_NAME, getSearchPlaceholder | GifProvider (Bring back Tenor GIFs) |
@@ -274,6 +278,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 10331 | `modules/media_keyboard/native/components/MediaKeyboardBottomSheetActions.tsx` | default | MediaKeyboardBottomSheetActions (Hide extra buttons: attach menu) |
 | 10475 | `design/components/Icon/native/redesign/generated/ClydeIcon.tsx` | ClydeIcon | ClydeIcon (Remove anything: Discord join date) |
 | 10531 | `modules/main_tabs_v2/native/shared_components/user_list/UserRow.tsx` | CALL, MESSAGE, ACCEPT | UserRow |
+| 10551 | `design/components/Icon/native/redesign/generated/MusicIcon.tsx` | MusicIcon | MusicIcon (Compress big files) |
 | 10561 | `design/components/Icon/native/redesign/generated/XLargeIcon.tsx` | XLargeIcon | XLargeIcon (Remove anything icon) |
 | 10563 | `design/components/Icon/native/redesign/generated/CrownIcon.tsx` | CrownIcon | CrownIcon |
 | 10598 | `design/components/Icon/native/redesign/generated/UserCircleIcon.tsx` | UserCircleIcon | UserCircleIcon |
@@ -314,6 +319,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 11619 | `design/components/Icon/native/redesign/generated/ChatShieldIcon.tsx` | ChatShieldIcon | ChatShieldIcon (Hide blocked or ignored messages) |
 | 11630 | `design/components/Icon/native/redesign/generated/RefreshIcon.tsx` | RefreshIcon | RefreshIcon |
 | 11632 | `design/components/Icon/native/redesign/generated/RetryIcon.tsx` | RetryIcon | RetryIcon (preview Start over / New people) |
+| 11636 | `design/components/Icon/native/redesign/generated/FileUpIcon.tsx` | FileUpIcon | FileUpIcon (Compress big files) |
 | 11657 | `design/components/Icon/native/redesign/generated/ImagePlusIcon.tsx` | ImagePlusIcon | ImagePlusIcon |
 | 11671 | `design/components/Icon/native/redesign/generated/UserIcon.tsx` | UserIcon | UserIcon |
 | 11678 | `design/components/Tabs/native/Tabs.native.tsx` | Tabs | Tabs (Remove anything: profile tab bar) |
