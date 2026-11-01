@@ -54,7 +54,7 @@
   "Adding hours": "Aggiunta delle ore",
   "Adding hours tells Discord you played games you never played. That breaks Discord's Terms of Service. People have reported accounts suspended for tools that do this, and hours added this way can't be taken back.": "Aggiungere ore dice a Discord che hai giocato a giochi a cui non hai mai giocato. Viola i Termini di servizio di Discord. Alcuni utenti hanno segnalato account sospesi per strumenti che fanno questo, e le ore aggiunte così non si possono togliere.",
   "Adding {done} of {total} hours.": "Aggiunta di {done} ore su {total}.",
-  "Adding…": "Aggiunta…",
+  "Adding…": "Aggiunta in corso…",
   "Adds Dev Tools to Settings, to try features Discord is still testing.": "Aggiunge Dev Tools alle Impostazioni, per provare le funzioni che Discord sta ancora testando.",
   "Admin": "Admin",
   "Admins": "Amministratori",
@@ -188,7 +188,7 @@
     "other": "Rimuove {n} persone che hai scelto o aggiunto tramite ID."
   },
   "Clears {n} person you picked or added by ID.": "Rimuove {n} persona che hai scelto o aggiunto tramite ID.",
-  "Clone emojis and stickers": "Clona emoji e sticker",
+  "Clone emojis and stickers": "Copia emoji e sticker",
   "Close": "Chiudi",
   "Close expression picker": "Chiudi il selettore delle espressioni",
   "Close the list": "Chiudi l'elenco",
@@ -652,7 +652,7 @@
   "No boost level yet": "Ancora nessun livello di potenziamento",
   "No features found": "Nessuna funzionalità trovata",
   "No features were patched in.": "Nessuna funzionalità è stata inclusa nella patch.",
-  "No free slots": "Nessuno slot libero",
+  "No free slots": "Nessuno spazio libero",
   "No friends found": "Nessun amico trovato",
   "No games playing": "Nessun gioco in corso",
   "No limit": "Nessun limite",
@@ -1300,8 +1300,8 @@
     "one": "Puoi salvare fino a {n} account.",
     "other": "Puoi salvare fino a {n} account."
   },
-  "You can't add emojis to any of your servers. You need the Create Expressions permission.": "Non puoi aggiungere emoji in nessuno dei tuoi server. Ti serve il permesso Crea espressioni.",
-  "You can't add stickers to any of your servers. You need the Create Expressions permission.": "Non puoi aggiungere sticker in nessuno dei tuoi server. Ti serve il permesso Crea espressioni.",
+  "You can't add emojis to any of your servers. You need the Create Expressions permission.": "Non puoi aggiungere emoji a nessuno dei tuoi server. Ti serve il permesso Crea espressioni.",
+  "You can't add stickers to any of your servers. You need the Create Expressions permission.": "Non puoi aggiungere sticker a nessuno dei tuoi server. Ti serve il permesso Crea espressioni.",
   "You can't open this channel, but Discord already sent these details.": "Non puoi aprire questo canale, ma Discord ha già inviato questi dettagli.",
   "You change your mind and tap your message three times": "Cambi idea e tocchi il tuo messaggio tre volte",
   "You double-tap Sam's message": "Tocchi due volte il messaggio di Sam",
@@ -1464,10 +1464,10 @@
     "one": "{n} funzionalità sarà attiva.",
     "other": "{n} funzionalità saranno attive."
   },
-  "{n} free slot": "{n} slot libero",
+  "{n} free slot": "{n} spazio libero",
   "{n} free slots": {
-    "one": "{n} slot libero",
-    "other": "{n} slot liberi"
+    "one": "{n} spazio libero",
+    "other": "{n} spazi liberi"
   },
   "{n} friend": "{n} amico",
   "{n} friend here": "{n} amico qui",

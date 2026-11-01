@@ -48,9 +48,9 @@
   "Add hours now": "अभी घंटे जोड़ें",
   "Add hours now. Risky.": "अभी घंटे जोड़ें। जोखिम भरा।",
   "Add hours now?": "अभी घंटे जोड़ें?",
-  "Add to a server": "सर्वर में जोड़ें",
+  "Add to a server": "किसी सर्वर में जोड़ें",
   "Add {n} hours": "{n} घंटे जोड़ें",
-  "Added to {server}": "{server} में जोड़ा गया",
+  "Added to {server}": "{server} में जोड़ दिया",
   "Adding hours": "घंटे जोड़े जा रहे हैं",
   "Adding hours tells Discord you played games you never played. That breaks Discord's Terms of Service. People have reported accounts suspended for tools that do this, and hours added this way can't be taken back.": "घंटे जोड़ने का मतलब है Discord को बताना कि आपने ऐसे गेम खेले जो आपने कभी नहीं खेले। यह Discord की सेवा की शर्तों का उल्लंघन है। लोगों ने ऐसा करने वाले टूल की वजह से अकाउंट निलंबित होने की बात बताई है, और इस तरह जोड़े गए घंटे वापस नहीं लिए जा सकते।",
   "Adding {done} of {total} hours.": "{total} में से {done} घंटे जोड़े जा रहे हैं।",
@@ -222,7 +222,7 @@
   "Copy profile bios": "प्रोफ़ाइल बायो कॉपी करें",
   "Copy the rest": "बाकी कॉपी करें",
   "Copy to clipboard": "क्लिपबोर्ड पर कॉपी करें",
-  "Couldn't add it: {reason}": "जोड़ा नहीं जा सका: {reason}",
+  "Couldn't add it: {reason}": "नहीं जोड़ा जा सका: {reason}",
   "Couldn't download icon pack (HTTP {status}).": "आइकन पैक डाउनलोड नहीं हो सका (HTTP {status})।",
   "Couldn't download the voice message.": "वॉइस मैसेज डाउनलोड नहीं हो सका।",
   "Couldn't download theme (HTTP {status}).": "थीम डाउनलोड नहीं हो सकी (HTTP {status})।",
@@ -1058,7 +1058,7 @@
   "Tap Select Messages under Delete Message": "संदेश हटाएँ के नीचे संदेश चुनें पर टैप करें",
   "Tap Server info": "सर्वर जानकारी पर टैप करें",
   "Tap a button you never use to remove it, right where it is.": "जिस बटन का आप कभी इस्तेमाल नहीं करते, उस पर टैप करके उसे वहीं से हटा दें।",
-  "Tap a custom emoji or sticker in chat to add it to one of your servers.": "चैट में किसी कस्टम इमोजी या स्टिकर पर टैप करके उसे अपने किसी सर्वर में जोड़ें।",
+  "Tap a custom emoji or sticker in chat to add it to one of your servers.": "चैट में किसी कस्टम इमोजी या स्टिकर पर टैप करें और उसे अपने किसी सर्वर में जोड़ें।",
   "Tap a site to pick its service, post style, translation and tracking.": "किसी साइट पर टैप करके उसकी सेवा, पोस्ट का रूप, अनुवाद और ट्रैकिंग चुनें।",
   "Tap an @mention in the message bar to see who it is.": "मैसेज बार में किसी @मेंशन पर टैप करके देखें कि वह कौन है।",
   "Tap any icon pack below to try it live.": "लाइव आज़माने के लिए नीचे किसी भी आइकन पैक पर टैप करें।",
@@ -1464,10 +1464,10 @@
     "one": "{n} फ़ीचर चालू होगा।",
     "other": "{n} फ़ीचर चालू होंगे।"
   },
-  "{n} free slot": "{n} खाली जगह",
+  "{n} free slot": "{n} जगह खाली",
   "{n} free slots": {
-    "one": "{n} खाली जगह",
-    "other": "{n} खाली जगहें"
+    "one": "{n} जगह खाली",
+    "other": "{n} जगहें खाली"
   },
   "{n} friend": "{n} दोस्त",
   "{n} friend here": "यहाँ {n} दोस्त है",

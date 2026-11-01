@@ -188,7 +188,7 @@
     "other": "Borra {n} personas que elegiste o añadiste por ID."
   },
   "Clears {n} person you picked or added by ID.": "Borra {n} persona que elegiste o añadiste por ID.",
-  "Clone emojis and stickers": "Clonar emojis y stickers",
+  "Clone emojis and stickers": "Copiar emojis y stickers",
   "Close": "Cerrar",
   "Close expression picker": "Cerrar el selector de expresiones",
   "Close the list": "Cerrar la lista",
@@ -652,7 +652,7 @@
   "No boost level yet": "Aún sin nivel de mejora",
   "No features found": "No se encontraron funciones",
   "No features were patched in.": "No se incluyó ninguna función al parchear.",
-  "No free slots": "Sin espacios libres",
+  "No free slots": "No hay espacios libres",
   "No friends found": "No se encontraron amigos",
   "No games playing": "Ningún juego en marcha",
   "No limit": "Sin límite",

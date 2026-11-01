@@ -188,7 +188,7 @@
     "other": "Efface {n} personnes choisies ou ajoutées par identifiant."
   },
   "Clears {n} person you picked or added by ID.": "Efface {n} personne choisie ou ajoutée par identifiant.",
-  "Clone emojis and stickers": "Cloner les émojis et autocollants",
+  "Clone emojis and stickers": "Copier les émojis et autocollants",
   "Close": "Fermer",
   "Close expression picker": "Fermer le sélecteur d'expressions",
   "Close the list": "Fermer la liste",
@@ -1058,7 +1058,7 @@
   "Tap Select Messages under Delete Message": "Touche Sélectionner des messages sous Supprimer le message",
   "Tap Server info": "Appuie sur Infos du serveur",
   "Tap a button you never use to remove it, right where it is.": "Touche un bouton que tu n'utilises jamais pour le retirer, là où il est.",
-  "Tap a custom emoji or sticker in chat to add it to one of your servers.": "Touchez un émoji personnalisé ou un autocollant dans une discussion pour l'ajouter à l'un de vos serveurs.",
+  "Tap a custom emoji or sticker in chat to add it to one of your servers.": "Touchez un émoji personnalisé ou un autocollant dans la discussion pour l'ajouter à l'un de vos serveurs.",
   "Tap a site to pick its service, post style, translation and tracking.": "Touchez un site pour choisir son service, le style des publications, la traduction et le pistage.",
   "Tap an @mention in the message bar to see who it is.": "Touche une @mention dans la barre de message pour voir de qui il s'agit.",
   "Tap any icon pack below to try it live.": "Appuyez sur un pack d'icônes ci-dessous pour l'essayer en direct.",

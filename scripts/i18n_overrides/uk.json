@@ -190,7 +190,7 @@
     "one": "Скидає {n} людину, яку ви вибрали або додали за ID."
   },
   "Clears {n} person you picked or added by ID.": "Скидає {n} людину, яку ви вибрали або додали за ID.",
-  "Clone emojis and stickers": "Копіювання емодзі та наліпок",
+  "Clone emojis and stickers": "Копіювання емодзі й наліпок",
   "Close": "Закрити",
   "Close expression picker": "Закрити панель емодзі й стікерів",
   "Close the list": "Закрити список",
@@ -674,7 +674,7 @@
   "No saved accounts yet": "Збережених акаунтів поки немає",
   "No servers edited yet": "Поки немає змінених серверів",
   "No servers found": "Сервери не знайдено",
-  "No servers to add it to": "Немає сервера, куди можна додати",
+  "No servers to add it to": "Немає серверів, куди можна додати",
   "No sites turned on": "Жоден сайт не ввімкнено",
   "No tier yet": "Рівня ще немає",
   "Nobody is tagged": "Нікого не позначено",
@@ -1067,7 +1067,7 @@
   "Tap Select Messages under Delete Message": "Натисніть «Вибрати повідомлення» під «Видалити повідомлення»",
   "Tap Server info": "Натисніть «Про сервер»",
   "Tap a button you never use to remove it, right where it is.": "Торкніться кнопки, якою ви не користуєтеся, щоб прибрати її просто там, де вона є.",
-  "Tap a custom emoji or sticker in chat to add it to one of your servers.": "Торкніться власного емодзі чи наліпки в чаті, щоб додати їх на один зі своїх серверів.",
+  "Tap a custom emoji or sticker in chat to add it to one of your servers.": "Натисніть власний емодзі чи наліпку в чаті, щоб додати її на один зі своїх серверів.",
   "Tap a site to pick its service, post style, translation and tracking.": "Торкніться сайту, щоб вибрати сервіс, вигляд дописів, переклад і відстеження.",
   "Tap an @mention in the message bar to see who it is.": "Торкніться @згадки в рядку повідомлення, щоб побачити, хто це.",
   "Tap any icon pack below to try it live.": "Торкніться будь-якого набору іконок нижче, щоб одразу його випробувати.",
@@ -1498,7 +1498,8 @@
   "{n} free slots": {
     "one": "{n} вільне місце",
     "few": "{n} вільні місця",
-    "many": "{n} вільних місць"
+    "many": "{n} вільних місць",
+    "other": "{n} вільного місця"
   },
   "{n} friend": "{n} друг",
   "{n} friend here": "Тут {n} друг",

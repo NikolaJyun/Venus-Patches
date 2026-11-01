@@ -725,7 +725,7 @@
     "No saved accounts yet": "Сохранённых аккаунтов пока нет",
     "No servers edited yet": "Пока нет изменённых серверов",
     "No servers found": "Серверы не найдены",
-    "No servers to add it to": "Нет сервера, куда можно добавить",
+    "No servers to add it to": "Нет серверов, куда можно добавить",
     "No sites turned on": "Ни один сайт не включён",
     "No tier yet": "Уровня пока нет",
     "Nobody is tagged": "Никто не отмечен",
@@ -1133,7 +1133,7 @@
     "Tap Select Messages under Delete Message": "Нажмите «Выбрать сообщения» под «Удалить сообщение»",
     "Tap Server info": "Нажмите «О сервере»",
     "Tap a button you never use to remove it, right where it is.": "Нажмите на кнопку, которой вы не пользуетесь, чтобы убрать её прямо там, где она есть.",
-    "Tap a custom emoji or sticker in chat to add it to one of your servers.": "Нажмите на свой эмодзи или стикер в чате, чтобы добавить его на один из своих серверов.",
+    "Tap a custom emoji or sticker in chat to add it to one of your servers.": "Нажмите на пользовательский эмодзи или стикер в чате, чтобы добавить его на один из своих серверов.",
     "Tap a site to pick its service, post style, translation and tracking.": "Нажмите на сайт, чтобы выбрать сервис, вид постов, перевод и отслеживание.",
     "Tap an @mention in the message bar to see who it is.": "Нажмите на @упоминание в строке сообщения, чтобы увидеть, кто это.",
     "Tap any icon pack below to try it live.": "Нажмите на любой набор иконок ниже, чтобы сразу его примерить.",
@@ -1580,7 +1580,8 @@
     "{n} free slots": {
       "one": "{n} свободное место",
       "few": "{n} свободных места",
-      "many": "{n} свободных мест"
+      "many": "{n} свободных мест",
+      "other": "{n} свободного места"
     },
     "{n} friend": "{n} друг",
     "{n} friend here": "Здесь {n} друг",
