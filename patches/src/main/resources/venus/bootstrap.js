@@ -297,6 +297,8 @@
         // Only the "Translated from ..." line under a translation is in Venus's language: redraw just those rows,
         // not every message on screen, and nothing while the feature is off or that line isn't shown.
         if (features.translate && enabled("translate") && (settings.translateNote || settings.translateOriginal)) translateRelabel();
+        // The timeout tag and the voice message Download button are drawn by Discord's native rows too.
+        if ((features.timeoutDuration && enabled("timeoutDuration")) || (features.voiceDownload && enabled("voiceDownload"))) chatAdditionsRelabel();
     }
     // A sub-option (piProfile, reviewWarning, pastelAll...) must also wake components that
     // subscribed to its plugin: those pages and badges read several of its settings at once.
@@ -18933,6 +18935,17 @@
         // Drawing them again puts back only the tags still timed out, which keeps the clock going.
         if (ids && ids.size) bulkDeleteRedrawIds(channelId, Array.from(ids));
     }
+    // After the language changes (or its file finishes loading), the open chat's timeout tags and Download buttons are
+    // drawn again in it: Discord keeps a native row until something about it changes.
+    function chatAdditionsRelabel() {
+        const selected = inspectedExport(2119, "default");
+        let channelId = null;
+        try { channelId = selected && typeof selected.getChannelId === "function" ? String(selected.getChannelId()) : null; } catch (_) {}
+        if (!channelId) return;
+        const ids = new Set();
+        [timeoutTag.shown.get(channelId), voiceDownload.shown.get(channelId)].forEach(set => { if (set) set.forEach(id => ids.add(id)); });
+        if (ids.size) bulkDeleteRedrawIds(channelId, Array.from(ids));
+    }
     // Banners in Do Not Disturb (#125): Discord keeps its in-app banners (the message that slides down at the top) away
     // while you're on Do Not Disturb, in one place: NotificationTextUtils.shouldNotify (13511) asks SelfPresenceStore
     // (6015) for your status and stops at DND. While it decides, your status reads as online, so the banner shows the way
@@ -18975,7 +18988,7 @@
     // full-screen viewer's Save uses, so it lands in Downloads with the system's download notification. It stays the
     // original Ogg Opus file: every Android music app plays it, and nothing is re-encoded or lost.
     const VOICE_DOWNLOAD_CALLBACK = "venus-voice-download";
-    const voiceDownload = {buttons:new Map(), busy:new Set()};
+    const voiceDownload = {buttons:new Map(), busy:new Set(), shown:new Map()};
     function voiceDownloadAttachment(source) {
         if (!source) return null;
         const flags = Number(source.flags) || 0, list = source.attachments;
@@ -18998,7 +19011,14 @@
     function voiceDownloadMessage(message, source) {
         if (!message || message.ctaButton || !voiceDownloadAttachment(source)) return message;
         const button = voiceDownloadButton();
-        return button ? Object.assign({}, message, {ctaButton:button}) : message;
+        if (!button) return message;
+        const channelId = String(message.channelId || source.channel_id || source.channelId || ""), id = String(message.id || source.id || "");
+        if (channelId && id) {
+            let ids = voiceDownload.shown.get(channelId);
+            if (!ids) { if (voiceDownload.shown.size > 20) voiceDownload.shown.clear(); voiceDownload.shown.set(channelId, ids = new Set()); }
+            if (ids.size < 200) ids.add(id);
+        }
+        return Object.assign({}, message, {ctaButton:button});
     }
     function voiceDownloadTap(event) {
         if (!enabled("voiceDownload")) return false;
@@ -19148,11 +19168,14 @@
         try { ui.showSheet({key:CLONE_SHEET, content:el(CloneSheet, {item}), stackingBehavior:"stack"}); } catch (_) {}
     }
     // The button at the bottom of Discord's sheet, in its own secondary style.
-    function cloneButton(item) {
+    // A component of its own, so it follows Venus's language inside Discord's sheet.
+    function CloneButton({item}) {
+        useLanguage();
         const Button = inspectedExport(5479, "Button");
-        return el(RN.View, {key:"venus-clone", style:{paddingHorizontal:16, paddingTop:12, paddingBottom:8}},
+        return el(RN.View, {style:{paddingHorizontal:16, paddingTop:12, paddingBottom:8}},
             Button ? el(Button, {text:tr("Add to a server"), variant:"secondary", size:"md", grow:true, icon:venusIcon(11657, "ImagePlusIcon"), onPress:() => cloneOpen(item)}) : null);
     }
+    function cloneButton(item) { return el(CloneButton, {key:"venus-clone", item}); }
     function cloneIntoSheet(tree, item) {
         if (!tree || !item || !React) return tree;
         let added = false;
