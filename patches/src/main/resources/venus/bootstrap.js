@@ -58,6 +58,7 @@
     if (features.timeoutDuration) selectModules([2119, 2128, 8013]);
     if (features.dndBanners) selectModules([6015, 13511, 13523]);
     if (features.landscapeFull) targetModules[5075] = 1;
+    if (features.voiceDownload) selectModules([1447, 5532, 8013, 11114]);
     if (features.removedAlerts) selectModules([584, 1392, 6377, 7293, 8910, 10002, 14713, 14748]);
     if (features.bulkDelete) selectModules([584, 1087, 1392, 2068, 2119, 4845, 5532, 7445, 8013, 9978, 10692, 11114]);
     if (features.experiments) selectModules([584, 1392, 1403]);
@@ -84,7 +85,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
@@ -101,7 +102,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
         }));
     }
     // Backup and restore (#68): when you last saved a backup, and whether a restore is being applied right now.
@@ -1123,7 +1124,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
+        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
         const slot = id + ":" + name;
@@ -1173,6 +1174,7 @@
         silentLeave:["SilentLeave", "Silent leave", "Group DM", "Leave group"],
         guildLurk:["GuildLurk", "Guild lurk", "Lurk", "Lurker", "Preview", "Invite link", "Server ID"],
         timeoutDuration:["Timeout", "Timed out", "Muted", "Mute", "Communication disabled", "Moderation", "ShowTimeoutDuration"],
+        voiceDownload:["Voice message", "Voice messages", "Download", "Save", "Audio", "Recording", "VoiceDownload"],
         dndBanners:["Do Not Disturb", "DND", "Banner", "Banners", "In-app notifications", "Pop-up", "Focus"],
         landscapeFull:["Landscape", "Sideways", "Rotate", "Full screen", "Sidebar", "Channel list"],
         quietReplies:["Ping", "Pings", "Mention", "Mentions", "Reply", "Replies", "@ ON", "@ OFF", "Notification", "Servers", "Group DMs", "When they mentioned you", "Silent replies", "No ping"],
@@ -1647,6 +1649,7 @@
         toggle("sending", "picker", "Show file sizes when attaching", "Photos and videos in the picker show their size.");
         toggle("sending", "anonFiles", "Anonymous file names", "Files you send get a random name instead of the one on your phone.");
         withOptions("sending", "quietReplies", "VENUS_QUIETREPLIES", "Reply without pinging", "Replies start with the ping off, so nobody gets pinged unless you turn it on.", "Reply without pinging", QuietRepliesSettings);
+        toggle("messages", "voiceDownload", "Download voice messages", "A Download button under each voice message saves it to your phone.");
         toggle("messages", "dndBanners", "Banners in Do Not Disturb", "New messages still pop up at the top while you're on Do Not Disturb, without a sound.");
         toggle("sending", "clickableMentions", "Tap mentions to open profiles", "Tap an @mention in the message bar to see who it is.");
         // People
@@ -4451,6 +4454,11 @@
                 try { if (features.bulkDelete && bulkDeleteInterceptTap(event)) return undefined; } catch (_) {}
                 gesture.tapping++;
                 try { return dbl.apply(this, arguments); } finally { gesture.tapping--; }
+            };
+            const cta = handlers && handlers.handleTapCtaButton;
+            if (typeof cta === "function" && features.voiceDownload) handlers.handleTapCtaButton = function (event) {
+                try { if (voiceDownloadTap(event)) return undefined; } catch (_) {}
+                return cta.apply(this, arguments);
             };
             const link = handlers && handlers.handleTapLink;
             if (typeof link === "function" && features.noDelete) handlers.handleTapLink = function (event) {
@@ -7700,6 +7708,7 @@
             if (reply !== message.referencedMessage.message) message = Object.assign({},message,{referencedMessage:Object.assign({},message.referencedMessage,{message:reply})});
         }
         if (features.timeoutDuration && enabled("timeoutDuration")) message = timeoutTagMessage(message, row.message);
+        if (features.voiceDownload && enabled("voiceDownload")) message = voiceDownloadMessage(message, row.message);
         if (features.staffTag && enabled("staffTag")) message = staffTagMessage(message, row.message);
         let next = message === result.message ? result : Object.assign({},result,{message});
         if (!translateOn && !features.translate && !(noDeleteOn && (edits.size || deleted.size)) && !highlightOn && !features.messageHighlight && !bulkOn) return next;
@@ -18360,6 +18369,73 @@
         const layout = orig.apply(self, args);
         return layout && layout.isChatBesideChannelList && landscapePhone() ? LANDSCAPE_PHONE_LAYOUT : layout;
     }
+    // Download voice messages (#125, after VoiceDownload): a voice message gets a Download button of its own, right under its
+    // waveform: the native call-to-action button Discord's message view already draws (Message.ctaButton, the one under
+    // age-verification DMs), so it looks and feels like the rest of the chat and needs no hold menu. Its tap reaches
+    // MessagesHandlers.handleTapCtaButton with the callback Venus gave it. The file is saved by Discord's own downloader
+    // (NativeMediaManagerModule.downloadMediaAssetWithContentType 1447 -> Android's DownloadManager), the same one the
+    // full-screen viewer's Save uses, so it lands in Downloads with the system's download notification. It stays the
+    // original Ogg Opus file: every Android music app plays it, and nothing is re-encoded or lost.
+    const VOICE_DOWNLOAD_CALLBACK = "venus-voice-download";
+    const voiceDownload = {buttons:new Map(), busy:new Set()};
+    function voiceDownloadAttachment(source) {
+        if (!source) return null;
+        const flags = Number(source.flags) || 0, list = source.attachments;
+        if (!(flags & 8192) || !list || typeof list.length !== "number" || !list.length) return null;
+        const file = list[0];
+        return file && typeof file.url === "string" && /^https:\/\//.test(file.url) ? file : null;
+    }
+    // The button in the theme in use: a quiet grey one, like Discord's secondary buttons.
+    function voiceDownloadButton() {
+        const slot = nativeThemeSlot(), light = slot === "light", key = slot + "\u0000" + tr("Download");
+        const hit = voiceDownload.buttons.get(key);
+        if (hit) return hit;
+        const textColor = highlightProcess(light ? "#313338" : "#dbdee1"), backgroundColor = highlightProcess(light ? "#0000000f" : "#ffffff14");
+        if (textColor == null || backgroundColor == null) return null;
+        const button = Object.freeze({text:tr("Download"), textColor, backgroundColor, callback:VOICE_DOWNLOAD_CALLBACK});
+        voiceDownload.buttons.clear();
+        voiceDownload.buttons.set(key, button);
+        return button;
+    }
+    function voiceDownloadMessage(message, source) {
+        if (!message || message.ctaButton || !voiceDownloadAttachment(source)) return message;
+        const button = voiceDownloadButton();
+        return button ? Object.assign({}, message, {ctaButton:button}) : message;
+    }
+    function voiceDownloadTap(event) {
+        if (!enabled("voiceDownload")) return false;
+        let data = event && event.nativeEvent;
+        if (!data || data.callback == null) {
+            const read = inspectedExport(9976, "getNativeSyntheticEventData");
+            try { data = typeof read === "function" ? read(event) : data; } catch (_) {}
+        }
+        if (!data || data.callback !== VOICE_DOWNLOAD_CALLBACK) return false;
+        const store = msgStore || (msgStore = inspectedExport(5532, "default"));
+        let message = null;
+        try { message = store && typeof store.getMessage === "function" ? store.getMessage(String(data.channelId), String(data.messageId)) : null; } catch (_) {}
+        voiceDownloadSave(voiceDownloadAttachment(message), String(data.messageId));
+        return true;
+    }
+    function voiceDownloadName(file) {
+        const name = typeof file.filename === "string" && file.filename ? file.filename : "voice-message.ogg";
+        return /\.[a-z0-9]{2,4}$/i.test(name) ? name : name + ".ogg";
+    }
+    function voiceDownloadSave(file, id) {
+        const ui = reviewUI(), icon = venusIcon(5143, "DownloadIcon");
+        if (!file) { showToast(ui, "venus-voice-download", tr("Couldn't download the voice message."), icon); return; }
+        if (voiceDownload.busy.has(id)) return;
+        const media = inspectedExport(1447, "default");
+        if (!media || typeof media.downloadMediaAssetWithContentType !== "function") { showToast(ui, "venus-voice-download", tr("Couldn't download the voice message."), icon); return; }
+        haptic("IMPACT_LIGHT");
+        voiceDownload.busy.add(id);
+        showToast(ui, "venus-voice-download", tr("Downloading voice message…"), icon);
+        const done = ok => {
+            voiceDownload.busy.delete(id);
+            showToast(ui, "venus-voice-download", ok ? tr("Saved to Downloads as {name}", {name:voiceDownloadName(file)}) : tr("Couldn't download the voice message."), icon);
+        };
+        Promise.resolve().then(() => media.downloadMediaAssetWithContentType(file.url, 0, file.content_type || file.contentType || "audio/ogg"))
+            .then(() => done(true), () => done(false));
+    }
     function AlwaysTrustSettings() {
         useSettings("alwaysTrust");
         const ui = reviewUI();
@@ -19516,7 +19592,7 @@
             case 1266: if (features.pastelize) pastelHash = typeof exports === "function" ? exports : exports.default; return exports;
             case 2128: if (features.pastelize) guildMembers = exports.default; if (features.timeoutDuration && exports && exports.default) timeoutTag.members = exports.default; return exports;
             case 8013:
-                if ((features.pastelize || features.noDelete || features.translate || features.messageHighlight || features.bulkDelete || features.staffTag || features.timeoutDuration) && exports.default && exports.default.prototype)
+                if ((features.pastelize || features.noDelete || features.translate || features.messageHighlight || features.bulkDelete || features.staffTag || features.timeoutDuration || features.voiceDownload) && exports.default && exports.default.prototype)
                     hookExport(exports.default.prototype, "generate", messageRow);
                 return exports;
             case 5207: if (features.platformIndicators || features.userNotif) { presenceStore = exports.default; if (features.userNotif) userNotifSeedStatuses(); } return exports;
@@ -19702,7 +19778,7 @@
             case 13762: return features.gestures ? hookExport(exports, "DoubleTapEmojiEditNudge", hideWhenGestures) : exports;
             case 9738: return features.gestures ? hookExport(exports, "maybeShowDoubleTapReminderToast", (orig, self, args) => enabled("gestures") ? undefined : orig.apply(self, args)) : exports;
             case 12935: return features.gestures ? hookExport(exports, "DoubleTapToReactChatInputBanner", hideWhenGestures) : exports;
-            case 11114: return (features.gestures || features.bulkDelete || features.noDelete) ? hookTapHandlers(exports) : exports;
+            case 11114: return (features.gestures || features.bulkDelete || features.noDelete || features.voiceDownload) ? hookTapHandlers(exports) : exports;
             case 7445: {
                 let actions = exports.default;
                 if (!actions) return exports;

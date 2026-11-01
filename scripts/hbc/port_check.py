@@ -466,6 +466,8 @@ BOOTSTRAP_MODULES = [
     (9990, 'modules/replies/PendingReplyActionCreators.tsx', ['createPendingReply', 'createShallowPendingReply'], 'PendingReplyActionCreators (Reply without pinging)'),
     (13511, 'modules/notifications/NotificationTextUtils.tsx', ['shouldNotify'], 'NotificationTextUtils (Banners in Do Not Disturb)'),
     (13523, 'modules/notifications/native/playInAppMessageSound.tsx', ['playInAppMessageSound'], 'playInAppMessageSound (Banners in Do Not Disturb: no sound)'),
+    (1447, '../discord_common/js/packages/rtn-codegen/js/NativeMediaManagerModule.tsx', ['default'], 'NativeMediaManagerModule (Download voice messages)'),
+    (9976, 'modules/messages/native/snowflake/MessageDataSnowflakeUtils.tsx', ['getNativeSyntheticEventData'], 'MessageDataSnowflakeUtils (Download voice messages)'),
     (5075, 'modules/chat/native/useChatLayout.tsx', ['default', 'getChatLayout'], 'useChatLayout (Full-screen chat in landscape)'),
 ]
 

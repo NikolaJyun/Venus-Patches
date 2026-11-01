@@ -74,7 +74,7 @@ private val runtimeAssets = rawResourcePatch {
             "{picker:$pickerSelected,voice:$voiceSelected,copyBios:$copyBiosSelected," +
                 "favouriteAnything:$favouriteAnythingSelected,freeNitro:$freeNitroSelected," +
                 listOf("noTyping", "quickDelete", "noDelete", "jumpToTop", "hiddenChannels", "pastelize", "platformIndicators", "reviewDB", "readAll", "quests", "badges", "systemFont",
-                    "systemEmoji", "gestures", "validUser", "youBarSettings", "splitMessages", "translate", "userNotif", "accountSwitcher", "appIcons", "nitroThemes", "customThemes", "materialYou", "iconPacks", "messageHighlight", "serverInfo", "serverEdit", "fixEmbeds", "tenorGifs", "hideBlocked", "bulkDelete", "experiments", "cleanChannels", "noHandsfree", "voiceOptions", "anonFiles", "staffTag", "removedAlerts", "fullImages", "hideAnything", "alwaysTrust", "noConfirmPin", "clickableMentions", "quietReplies", "silentLeave", "guildLurk", "compressUploads", "timeoutDuration", "dndBanners", "landscapeFull")
+                    "systemEmoji", "gestures", "validUser", "youBarSettings", "splitMessages", "translate", "userNotif", "accountSwitcher", "appIcons", "nitroThemes", "customThemes", "materialYou", "iconPacks", "messageHighlight", "serverInfo", "serverEdit", "fixEmbeds", "tenorGifs", "hideBlocked", "bulkDelete", "experiments", "cleanChannels", "noHandsfree", "voiceOptions", "anonFiles", "staffTag", "removedAlerts", "fullImages", "hideAnything", "alwaysTrust", "noConfirmPin", "clickableMentions", "quietReplies", "silentLeave", "guildLurk", "compressUploads", "timeoutDuration", "dndBanners", "landscapeFull", "voiceDownload")
                     .joinToString(",") { "$it:${it in additionalSelections}" } + "}"
         )
         asset.writeText(selected)
@@ -346,6 +346,10 @@ val quietReplies = bundledPlugin("quietReplies", "Reply without pinging",
 @Suppress("unused")
 val showTimeoutDuration = bundledPlugin("timeoutDuration", "Show timeout duration",
     "A tag next to timed-out people says how long until they can talk again. Based on ShowTimeoutDuration by Ven.")
+
+@Suppress("unused")
+val voiceDownload = bundledPlugin("voiceDownload", "Download voice messages",
+    "A Download button under each voice message saves it to your phone. Based on VoiceDownload by puv.")
 
 @Suppress("unused")
 val dndBanners = bundledPlugin("dndBanners", "Banners in Do Not Disturb",

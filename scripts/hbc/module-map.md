@@ -36,6 +36,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 1392 | `stores/UserStore.tsx` | default, users, ASSISTANT_WUMPUS_VOICE_USER | UserStore |
 | 1403 | `modules/user/UserStoreUtils.tsx` | isStaffEnv, isStaffEnvRawData, getEnv | UserStoreUtils.isStaffEnv (Unlock Discord experiments) |
 | 1417 | `utils/AvatarUtils.tsx` | default | AvatarUtils |
+| 1447 | `../discord_common/js/packages/rtn-codegen/js/NativeMediaManagerModule.tsx` | default | NativeMediaManagerModule (Download voice messages) |
 | 1498 | `utils/native/ImageUtils.tsx` | default, getMobileOptimizedSrc, getSrcWithWidthAndHeight | ImageUtils (Load full-quality images) |
 | 1505 | `design/components/Navigator/native/useNavigation.native.tsx` | useNavigation, useNativeStackNavigation, useStackNavigation | useStackNavigation |
 | 2001 | `stores/native/AppStateStore.tsx` | default | AppStateStore |
@@ -250,6 +251,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 9851 | `design/components/Icon/native/redesign/generated/StarIcon.tsx` | StarIcon | StarIcon |
 | 9873 | `design/components/Icon/native/redesign/generated/FlagIcon.tsx` | FlagIcon | FlagIcon (Remove anything: Report) |
 | 9880 | `design/components/Icon/native/redesign/generated/BackspaceIcon.tsx` | BackspaceIcon | BackspaceIcon |
+| 9976 | `modules/messages/native/snowflake/MessageDataSnowflakeUtils.tsx` | getNativeSyntheticEventData | MessageDataSnowflakeUtils (Download voice messages) |
 | 9978 | `modules/messages/native/long_press/LongPressMessageActionSheet.tsx` | default | LongPressMessageActionSheet |
 | 9988 | `modules/messages/native/long_press/LongPressMessageActionSheetUtils.tsx` | getContextBarCancelReason, handleEdit, handleCreateThread | LongPressMessageActionSheetUtils |
 | 9990 | `modules/replies/PendingReplyActionCreators.tsx` | createPendingReply, createShallowPendingReply | PendingReplyActionCreators (Reply without pinging) |
