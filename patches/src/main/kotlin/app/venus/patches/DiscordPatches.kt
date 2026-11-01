@@ -74,7 +74,7 @@ private val runtimeAssets = rawResourcePatch {
             "{picker:$pickerSelected,voice:$voiceSelected,copyBios:$copyBiosSelected," +
                 "favouriteAnything:$favouriteAnythingSelected,freeNitro:$freeNitroSelected," +
                 listOf("noTyping", "quickDelete", "noDelete", "jumpToTop", "hiddenChannels", "pastelize", "platformIndicators", "reviewDB", "readAll", "quests", "badges", "systemFont",
-                    "systemEmoji", "gestures", "validUser", "youBarSettings", "splitMessages", "translate", "userNotif", "accountSwitcher", "appIcons", "nitroThemes", "customThemes", "materialYou", "iconPacks", "messageHighlight", "serverInfo", "serverEdit", "fixEmbeds", "tenorGifs", "hideBlocked", "bulkDelete", "experiments", "cleanChannels", "noHandsfree", "voiceOptions", "anonFiles", "staffTag", "removedAlerts", "fullImages", "hideAnything", "alwaysTrust", "noConfirmPin", "clickableMentions", "quietReplies", "silentLeave", "guildLurk", "compressUploads", "timeoutDuration", "dndBanners", "landscapeFull", "voiceDownload", "cloneExpressions", "listenAlong")
+                    "systemEmoji", "gestures", "validUser", "youBarSettings", "splitMessages", "translate", "userNotif", "accountSwitcher", "appIcons", "nitroThemes", "customThemes", "materialYou", "iconPacks", "messageHighlight", "serverInfo", "serverEdit", "fixEmbeds", "tenorGifs", "hideBlocked", "bulkDelete", "experiments", "cleanChannels", "noHandsfree", "voiceOptions", "anonFiles", "staffTag", "removedAlerts", "fullImages", "hideAnything", "alwaysTrust", "noConfirmPin", "clickableMentions", "quietReplies", "silentLeave", "guildLurk", "compressUploads", "timeoutDuration", "dndBanners", "landscapeFull", "voiceDownload", "cloneExpressions", "listenAlong", "silentEdit", "silentDelete", "localEdit")
                     .joinToString(",") { "$it:${it in additionalSelections}" } + "}"
         )
         asset.writeText(selected)
@@ -334,6 +334,18 @@ val clickableMentions = bundledPlugin("clickableMentions", "Tap mentions to open
 @Suppress("unused")
 val silentLeave = bundledPlugin("silentLeave", "Leave group DMs silently",
     "Leave group DMs without the \"left the group\" message. Based on SilentLeave by coder.gg.")
+
+@Suppress("unused")
+val silentEdit = bundledPlugin("silentEdit", "Edit without \"(edited)\"",
+    "Edit a message without the \"(edited)\" tag. Only works while your message is the latest one in the chat: Venus sends the new text as a new message and deletes the old one. Older messages are edited the normal way.")
+
+@Suppress("unused")
+val silentDelete = bundledPlugin("silentDelete", "Delete without a trace",
+    "Blanks your message before deleting it, so message loggers on other clients keep nothing.")
+
+@Suppress("unused")
+val localEdit = bundledPlugin("localEdit", "Edit messages on this phone",
+    "Hold any message and change how it reads to you. Only you see the change.")
 
 @Suppress("unused")
 val guildLurk = bundledPlugin("guildLurk", "Preview servers without joining",
