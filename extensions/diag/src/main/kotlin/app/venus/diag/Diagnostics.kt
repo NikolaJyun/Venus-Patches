@@ -220,6 +220,7 @@ object Diagnostics {
         line(out, "Package", c.packageName)
         line(out, "Installed by", try { installer(c) } catch (_: Throwable) { null })
         line(out, "Process", processName())
+        line(out, "Runs as", (if (Build.VERSION.SDK_INT >= 23 && !Process.is64Bit()) "32-bit" else "64-bit") + " (native libraries in " + c.applicationInfo.nativeLibraryDir + ")")
         line(out, "Crash screen", if (screenOn) "on" else "off")
         section(out, "Device")
         line(out, "Model", Build.MANUFACTURER + " " + Build.MODEL + " (" + Build.DEVICE + ", " + Build.PRODUCT + ")")
@@ -238,6 +239,12 @@ object Diagnostics {
             val m = c.resources.displayMetrics
             val conf = c.resources.configuration
             line(out, "Density", m.density.toString() + " (" + m.densityDpi + " dpi)" + (if (m.density != Math.round(m.density).toFloat()) ", not a whole number" else ""))
+            // Android's Display size setting changes the density from the panel's own: a Poco F3 is 440 dpi, "larger" makes it 461.
+            if (Build.VERSION.SDK_INT >= 24) {
+                val stable = android.util.DisplayMetrics.DENSITY_DEVICE_STABLE
+                line(out, "Display size", if (stable == m.densityDpi) "default (" + stable + " dpi)"
+                    else "changed: " + m.densityDpi + " dpi instead of the phone's " + stable + " dpi (" + (if (m.densityDpi > stable) "larger" else "smaller") + ")")
+            }
             line(out, "Font scale", conf.fontScale.toString() + " (scaled density " + m.scaledDensity + ")")
             if (Build.VERSION.SDK_INT >= 31) line(out, "Bold text adjustment", conf.fontWeightAdjustment)
             line(out, "Screen", m.widthPixels.toString() + " x " + m.heightPixels + " px, " + conf.screenWidthDp + " x " + conf.screenHeightDp + " dp, smallest " + conf.smallestScreenWidthDp + " dp")
@@ -311,6 +318,94 @@ object Diagnostics {
         return run(args.toArray(arrayOfNulls<String>(0)), 2 * 1024 * 1024)
     }
 
+    /**
+     * React Native logs the same SoftException with a 70-line stack trace thousands of times. Those copies filled the
+     * report and pushed the minutes around a problem out of it ("82 KB left out"). A stack trace already shown once
+     * becomes one line with its time, and a run of identical lines becomes one line with a count.
+     */
+    private fun squeeze(log: String): String {
+        if (log.length == 0) return log
+        val text = log as java.lang.String
+        val lines = java.util.ArrayList<String>()
+        var from = 0
+        while (from < text.length) {
+            var to = text.indexOf('\n'.code, from)
+            if (to < 0) to = text.length
+            lines.add(text.substring(from, to))
+            from = to + 1
+        }
+        val out = java.lang.StringBuilder(log.length / 2)
+        val seen = java.util.HashMap<String, String>()
+        var lastMessage = ""
+        var repeats = 0
+        var i = 0
+        while (i < lines.size) {
+            val first = lines.get(i)
+            var end = i + 1
+            while (end < lines.size && isFrame(lines.get(end))) end++
+            if (end - i > 2) {
+                val sig = java.lang.StringBuilder()
+                var k = i
+                while (k < end) { sig.append(shape(message(lines.get(k)))).append('\n'); k++ }
+                val key = sig.toString()
+                val firstSeen = seen.get(key)
+                if (firstSeen != null) {
+                    if (repeats > 0) { out.append("    (the line above ").append(repeats).append(" more times)\n"); repeats = 0 }
+                    out.append(prefix(first)).append(firstLine(message(first))).append("  (same ").append(end - i - 1)
+                        .append("-line stack trace as at ").append(firstSeen).append(")\n")
+                    lastMessage = ""
+                    i = end
+                    continue
+                }
+                seen.put(key, prefix(first).trim())
+            }
+            var k = i
+            while (k < end) {
+                val line = lines.get(k)
+                val msg = shape(message(line))
+                if (msg.length > 0 && msg == lastMessage) repeats++
+                else {
+                    if (repeats > 0) { out.append("    (the line above ").append(repeats).append(" more times)\n"); repeats = 0 }
+                    out.append(line).append('\n')
+                    lastMessage = msg
+                }
+                k++
+            }
+            i = end
+        }
+        if (repeats > 0) out.append("    (the line above ").append(repeats).append(" more times)\n")
+        return out.toString()
+    }
+
+    /** "11-01 05:05:48.221 25764 25764 E Tag: message" -> "message" (the whole line when it isn't in that form). */
+    private fun message(line: String): String {
+        val at = (line as java.lang.String).indexOf(": ", 31)
+        return if (at < 0) line else line.substring(at + 2)
+    }
+
+    private fun prefix(line: String): String {
+        val at = (line as java.lang.String).indexOf(": ", 31)
+        return if (at < 0 || line.length < 18) "" else line.substring(6, 18) + " " + line.substring(31, at + 2)
+    }
+
+    private fun isFrame(line: String): Boolean {
+        val m = message(line) as java.lang.String
+        return m.startsWith("\tat ") || m.startsWith("\t... ") || m.startsWith("Caused by: ")
+    }
+
+    /** The same text with every number as #, so a trace for view tag 4268 and one for 9844 count as the same. */
+    private fun shape(text: String): String {
+        val out = java.lang.StringBuilder(text.length)
+        var digits = false
+        var i = 0
+        while (i < text.length) {
+            val ch = text[i]
+            if (ch >= '0' && ch <= '9') { if (!digits) out.append('#'); digits = true } else { out.append(ch); digits = false }
+            i++
+        }
+        return out.toString()
+    }
+
     private fun run(command: Array<out String?>, limit: Int): String = try {
         val p = Runtime.getRuntime().exec(command)
         val text = readAll(p.inputStream, limit)
@@ -329,7 +424,7 @@ object Diagnostics {
         for (key in PROPS) {
             val at = all.indexOf("[" + key + "]: [")
             if (at < 0) continue
-            val start = at + key.length + 6
+            val start = at + key.length + 5
             val end = all.indexOf("]", start)
             if (end > start) out.append(key).append(": ").append(all.substring(start, end)).append('\n')
         }
@@ -498,8 +593,8 @@ object Diagnostics {
         header(out, "Troubleshooting report")
         details(out)
         threads(out, null)
-        section(out, "Logcat (this process, last 3000 lines)")
-        val log = logcat(3000, true)
+        section(out, "Logcat (this process, last 5000 lines, repeated stack traces shortened)")
+        val log = squeeze(logcat(5000, true))
         out.append(if (log.length > 0) log else "(unavailable)\n")
         return cap(out.toString(), MAX_REPORT)
     }
@@ -801,6 +896,9 @@ object Diagnostics {
                 val file = File(folder(c), LAST)
                 promise.resolve(try { if (file.isFile) read(file) else "" } catch (_: Throwable) { "" })
             }
+            "views" -> main.post(object : Runnable { override fun run() {
+                try { promise.resolve(views(argument ?: "")) } catch (error: Throwable) { promise.reject("VENUS_DIAG", error.toString()) }
+            } })
             "forget" -> { try { File(folder(c), LAST).delete() } catch (_: Throwable) { }; promise.resolve("ok") }
             "screen:on", "screen:off" -> { screenOn = action == "screen:on"; promise.resolve("ok") }
             "strings" -> {
@@ -821,6 +919,76 @@ object Diagnostics {
         }
         return true
     }
+
+    // ---------------------------------------------------------------- native views
+
+    /**
+     * The Android views behind something Venus drew, found by its accessibility label (Read all's pill sets one), for
+     * the debug log. React can reserve room for a view that never reaches the screen (Fabric's "Unable to find viewState
+     * for tag"); this says whether it exists natively, whether it's visible, its real colors and every parent that could
+     * hide or clip it.
+     */
+    private fun views(label: String): String {
+        if (label.length == 0) return "no label given"
+        val activity = current?.get() ?: return "no screen open"
+        val root = activity.window?.decorView ?: return "no window"
+        val found = java.util.ArrayList<View>()
+        val texts = java.util.ArrayList<View>()
+        find(root, label, found, texts, 0)
+        val out = java.lang.StringBuilder()
+        out.append(found.size).append(" native view(s) labelled \"").append(label).append("\", ").append(texts.size).append(" text view(s) showing it")
+        var n = 0
+        for (v in found) { if (n++ >= 3) break; out.append("\n  labelled: "); describe(out, v); ancestors(out, v) }
+        n = 0
+        for (v in texts) { if (n++ >= 3) break; out.append("\n  text: "); describe(out, v) }
+        return out.toString()
+    }
+
+    private fun find(v: View, label: String, found: java.util.ArrayList<View>, texts: java.util.ArrayList<View>, depth: Int) {
+        if (depth > 120 || found.size > 8) return
+        val d = v.contentDescription
+        if (d != null && (d.toString() as java.lang.String).indexOf(label) >= 0) found.add(v)
+        if (v is TextView) { val t = v.text; if (t != null && (t.toString() as java.lang.String).equals(label)) texts.add(v) }
+        if (v is ViewGroup) { var i = 0; while (i < v.childCount) { val child = v.getChildAt(i); if (child != null) find(child, label, found, texts, depth + 1); i++ } }
+    }
+
+    private fun describe(out: java.lang.StringBuilder, v: View) {
+        val at = IntArray(2)
+        try { v.getLocationOnScreen(at) } catch (_: Throwable) { }
+        val rect = android.graphics.Rect()
+        val visible = try { v.getGlobalVisibleRect(rect) } catch (_: Throwable) { false }
+        out.append(v.javaClass.name).append(" ").append(visibility(v.visibility)).append(" alpha ").append(v.alpha)
+            .append(if (v.isShown) " shown" else " NOT shown").append(if (v.isAttachedToWindow) "" else " DETACHED")
+            .append(", ").append(v.width).append("x").append(v.height).append(" px at ").append(at[0]).append(",").append(at[1])
+            .append(", on screen ").append(if (visible) rect.toShortString() else "NOWHERE")
+        if (v.translationX != 0f || v.translationY != 0f) out.append(", moved ").append(v.translationX).append(",").append(v.translationY)
+        if (v.scaleX != 1f || v.scaleY != 1f) out.append(", scale ").append(v.scaleX).append("x").append(v.scaleY)
+        if (Build.VERSION.SDK_INT >= 18 && v.clipBounds != null) out.append(", clipped to ").append(v.clipBounds.toShortString())
+        if (v.willNotDraw()) out.append(", draws nothing itself")
+        val bg = v.background
+        out.append(", background ").append(if (bg == null) "none" else if (bg is ColorDrawable) "#" + Integer.toHexString(bg.color) else bg.javaClass.simpleName + " alpha " + bg.alpha)
+        if (v is TextView) out.append(", text color #").append(Integer.toHexString(v.currentTextColor)).append(", ").append(v.textSize).append(" px, ")
+            .append(v.layout?.lineCount ?: -1).append(" line(s)")
+        if (v is ViewGroup) out.append(", ").append(v.childCount).append(" children")
+    }
+
+    private fun ancestors(out: java.lang.StringBuilder, v: View) {
+        var p = v.parent
+        var depth = 0
+        while (p is View && depth < 14) {
+            val g = p as View
+            out.append("\n    in ").append(g.javaClass.simpleName).append(" ").append(visibility(g.visibility)).append(" alpha ").append(g.alpha)
+                .append(", ").append(g.width).append("x").append(g.height).append(" px")
+            if (g.translationX != 0f || g.translationY != 0f) out.append(", moved ").append(g.translationX).append(",").append(g.translationY)
+            if (g.scrollX != 0 || g.scrollY != 0) out.append(", scrolled ").append(g.scrollX).append(",").append(g.scrollY)
+            if (g is ViewGroup && g.clipChildren) out.append(", clips children")
+            if (Build.VERSION.SDK_INT >= 18 && g.clipBounds != null) out.append(", clipped to ").append(g.clipBounds.toShortString())
+            p = g.parent
+            depth++
+        }
+    }
+
+    private fun visibility(value: Int): String = if (value == View.VISIBLE) "visible" else if (value == View.INVISIBLE) "INVISIBLE" else "GONE"
 
     /** What the crash screen looks like, for "Preview" when nothing has crashed yet. Nothing is thrown. */
     private fun sampleReport(): String {
