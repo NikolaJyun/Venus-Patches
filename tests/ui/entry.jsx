@@ -126,7 +126,7 @@ function colorTables() {
   modules[591] = { _private: { RawColors: D.tables.raw } };
   modules[589] = { _private: { SemanticColors: D.tables.sem } };
   modules[590] = { _private: { SemanticColorExperiments: JSON.parse(JSON.stringify(d.exp || {})) } };
-  modules[1207] = { default: store({ emitChange() { rerender(); } }) };
+  modules[1207] = { default: store({ theme: D.themeName, emitChange() { rerender(); } }) };
 }
 function boot() {
   colorTables();

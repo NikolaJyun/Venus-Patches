@@ -28,6 +28,8 @@
 //   scene=removeHeaders  the Messages tab header and a server's channel list header, laid out from the heights Discord measures
 //   scene=removeMessage  your message's hold menu: quick reactions and every row, with Translate and Select Messages added by Venus
 //   scene=removeGuild  the server menu: Community Server pill, Boost / Invite / Notifications, its rows and switches, Server Emoji
+//   scene=chatAdditions  a server chat with what Venus adds to messages: Show timeout duration's tag on Sam (timed out for 2h 14m)
+//                      and Download voice messages' button under a voice message, drawn from the real row hook (RowGenerator 8013)
 //   scene=longEdit     Send long messages: saving an edit past Discord's limit (the alert that explains why it wasn't sent)
 // Edge cases: friends=0 (none of your friends are in Game Night), owner=me (you own it), desc=0 (no description).
 // Each scene turns on the features it shows (SCENE_SETTINGS below), so scene=serverInfo needs no on=; set= still wins
@@ -52,6 +54,7 @@ const guild = { id: snowflake(now - 3.2 * 365 * DAY), name: "Game Night", icon: 
   memberCount: 1284, premiumSubscriberCount: 9, premiumTier: 2, ownerId: q.get("owner") === "me" ? "123456789012345678" : allPeople[0].id, vanityURLCode: "gamenight",
   verificationLevel: 2, preferredLocale: "en-US", features: new Set(["COMMUNITY"]) };
 const guilds = [guild, { id: "1100000000000000002", name: "Art Room", icon: null }, { id: "1100000000000000003", name: "Work Devs", icon: null }];
+const TIMEOUT_UNTIL = new Date(now + (2 * 60 + 14) * 60000 - 30000).toISOString();
 const chan = n => Array.from({ length: n }, (_, i) => ({ channel: { id: String(i) } }));
 
 // The saved settings each scene starts from: the features it draws, plus the options its description names.
@@ -61,11 +64,12 @@ export const SCENE_SETTINGS = {
   youBar: { youBarSettings: true, accountSwitcher: true }, translateBar: { translate: true, translateMode: "manual" },
   messageMenu: { translate: true }, bulkDelete: { bulkDelete: true }, longMessageFailed: { splitMessages: true }, longEdit: { splitMessages: true },
   removeMode: { hideAnything: true }, removeProfile: { hideAnything: true }, removeMenu: { hideAnything: true },
+  chatAdditions: { timeoutDuration: true, voiceDownload: true },
   removeHeaders: { hideAnything: true }, removeGuild: { hideAnything: true }, removeMessage: { hideAnything: true, translate: true, bulkDelete: true },
 };
 
 // The stand-in modules: Discord's stores the sheet reads, its sheets, and the two guild-bar modules Venus hooks.
-export const hooked = [1392, 5207, 17433, 2090, 1417, 17439, 14101, 1087, 2068, 4845, 1114, 17538, 10692, 5532, 9978, 13759, 14995, 7445, 9683,
+export const hooked = [8013, 1392, 5207, 17433, 2090, 1417, 17439, 14101, 1087, 2068, 4845, 1114, 17538, 10692, 5532, 9978, 13759, 14995, 7445, 9683,
   15590, 17157, 13780, 14204, 9419, 12892, 12897, 12901, 12909, 12908,
   14015, 15046, 10858, 14197, 8805, 11678, 11679, 10939, 7158, 14182, 17156, 17263, 12942, 14988, 14994, 14925, 14998];
 let host = null; // the Scene, once drawn: shows and hides sheets
@@ -83,7 +87,7 @@ export function modules(store, me) {
     5207: { default: store({ getStatus: id => (allPeople.find(p => p.id === id) || {}).status || "offline" }) },
     2090: { default: store({ getGuild: id => guilds.find(g => g.id === id) || null, getGuilds: () => Object.fromEntries(guilds.map(g => [g.id, g])) }) },
     5116: { default: store({ getMemberCount: () => 1284, getOnlineCount: () => 312 }) },
-    2128: { default: store({ getMember: (g, id) => { const p = allPeople.find(x => x.id === id); return p && id !== allPeople[2].id ? { nick: p.nick } : null; },
+    2128: { default: store({ getMember: (g, id) => { const p = allPeople.find(x => x.id === id); return p && id !== allPeople[2].id ? Object.assign({ nick: p.nick }, id === allPeople[1].id ? { communicationDisabledUntil: TIMEOUT_UNTIL } : null) : null; },
       getSelfMemberJoinedAt: () => new Date(now - 400 * DAY) }) },
     2122: { default: store({ getNumRoles: () => 10 }) },
     4843: { default: store({ getChannels: () => ({ SELECTABLE: chan(12), VOCAL: chan(3) }) }) },
@@ -126,6 +130,9 @@ export function modules(store, me) {
     // useChatBottomManagerUIStore: the message bar's measured height, which the selection bar fills.
     9683: { useBestActiveChatInputContainerHeight: () => COMPOSER, useChatInputContainerHeight: () => COMPOSER, useSmallSuggestionBarHeight: () => 0 },
     // LongPressMessageActionSheet: a message's hold menu, Discord's rows that Venus adds Translate after.
+    // RowGenerator: generate(row) gives the message as the native chat gets it (createMessageContent's fields).
+    8013: { default: class RowGenerator { generate(row) { const m = row.message; return { message: { id: m.id, channelId: m.channel_id, guildId: GUILD,
+      authorId: m.author.id, username: m.author.username, content: m.content } }; } } },
     9978: { default: MessageMenu }, 13759: { default: EmojiRow },
     // GuildActionSheetJoinRequestRow: the server sheet's last row, which Venus turns into its Reviews row.
     14995: { default: () => null },
@@ -258,6 +265,58 @@ function Chat({ defined }) {
           <D.Text variant="text-md/medium" color="text-muted">Message #general</D.Text></RN.View>
       </RN.View>
     </Wrapper>
+  </RN.View>;
+}
+// What Venus adds to chat rows: each stand-in message goes through the real runtime's row hook (8013), and the row is drawn
+// from what comes back, the way the native chat draws Message: the tag pill (tagText and colors) after the name, and the
+// call-to-action button (ctaButton) under the content.
+const ADDITIONS = [
+  { id: "11", channel_id: CHAT, content: "Did anyone save the clip from last night?", author: { id: allPeople[0].id, username: "Alex" }, color: "#3ba55c", time: "4:01 PM" },
+  { id: "12", channel_id: CHAT, content: "", flags: 8192, attachments: [{ url: "https://cdn.discordapp.com/attachments/1/2/voice-message.ogg", filename: "voice-message.ogg", content_type: "audio/ogg", duration_secs: 14 }],
+    author: { id: allPeople[0].id, username: "Alex" }, color: "#3ba55c", time: "4:01 PM", voice: true },
+  { id: "13", channel_id: CHAT, content: "I can't talk right now, I'll explain later", author: { id: allPeople[1].id, username: "Sam" }, color: "#eb459e", time: "4:03 PM" },
+  { id: "14", channel_id: CHAT, content: "lol what did you do", author: { id: allPeople[2].id, username: "Jordan" }, color: "#f0b232", time: "4:04 PM" },
+];
+const argb = n => typeof n === "number" ? "rgba(" + [(n >> 16) & 255, (n >> 8) & 255, n & 255].join(",") + "," + (((n >>> 24) & 255) / 255).toFixed(3) + ")" : undefined;
+function Waveform() {
+  const bars = [4, 9, 14, 8, 18, 12, 6, 16, 20, 10, 7, 15, 11, 5, 13, 17, 9, 6, 12, 8, 4, 10, 14, 7, 5, 9, 6, 4];
+  return <RN.View style={{ flexDirection: "row", alignItems: "center", gap: 6, alignSelf: "flex-start", paddingVertical: 8, paddingLeft: 8, paddingRight: 14, borderRadius: 24,
+    backgroundColor: D.tok("BACKGROUND_SURFACE_HIGH"), marginTop: 4 }}>
+    <RN.View style={{ width: 32, height: 32, borderRadius: 16, backgroundColor: D.tok("BACKGROUND_BRAND"), alignItems: "center", justifyContent: "center" }}>
+      <RN.View style={{ marginLeft: 3, width: 0, height: 0, borderTopWidth: 6, borderBottomWidth: 6, borderLeftWidth: 10, borderTopColor: "transparent", borderBottomColor: "transparent", borderLeftColor: "#fff" }} /></RN.View>
+    <RN.View style={{ flexDirection: "row", alignItems: "center", gap: 2, height: 22 }}>
+      {bars.map((h, i) => <RN.View key={i} style={{ width: 3, height: h, borderRadius: 2, backgroundColor: D.tok("INTERACTIVE_TEXT_DEFAULT"), opacity: 0.75 }} />)}</RN.View>
+    <D.Text variant="text-sm/medium" color="text-muted" style={{ marginLeft: 4 }}>0:14</D.Text>
+  </RN.View>;
+}
+function AdditionRow({ source, message, first }) {
+  const cta = message.ctaButton;
+  return <RN.View style={{ flexDirection: "row", gap: 12, paddingHorizontal: 16, paddingTop: first ? 14 : 2 }}>
+    {first ? <RN.View style={{ width: 40, height: 40, borderRadius: 20, backgroundColor: source.color, alignItems: "center", justifyContent: "center" }}>
+      <D.Text variant="text-md/bold" style={{ color: "#fff" }}>{source.author.username[0]}</D.Text></RN.View> : <RN.View style={{ width: 40 }} />}
+    <RN.View style={{ flex: 1 }}>
+      {first ? <RN.View style={{ flexDirection: "row", alignItems: "center", gap: 6, flexWrap: "wrap" }}>
+        <D.Text variant="text-md/semibold" color="text-strong">{source.author.username}</D.Text>
+        {message.tagText ? <RN.View accessibilityLabel={message.tagAccessibilityLabel} style={{ paddingHorizontal: 5, height: 17, borderRadius: 4, justifyContent: "center", backgroundColor: argb(message.tagBackgroundColor) }}>
+          <D.Text variant="text-xxs/bold" style={{ color: argb(message.tagTextColor) }}>{message.tagText}</D.Text></RN.View> : null}
+        <D.Text variant="text-xs/medium" color="text-muted">Today at {source.time}</D.Text>
+      </RN.View> : null}
+      {source.voice ? <Waveform /> : <D.Text variant="text-md/normal" color="text-default">{source.content}</D.Text>}
+      {cta ? <RN.Pressable accessibilityRole="button" style={{ alignSelf: "flex-start", marginTop: 8, height: 32, paddingHorizontal: 14, borderRadius: 16, flexDirection: "row", alignItems: "center", gap: 6,
+        backgroundColor: argb(cta.backgroundColor) }}>
+        <D.Text variant="text-sm/semibold" style={{ color: argb(cta.textColor) }}>{cta.text}</D.Text></RN.Pressable> : null}
+    </RN.View>
+  </RN.View>;
+}
+function ChatAdditions({ defined }) {
+  const Generator = defined[8013].exports.default, gen = new Generator();
+  const rows = ADDITIONS.map(m => ({ source: m, message: gen.generate({ rowType: 1, message: m }).message }));
+  return <RN.View style={{ width: D.W, minHeight: "100vh", backgroundColor: D.tok("BACKGROUND_BASE_LOWER") }}>
+    <RN.View style={{ height: 52, flexDirection: "row", alignItems: "center", gap: 8, paddingHorizontal: 16, borderBottomWidth: 1, borderColor: D.tok("BORDER_SUBTLE") }}>
+      {React.createElement(D.makeIcon("HashmarkIcon"), { size: "sm", color: D.tok("CHANNEL_ICON") })}<D.Text variant="text-md/bold" color="text-strong">general</D.Text></RN.View>
+    <RN.View style={{ paddingBottom: 16 }}>
+      {rows.map((r, i) => <AdditionRow key={r.source.id} source={r.source} message={r.message} first={i === 0 || rows[i - 1].source.author.id !== r.source.author.id} />)}
+    </RN.View>
   </RN.View>;
 }
 function FormRow(p) {
@@ -541,6 +600,7 @@ export function Scene({ name, defined, registry }) {
       <ProfileScreen defined={defined} />}</RemoveScene>;
   if (name === "reviews") return <Profile defined={defined} />;
   if (name === "youBar") return <YouBar defined={defined} />;
+  if (name === "chatAdditions") return <ChatAdditions defined={defined} />;
   if (name === "translateBar" || name === "bulkDelete" && !sheets.length) return <Chat defined={defined} />;
   if (name === "settings") return <SettingsScreen defined={defined} registry={registry} />;
   const top = sheets[sheets.length - 1];
