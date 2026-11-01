@@ -139,6 +139,40 @@
       "options": []
     },
     {
+      "name": "Banners in Do Not Disturb",
+      "description": "New messages still pop up at the top while you're on Do Not Disturb, without a sound.",
+      "default": true,
+      "category": "Features",
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.discord",
+          "name": "Discord",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5865F2",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "351.11 - Stable",
+              "versionCodes": {
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
+              },
+              "isExperimental": false,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Bring back Tenor GIFs",
       "description": "Tenor GIFs show in Discord's GIF picker again, mixed with Discord's own or on their own. Inspired by BringBackTenor by Livie.",
       "default": true,
@@ -277,6 +311,40 @@
     {
       "name": "Complete badges automatically",
       "description": "Plays real PC games in the background, up to 3 at once, toward your Hours Played and Unique Games Played badges.",
+      "default": true,
+      "category": "Features",
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.discord",
+          "name": "Discord",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5865F2",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "351.11 - Stable",
+              "versionCodes": {
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
+              },
+              "isExperimental": false,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Compress big files",
+      "description": "Photos, videos and audio over Discord's file size limit are made smaller to fit as you send them, instead of being refused.",
       "default": true,
       "category": "Features",
       "dependencies": [
@@ -663,6 +731,40 @@
       "options": []
     },
     {
+      "name": "Download voice messages",
+      "description": "A Download button under each voice message saves it to your phone. Based on VoiceDownload by puv.",
+      "default": true,
+      "category": "Features",
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.discord",
+          "name": "Discord",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5865F2",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "351.11 - Stable",
+              "versionCodes": {
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
+              },
+              "isExperimental": false,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
       "name": "Edit servers locally",
       "description": "Give any server your own name and icon. Only you see them. Based on EditServers by mwittrien.",
       "default": true,
@@ -767,6 +869,40 @@
     {
       "name": "Fix unknown mentions",
       "description": "@unknown-user mentions are looked up and show the person's name. Based on ValidUser by fshin, o.oer and kmmiio99o.",
+      "default": true,
+      "category": "Features",
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.discord",
+          "name": "Discord",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5865F2",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "351.11 - Stable",
+              "versionCodes": {
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
+              },
+              "isExperimental": false,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Full-screen chat in landscape",
+      "description": "Chat fills the screen sideways. Swipe from the left for servers and channels.",
       "default": true,
       "category": "Features",
       "dependencies": [
@@ -1550,6 +1686,40 @@
     {
       "name": "Show owner and mod tags",
       "description": "Shows an Owner, Admin, Manager or Mod tag next to people's names in chat. Based on StaffTag by mwittrien.",
+      "default": true,
+      "category": "Features",
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.discord",
+          "name": "Discord",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5865F2",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "351.11 - Stable",
+              "versionCodes": {
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
+              },
+              "isExperimental": false,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Show timeout duration",
+      "description": "A tag next to timed-out people says how long until they can talk again. Based on ShowTimeoutDuration by Ven.",
       "default": true,
       "category": "Features",
       "dependencies": [
