@@ -97,6 +97,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 5534 | `modules/messages/MessageRecordUtils.tsx` | createMessageRecord, updateServerMessage, updateMessageRecord | MessageRecordUtils |
 | 5888 | `modules/messages/isMessageMentioned.tsx` | isRawMessageMentioned, isMentioned, mention_roles | isMessageMentioned (Message highlights: role mentions) |
 | 6015 | `stores/SelfPresenceStore.tsx` | default | SelfPresenceStore (Badge Completer) |
+| 6017 | `stores/ConnectedAccountsStore.tsx` | default | ConnectedAccountsStore (Listen along) |
 | 6145 | `actions/SelectedChannelActionCreators.tsx` | default | SelectedChannelActionCreators (Voice channel options) |
 | 6186 | `actions/AuthenticationActionCreators.tsx` | default | AuthenticationActionCreators (Account switcher) |
 | 6188 | `stores/ConsentStore.tsx` | default | ConsentStore (Badge Completer) |
@@ -350,7 +351,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 13123 | `design/components/Icon/native/redesign/generated/ChatWarningIcon.tsx` | ChatWarningIcon | ChatWarningIcon |
 | 13151 | `components_native/chat/ChatBeginningRow.tsx` | default | ChatBeginningRow (Remove anything: bot DM Mute / Deauthorize / Report Spam) |
 | 13212 | `design/components/Icon/native/redesign/generated/SoundboardIcon.tsx` | SoundboardIcon | SoundboardIcon (Voice channel options) |
-| 13214 | `design/components/Icon/native/redesign/generated/HeadphonesIcon.tsx` | HeadphonesIcon | HeadphonesIcon (Keep Bluetooth audio clear in calls) |
+| 13214 | `design/components/Icon/native/redesign/generated/HeadphonesIcon.tsx` | HeadphonesIcon | HeadphonesIcon (Keep Bluetooth audio clear in calls, Listen along) |
 | 13217 | `design/components/Icon/native/redesign/generated/StickerIcon.tsx` | StickerIcon | StickerIcon |
 | 13268 | `design/components/Icon/native/redesign/generated/BoostTier1Icon.tsx` | BoostTier1Icon | BoostTier1Icon |
 | 13422 | `modules/accept_invite/native/InviteDetails.tsx` | ACCEPT, DECLINE, default | InviteDetails (Preview servers without joining: Preview button on the join screen) |
@@ -372,6 +373,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 14015 | `modules/user_profile/native/UserProfileOverflowMenu.tsx` | default | UserProfileOverflowMenu (Remove anything: profile menu items) |
 | 14059 | `design/components/Icon/native/redesign/generated/NewUserIcon.tsx` | NewUserIcon | NewUserIcon (Create a new account) |
 | 14076 | `modules/user_profile/native/UserProfileActivityVoiceChannelUsers.tsx` | default | UserProfileActivityVoiceChannelUsers |
+| 14082 | `modules/user_profile/native/UserProfileActivityButtons.tsx` | PlayOnSpotifyButton | UserProfileActivityButtons (Listen along) |
 | 14101 | `modules/user_profile/native/UserProfileNote.tsx` | default | UserProfileNote |
 | 14150 | `design/components/Icon/native/redesign/generated/QuoteIcon.tsx` | QuoteIcon | QuoteIcon |
 | 14182 | `modules/user_profile/native/UserProfileConnections.tsx` | UserProfileAccountConnectionsCard | UserProfileConnections (Remove anything: Connections) |
@@ -390,6 +392,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 14998 | `modules/guild_action_sheet/native/components/GuildActionSheetEmojiSection.tsx` | default | GuildActionSheetEmojiSection (Remove anything: Server Emoji) |
 | 15046 | `design/components/ContextMenu/native/ContextMenuItem.native.tsx` | ContextMenuItem | ContextMenuItem (Remove anything: marks profile menu items) |
 | 15048 | `design/components/ContextMenu/native/ContextMenuPopout.native.tsx` | ContextMenuPopout | ContextMenuPopout |
+| 15065 | `design/components/Slider/native/Slider.native.tsx` | Slider | Slider (Listen along) |
 | 15066 | `modules/premium/ProductCatalog.tsx` | ANIMATED_EMOJIS, EMOJIS_EVERYWHERE, STICKERS_EVERYWHERE, CLIENT_THEMES | EmojiPermissions |
 | 15185 | `design/void/Status/native/Status.tsx` | default, StatusWithTyping | Status |
 | 15471 | `modules/notifications/native/NotificationTokenManager.tsx` | default | NotificationTokenManager |
