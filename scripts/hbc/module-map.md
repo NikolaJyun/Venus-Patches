@@ -63,7 +63,6 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 5032 | `modules/client_themes/ClientThemesBackgroundStore.tsx` | default | ClientThemesBackgroundStore (Unlock Nitro themes) |
 | 5072 | `modules/main_tabs_v2/helpers/NavigationRouteUtils.native.tsx` | navigateToChannel, navigateToRootTab, pushModal, popModal | ModalAPI |
 | 5073 | `modules/main_tabs_v2/RootNavigationRef.native.tsx` | getRootNavigationRef | RootNavigationRef |
-| 5075 | `modules/chat/native/useChatLayout.tsx` | default, getChatLayout | useChatLayout (Full-screen chat in landscape) |
 | 5112 | `modules/experiments/ExperimentStore.tsx` | default, registerExperiment | ExperimentStore (Unlock Discord experiments) |
 | 5116 | `stores/GuildMemberCountStore.tsx` | default, getMemberCount, getOnlineCount | GuildMemberCountStore |
 | 5131 | `design/components/Icon/native/redesign/generated/UserPlusIcon.tsx` | UserPlusIcon | UserPlusIcon |
