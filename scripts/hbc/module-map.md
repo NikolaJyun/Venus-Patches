@@ -183,6 +183,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 8056 | `lib/uploader/native/CloudUploaderUtils.tsx` | default, prepareMessagePayload, getUploadPayload | CloudUploaderUtils (Anonymous file names) |
 | 8254 | `modules/double_tap_to_react/native/DoubleTapToReactUtils.tsx` | getFallbackDoubleTapDisambiguatedEmoji, reactionEmojiFromSettingsValue, disambiguatedEmojiFromSettingsValue | DoubleTapToReactUtils |
 | 8261 | `modules/replies/canReplyToMessage.tsx` | useCanReplyToMessage, canReplyToMessage | canReplyToMessage |
+| 8294 | `utils/GuildBoostingUtils.tsx` | getMaxEmojiSlots, getTotalStickerCountForTier | GuildBoostingUtils (Clone emojis and stickers: free slots) |
 | 8404 | `design/components/Icon/native/redesign/generated/XNeutralIcon.tsx` | XNeutralIcon | XNeutralIcon (Fix link previews) |
 | 8406 | `design/components/Icon/native/redesign/generated/FacebookNeutralIcon.tsx` | FacebookNeutralIcon | FacebookNeutralIcon (Fix link previews) |
 | 8408 | `design/components/Icon/native/redesign/generated/InstagramNeutralIcon.tsx` | InstagramNeutralIcon | InstagramNeutralIcon (Fix link previews) |
@@ -249,6 +250,8 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 9709 | `design/components/Icon/native/redesign/generated/BoostGemIcon.tsx` | BoostGemIcon | BoostGemIcon (Remove anything: Boost button in the server menu) |
 | 9738 | `modules/double_tap_to_react/native/DoubleTapReminderToast.tsx` | maybeShowDoubleTapReminderToast | DoubleTapReminderToast |
 | 9767 | `modules/app_icons/native/AppIconConstants.tsx` | getDefaultIcon, getOfficialAlternateIcons, getLimitedAlternateIcons | AppIconConstants |
+| 9839 | `modules/messages/native/emoji/MessageEmojiActionSheet.tsx` | default | MessageEmojiActionSheet (Clone emojis and stickers) |
+| 9845 | `actions/EmojiActionCreators.tsx` | uploadEmoji | EmojiActionCreators (Clone emojis and stickers) |
 | 9851 | `design/components/Icon/native/redesign/generated/StarIcon.tsx` | StarIcon | StarIcon |
 | 9873 | `design/components/Icon/native/redesign/generated/FlagIcon.tsx` | FlagIcon | FlagIcon (Remove anything: Report) |
 | 9880 | `design/components/Icon/native/redesign/generated/BackspaceIcon.tsx` | BackspaceIcon | BackspaceIcon |
@@ -262,6 +265,8 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 10036 | `modules/gif_picker/GifProvider.tsx` | GIF_PROVIDER, GIF_PROVIDER_EMBED_NAME, getSearchPlaceholder | GifProvider (Bring back Tenor GIFs) |
 | 10038 | `modules/gif_picker/native/GIFPickerUtils.tsx` | GIF_HEADER_HEIGHT, useFavoriteGIFsMobile, GIF_PICKER_ITEM_ESIMTATED_HEIGHT | useFavoriteGIFsMobile |
 | 10051 | `design/components/Icon/native/redesign/generated/GifIcon.tsx` | GifIcon | GifIcon (Bring back Tenor GIFs) |
+| 10058 | `modules/stickers/StickersActionCreators.tsx` | createGuildSticker | StickersActionCreators (Clone emojis and stickers) |
+| 10078 | `modules/stickers/native/StickerDetailActionSheet.tsx` | default | StickerDetailActionSheet (Clone emojis and stickers) |
 | 10081 | `modules/premium/components/native/NitroUpsellButton.tsx` | default | NitroUpsellButton |
 | 10316 | `design/components/Icon/native/redesign/generated/IdIcon.tsx` | IdIcon | IdIcon |
 | 10325 | `design/components/Icon/native/redesign/generated/PollsIcon.tsx` | PollsIcon | PollsIcon (Hide extra buttons) |
