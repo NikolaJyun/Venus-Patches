@@ -30,6 +30,8 @@
 //   scene=removeGuild  the server menu: Community Server pill, Boost / Invite / Notifications, its rows and switches, Server Emoji
 //   scene=chatAdditions  a server chat with what Venus adds to messages: Show timeout duration's tag on Sam (timed out for 2h 14m)
 //                      and Download voice messages' button under a voice message, drawn from the real row hook (RowGenerator 8013)
+//   scene=cloneEmoji   Discord's sheet for a custom emoji tapped in chat, with Clone emojis and stickers' Add to a server button;
+//                      add tap=Add to a server for the server picker it opens (Work Devs is full, so it shows No free slots)
 //   scene=longEdit     Send long messages: saving an edit past Discord's limit (the alert that explains why it wasn't sent)
 // Edge cases: friends=0 (none of your friends are in Game Night), owner=me (you own it), desc=0 (no description).
 // Each scene turns on the features it shows (SCENE_SETTINGS below), so scene=serverInfo needs no on=; set= still wins
@@ -64,12 +66,12 @@ export const SCENE_SETTINGS = {
   youBar: { youBarSettings: true, accountSwitcher: true }, translateBar: { translate: true, translateMode: "manual" },
   messageMenu: { translate: true }, bulkDelete: { bulkDelete: true }, longMessageFailed: { splitMessages: true }, longEdit: { splitMessages: true },
   removeMode: { hideAnything: true }, removeProfile: { hideAnything: true }, removeMenu: { hideAnything: true },
-  chatAdditions: { timeoutDuration: true, voiceDownload: true },
+  chatAdditions: { timeoutDuration: true, voiceDownload: true }, cloneEmoji: { cloneExpressions: true },
   removeHeaders: { hideAnything: true }, removeGuild: { hideAnything: true }, removeMessage: { hideAnything: true, translate: true, bulkDelete: true },
 };
 
 // The stand-in modules: Discord's stores the sheet reads, its sheets, and the two guild-bar modules Venus hooks.
-export const hooked = [8013, 1392, 5207, 17433, 2090, 1417, 17439, 14101, 1087, 2068, 4845, 1114, 17538, 10692, 5532, 9978, 13759, 14995, 7445, 9683,
+export const hooked = [9839, 8013, 1392, 5207, 17433, 2090, 1417, 17439, 14101, 1087, 2068, 4845, 1114, 17538, 10692, 5532, 9978, 13759, 14995, 7445, 9683,
   15590, 17157, 13780, 14204, 9419, 12892, 12897, 12901, 12909, 12908,
   14015, 15046, 10858, 14197, 8805, 11678, 11679, 10939, 7158, 14182, 17156, 17263, 12942, 14988, 14994, 14925, 14998];
 let host = null; // the Scene, once drawn: shows and hides sheets
@@ -115,7 +117,7 @@ export function modules(store, me) {
       FormSubLabel: p => <D.Text variant="text-sm/medium" color="text-default" style={p.style}>{p.text}</D.Text> },
     6459: { Card: p => <RN.View style={{ gap: 8 }}>{p.title ? <D.Text variant="text-sm/semibold" color="text-muted">{p.title}</D.Text> : null}{p.children}</RN.View> },
     // A locked channel: Discord can't show it to you, but it sent its record (created, last message, last pin).
-    1087: { Permissions: { VIEW_CHANNEL: 1024 } },
+    1087: { Permissions: { VIEW_CHANNEL: 1024, CREATE_GUILD_EXPRESSIONS: 8796093022208, MANAGE_GUILD_EXPRESSIONS: 1073741824 } },
     2068: { default: store({ getChannel: id => CHANNELS[id] || null, getBasicChannel: id => CHANNELS[id] || null }) },
     4845: { default: { can: (bit, channel) => !(channel && channel.id === LOCKED), canBasicChannel: (bit, channel) => !(channel && channel.id === LOCKED) } },
     1114: { transitionTo: route => console.log("TOAST navigated " + route), replaceWith() {}, transitionToGuild() {} },
@@ -133,6 +135,11 @@ export function modules(store, me) {
     // RowGenerator: generate(row) gives the message as the native chat gets it (createMessageContent's fields).
     8013: { default: class RowGenerator { generate(row) { const m = row.message; return { message: { id: m.id, channelId: m.channel_id, guildId: GUILD,
       authorId: m.author.id, username: m.author.username, content: m.content } }; } } },
+    // MessageEmojiActionSheet: the sheet a custom emoji in chat opens, and the stores Clone emojis and stickers reads.
+    9839: { default: EmojiSheet },
+    6243: { default: store({ getCustomEmojiById: id => id === WAVE.id ? WAVE : null, getGuildEmoji: id => new Array(EMOJI_USED[id] || 0).fill({ animated: false }) }) },
+    6286: { default: store({ getStickersByGuildId: () => [], getStickerById: () => null }) },
+    8294: { getMaxEmojiSlots: () => 50, getTotalStickerCountForTier: t => [5, 15, 30, 60][t] || 5 },
     9978: { default: MessageMenu }, 13759: { default: EmojiRow },
     // GuildActionSheetJoinRequestRow: the server sheet's last row, which Venus turns into its Reviews row.
     14995: { default: () => null },
@@ -318,6 +325,22 @@ function ChatAdditions({ defined }) {
       {rows.map((r, i) => <AdditionRow key={r.source.id} source={r.source} message={r.message} first={i === 0 || rows[i - 1].source.author.id !== r.source.author.id} />)}
     </RN.View>
   </RN.View>;
+}
+// A custom emoji tapped in chat: Discord's sheet for it (MessageEmojiActionSheet), which Clone emojis and stickers adds to.
+const WAVE = { id: "1300000000000000001", name: "gg_wave", animated: false };
+const EMOJI_USED = { "1100000000000000002": 47, "1100000000000000003": 50 };
+function EmojiSheet(p) {
+  const n = p.emojiNode;
+  return <ActionSheet startExpanded>
+    <RN.View style={{ paddingHorizontal: 16, paddingBottom: 8, gap: 12 }}>
+      <RN.View style={{ flexDirection: "row", gap: 12, alignItems: "center" }}>
+        <RN.View style={{ width: 48, height: 48, borderRadius: 8, backgroundColor: "#f0b23233", alignItems: "center", justifyContent: "center" }}><RN.Text style={{ fontSize: 30 }}>👋</RN.Text></RN.View>
+        <RN.View style={{ flex: 1, gap: 2 }}><D.Text variant="text-lg/bold" color="text-strong">:{n.alt}:</D.Text>
+          <D.Text variant="text-sm/medium" color="text-muted">This emoji is from Cozy Corner. Join the server to use it.</D.Text></RN.View>
+      </RN.View>
+      <D.Button text="Join Server" variant="primary" size="md" grow />
+    </RN.View>
+  </ActionSheet>;
 }
 function FormRow(p) {
   return <RN.Pressable onLongPress={p.onLongPress} style={[{ flexDirection: "row", gap: 12, padding: 12, alignItems: "flex-start" }, p.style]}>
@@ -601,6 +624,7 @@ export function Scene({ name, defined, registry }) {
   if (name === "reviews") return <Profile defined={defined} />;
   if (name === "youBar") return <YouBar defined={defined} />;
   if (name === "chatAdditions") return <ChatAdditions defined={defined} />;
+  if (name === "cloneEmoji" && !sheets.length) return <RN.View style={{ width: D.W, minHeight: "100vh", backgroundColor: D.tok("BACKGROUND_SCRIM") }}><RN.View style={{ height: 300 }} />{React.createElement(defined[9839].exports.default, { emojiNode: { id: WAVE.id, alt: WAVE.name, src: "https://cdn.discordapp.com/emojis/" + WAVE.id + ".png" } })}</RN.View>;
   if (name === "translateBar" || name === "bulkDelete" && !sheets.length) return <Chat defined={defined} />;
   if (name === "settings") return <SettingsScreen defined={defined} registry={registry} />;
   const top = sheets[sheets.length - 1];
