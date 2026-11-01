@@ -334,7 +334,13 @@
         if (features.reviewDB && reviewToken && reviewAccount) extra.reviewAuth = {account:reviewAccount, token:reviewToken};
         if (features.userNotif && userNotif.ids.size) extra.userNotifIds = Array.from(userNotif.ids);
         if (features.removedAlerts && settings.removedAlerts) { const seen = removedSeenData(); if (seen) extra.removedSeen = seen; }
-        if (features.badges && badges.played.size) extra.badgesPlayedIds = Array.from(badges.played);
+        if (features.badges) {
+            const played = {};
+            Object.keys(badges.playedAll).forEach(id => { if (badges.playedAll[id].size) played[id] = Array.from(badges.playedAll[id]); });
+            if (Object.keys(played).length) extra.badgesPlayed = played;
+            if (badges.legacyPlayed) extra.badgesPlayedIds = badges.legacyPlayed;
+            if (!badges.legacyOn) extra.badgesAccounts = Array.from(badges.accounts);
+        }
         if (features.badges && Object.keys(badges.grants).length) extra.badgesGrants = badges.grants;
         // Kept until someone signs in to take it over, so a save before that doesn't lose it.
         else if (features.badges && badges.legacyGrant) extra.badgesGrant = badges.legacyGrant;
@@ -697,8 +703,17 @@
                 if (features.removedAlerts) removedLoad(loaded.removedSeen);
                 if (features.serverEdit && !serverEdit.dirty) serverEditLoad(serverEditClean(loaded.serverEdits, false));
                 if (features.badges) {
-                    if (Array.isArray(loaded.badgesPlayedIds))
-                        loaded.badgesPlayedIds.slice(0, BADGES_MAX_PLAYED).forEach(id => { if (typeof id === "string" && /^\d{17,20}$/.test(id)) badges.played.add(id); });
+                    const accounts = loaded.badgesAccounts, played = loaded.badgesPlayed, snowflake = id => typeof id === "string" && /^\d{17,20}$/.test(id);
+                    if (Array.isArray(accounts)) accounts.slice(0, 50).forEach(id => { if (snowflake(id)) badges.accounts.add(id); });
+                    badges.legacyOn = !Array.isArray(accounts);
+                    if (played && typeof played === "object" && !Array.isArray(played))
+                        Object.keys(played).slice(0, 20).forEach(uid => {
+                            if (!snowflake(uid) || !Array.isArray(played[uid])) return;
+                            const set = badgePlayedSet(uid);
+                            played[uid].slice(0, BADGES_MAX_PLAYED).forEach(id => { if (snowflake(id)) set.add(id); });
+                        });
+                    else if (Array.isArray(loaded.badgesPlayedIds)) badges.legacyPlayed = loaded.badgesPlayedIds.slice(0, BADGES_MAX_PLAYED).filter(snowflake);
+                    if (badges.user) badges.played = badgePlayedSet(badges.user);
                     badges.grants = badgeGrantsLoad(loaded.badgesGrants);
                     // The first test build kept one grant for every account: {at, hours}. It's given to whoever is signed in.
                     const legacy = loaded.badgesGrant;
@@ -719,7 +734,7 @@
             if (dirty.size || features.userNotif && userNotif.dirty) save();
             restoreDeleted();
             if (features.quests) { if (!enabled("quests")) questsStop(); else questsLoaded(); }
-            if (features.badges) { if (!enabled("badges")) badgesStop(); else badgesLoaded(); }
+            if (features.badges) { badgeSetUser(badges.user || currentId() || null); if (!enabled("badges")) badgesStop(); else badgesLoaded(); }
             if (features.userNotif) {
                 userNotifSync();
                 if (enabled("userNotif") && settings.userNotifPush) userNotifCheckPermissions();
@@ -2215,6 +2230,8 @@
                 if (key !== "language" && key !== "hiddenFeatures" && !features[featureFor(key)]) return;
                 setSetting(key, owns(parsed.values, key) ? parsed.values[key] : defaults[key]);
             });
+            // Reset turns Complete badges off on every account, not only the signed-in one.
+            if (reset && features.badges) { badges.accounts.clear(); badges.legacyOn = false; save(); }
             if (features.userNotif && parsed.people) {
                 userNotif.ids.clear(); parsed.people.forEach(id => userNotif.ids.add(id));
                 userNotif.dirty = true; save(); userNotifSync(); notify("userNotif");
@@ -4688,11 +4705,14 @@
     }
     // desktop: send this request as the Windows desktop app. Only Play and Activity heartbeats (and the game
     // lookup that names their executable) do; enrolling and video progress stay the phone, which Discord accepts.
-    function questRequest(url, body, desktop, method, active) {
+    // headers: request headers of its own. Discord's prepareRequest only adds the signed-in token when the request
+    // doesn't carry an Authorization header already, so Complete badges uses it to pin its account's token.
+    function questRequest(url, body, desktop, method, active, headers) {
         const http = inspectedExport(1297, "HTTP"), send = http && http[method || "post"];
         if (typeof send !== "function") return Promise.reject(new Error("Discord's network client isn't ready"));
         const request = {url, interceptResponse:questIntercept};
         if (body !== undefined) request.body = body;
+        if (headers) request.headers = headers;
         if (desktop) request.onRequestCreated = r => questDesktopRequest(r, (method || "post") !== "get");
         // Check at the send boundary too: a queued microtask must not send for an account we just left.
         return Promise.resolve().then(() => active && !active() ? null : send.call(http, request));
@@ -5406,7 +5426,10 @@
     ].map(([id, name, exePath, distributor, icon]) => ({id, name, exePath, distributor:distributor || null, icon:icon || null}));
     const badges = {generation:0, user:null, catalog:null, catalogAt:0, catalogLoading:null, current:null, heartbeatTimer:undefined,
         activityTimer:undefined, cycleTimer:undefined, startTimer:undefined, tickTimer:undefined, played:new Set(), cycled:0,
-        secondsSession:0, last:null, error:"", extra:[], grants:{}, legacyGrant:null, granting:null, roomCache:null, directoryAt:0, badgeStore:null, attached:false, patchedRunning:false, analytics:null};
+        secondsSession:0, last:null, error:"", extra:[], grants:{}, legacyGrant:null, granting:null, roomCache:null, directoryAt:0, badgeStore:null, attached:false, patchedRunning:false, analytics:{},
+        // Per account: games played ({user: Set}), and which accounts have the feature on. Before 1.21 both were one
+        // list and one switch for the whole phone (legacyPlayed / legacyOn), given to the first account that signs in.
+        playedAll:{}, accounts:new Set(), legacyOn:false, legacyPlayed:null, switching:false, switchTimer:undefined};
     function badgeNeedsGame() { return !!(enabled("badges") && (settings.badgesGameTime || settings.badgesUniqueGames)); }
     function badgeCycleOn() { return !!(enabled("badges") && settings.badgesUniqueGames); }
     function badgeClear(name) { if (badges[name] !== undefined && global.clearTimeout) global.clearTimeout(badges[name]); badges[name] = undefined; }
@@ -5489,23 +5512,86 @@
         const any = (catalog && catalog.length ? catalog : BADGE_FALLBACK_GAMES).filter(g => !skip(g.id));
         return any[Math.floor(Math.random() * any.length)] || BADGE_FALLBACK_GAMES[0];
     }
-    function badgeMarkPlayed(id) {
-        if (badges.played.has(id)) return;
-        if (badges.played.size >= BADGES_MAX_PLAYED) badges.played.delete(badges.played.keys().next().value);
-        badges.played.add(id);
+    function badgeMarkPlayed(id, user) {
+        const set = user && user !== badges.user ? badgePlayedSet(user) : badges.played;
+        if (set.has(id)) return;
+        if (set.size >= BADGES_MAX_PLAYED) set.delete(set.keys().next().value);
+        set.add(id);
         save();
     }
-    // Your analytics token, which /science needs; AuthenticationStore has it after login, /users/@me otherwise.
-    async function badgeAnalyticsToken() {
+    function badgePlayedSet(user) {
+        let set = badges.playedAll[user];
+        if (!set) {
+            const ids = Object.keys(badges.playedAll);
+            if (ids.length >= 20) delete badges.playedAll[ids[0] === badges.user ? ids[1] : ids[0]];
+            set = badges.playedAll[user] = new Set();
+        }
+        return set;
+    }
+    // Complete badges automatically is on or off per account: the switch shows and changes it for the signed-in account,
+    // and switching accounts starts or stops it to match. It used to be one switch for the whole phone, so turning it on
+    // in one account played games (and Add hours now could add them) on every account you switched to.
+    function badgeSetUser(id) {
+        if (badges.user !== (id || null)) { badges.user = id || null; badges.played = id ? badgePlayedSet(id) : new Set(); }
+        // Until the settings file is read, which accounts have it on isn't known yet; the read calls this again.
+        if (!id || status.storage === "loading" || status.storage === "waiting") return;
+        let changed = false;
+        if (badges.legacyPlayed) {
+            const set = badges.played;
+            badges.legacyPlayed.forEach(g => { if (set.size < BADGES_MAX_PLAYED) set.add(g); });
+            badges.legacyPlayed = null; changed = true;
+        }
+        if (badges.legacyOn) { badges.legacyOn = false; if (settings.badges) badges.accounts.add(id); changed = true; }
+        const on = badges.accounts.has(id);
+        if (settings.badges !== on) { settings.badges = on; changed = true; notify("badges"); }
+        if (changed) save();
+    }
+    // The switch was flipped: it's for the signed-in account. Before anyone has signed in, the first account that does gets it.
+    function badgeAccountChanged(value) {
+        const id = badges.user || currentId();
+        if (!id) { badges.legacyOn = !!value; return; }
+        if (value) badges.accounts.add(id); else badges.accounts.delete(id);
+        badges.legacyOn = false;
+    }
+    function badgeSwitchDone() { badgeClear("switchTimer"); badges.switching = false; }
+    // The token of the account these reports belong to. Discord's HTTP client adds whichever token is active when a
+    // request leaves, and while an account switch is under way that's already the next account's (UserStore still shows
+    // the last one), so heartbeats and play time for one account could be counted on the other. Each saved account's
+    // own token is used; without one, the active token only while nothing is switching and every store agrees it's theirs.
+    function badgeAuth(user) {
+        if (!user) return null;
+        let tokens = null;
         try {
-            const auth = inspectedExport(502, "default"), token = auth && typeof auth.getAnalyticsToken === "function" ? auth.getAnalyticsToken() : null;
-            if (typeof token === "string" && token) return token;
+            const raw = global.__r && global.__r(1113);
+            tokens = raw && typeof raw.getToken === "function" ? raw : raw && raw.default && typeof raw.default.getToken === "function" ? raw.default : null;
         } catch (_) {}
-        if (badges.analytics && badges.analytics.user === badges.user) return badges.analytics.token;
-        const res = await questRequest("/users/@me?with_analytics_token=true", undefined, false, "get");
-        const token = res && res.body && res.body.analytics_token;
-        if (typeof token !== "string" || !token) throw new Error("no analytics token");
-        badges.analytics = {user:badges.user, token};
+        if (!tokens) return null;
+        try { const own = tokens.getToken(user); if (typeof own === "string" && own) return own; } catch (_) {}
+        if (badges.switching || currentId() !== user) return null;
+        try {
+            const auth = inspectedExport(502, "default");
+            if (!auth || typeof auth.getId !== "function" || auth.getId() !== user) return null;
+            const active = tokens.getToken();
+            return typeof active === "string" && active ? active : null;
+        } catch (_) { return null; }
+    }
+    function badgeAuthError() { const error = new Error("Not signed in to this account"); error.status = 0; return error; }
+    // Your analytics token, which /science needs; AuthenticationStore has it after login, /users/@me otherwise.
+    // /science counts events for whoever the analytics token names, so it has to be this account's too, never just the
+    // signed-in one's.
+    async function badgeAnalyticsToken(user, authorization) {
+        try {
+            const auth = inspectedExport(502, "default");
+            if (!badges.switching && auth && typeof auth.getId === "function" && auth.getId() === user && typeof auth.getAnalyticsToken === "function") {
+                const token = auth.getAnalyticsToken();
+                if (typeof token === "string" && token) { badges.analytics[user] = token; return token; }
+            }
+        } catch (_) {}
+        if (badges.analytics[user]) return badges.analytics[user];
+        const res = await questRequest("/users/@me?with_analytics_token=true", undefined, false, "get", undefined, {authorization});
+        const body = res && res.body, token = body && body.analytics_token;
+        if (!body || body.id !== user || typeof token !== "string" || !token) throw new Error("no analytics token");
+        badges.analytics[user] = token;
         return token;
     }
     let badgeSequence = 0;
@@ -5534,9 +5620,13 @@
             executable_path:g.exePath, voice_channel_id:null, voice_channel_type:null, voice_channel_bitrate:null, voice_channel_guild_id:null,
             distributor_game_id:g.sku || null, hidden_by_distributor:false, game_metadata:null});
     }
-    async function badgeScience(events) {
-        const token = await badgeAnalyticsToken();
-        await questRequest("/science", {token, events}, true, "post");
+    async function badgeScience(events, user) {
+        user = user || badges.user;
+        // Taken before anything waits, so a switch that starts meanwhile can't hand these to the next account.
+        const authorization = badgeAuth(user);
+        if (!authorization) throw badgeAuthError();
+        const token = await badgeAnalyticsToken(user, authorization);
+        await questRequest("/science", {token, events}, true, "post", undefined, {authorization});
     }
     // A report that didn't go through is said once, quietly, and tried again with the next heartbeat.
     function badgeProblem(error) {
@@ -5546,16 +5636,18 @@
     }
     // Play time on your game stats, the same POST /activities body as ActivityTrackingStore.updateActivity.
     async function badgeActivity(entry, closed) {
+        const user = entry.user, authorization = badgeAuth(user);
+        if (!authorization || !closed && user !== badges.user) return false;
         const now = Date.now(), elapsed = entry.activityAt != null ? now - entry.activityAt : 0;
         const duration = elapsed > 0 && elapsed <= BADGE_MAX_DURATION_MS ? Math.floor(elapsed / 1000) : 0;
         entry.activityAt = now;
         const ids = {sessionId:null, mediaSessionId:null, voiceChannelId:null};
-        try { const auth = inspectedExport(502, "default"); ids.sessionId = auth && auth.getSessionId() || null; } catch (_) {}
+        try { const auth = inspectedExport(502, "default"); if (auth && auth.getId() === user) ids.sessionId = auth.getSessionId() || null; } catch (_) {}
         try {
             const res = await questRequest("/activities", {application_id:entry.game.id, distributor:entry.game.distributor || "steam", share_activity:true,
                 token:entry.token || null, duration, closed:!!closed, exePath:entry.game.exePath, voice_channel_id:ids.voiceChannelId,
                 session_id:ids.sessionId, media_session_id:ids.mediaSessionId}, true, "post",
-                () => closed || entry.generation === badges.generation && badgeEntries().includes(entry));
+                () => closed || entry.generation === badges.generation && entry.user === badges.user && badgeEntries().includes(entry), {authorization});
             const token = res && res.body && res.body.token;
             if (typeof token === "string" && token) entry.token = token;
             badges.secondsSession += duration;
@@ -5582,7 +5674,7 @@
     }
     function badgeEntry(game) {
         const now = Date.now();
-        return {game, generation:badges.generation, startedAt:now, heartbeatAt:now, activityAt:null, token:null, session:questUuidText(questUuid())};
+        return {game, user:badges.user, generation:badges.generation, startedAt:now, heartbeatAt:now, activityAt:null, token:null, session:questUuidText(questUuid())};
     }
     // Like desktop's RunningGameHeartbeatManager: one heartbeat for every running game every 5 minutes, in one batch.
     // One timer for every game: a game that starts or switches joins the next batch, so a switch never pushes back the
@@ -5593,7 +5685,8 @@
             badges.heartbeatTimer = undefined;
             const all = badgeEntries();
             if (!all.length) return;
-            badgeScience(all.map(entry => badgeHeartbeat(entry, false, false))).then(() => { badgeMarkLiveDay(); if (badges.error) { badges.error = ""; notify("badges"); } }, badgeProblem);
+            const user = all[0].user;
+            badgeScience(all.map(entry => badgeHeartbeat(entry, false, false)), user).then(() => { badgeMarkLiveDay(user); if (badges.error) { badges.error = ""; notify("badges"); } }, badgeProblem);
             badgeScheduleHeartbeat();
         }, BADGE_HEARTBEAT_MS, false);
         if (badges.activityTimer !== undefined) return;
@@ -5621,14 +5714,14 @@
         if (!entry) return;
         badgePresence(null, slot);
         const final = badgeHeartbeat(entry, false, true);
-        await Promise.all([badgeScience([final]).catch(() => {}), badgeActivity(entry, true)]);
+        await Promise.all([badgeScience([final], entry.user).catch(() => {}), badgeActivity(entry, true)]);
     }
     // Opens a game the way desktop does when it detects one: initial heartbeat and launch_game, then /activities.
     async function badgeOpen(entry, slot) {
         badgePresence(entry, slot);
         try {
-            await badgeScience([badgeHeartbeat(entry, true, false), badgeLaunch(entry)]);
-            if (entry.generation === badges.generation) { badges.error = ""; badgeMarkPlayed(entry.game.id); badgeMarkLiveDay(); }
+            await badgeScience([badgeHeartbeat(entry, true, false), badgeLaunch(entry)], entry.user);
+            if (entry.generation === badges.generation) { badges.error = ""; badgeMarkPlayed(entry.game.id, entry.user); badgeMarkLiveDay(entry.user); }
         } catch (error) { if (entry.generation === badges.generation) badgeProblem(error); }
         badgeActivity(entry, false);
     }
@@ -5678,7 +5771,8 @@
         if (!enabled("badges")) return;
         badges.startTimer = later(() => {
             badges.startTimer = undefined;
-            if (!badges.user) badges.user = currentId() || null;
+            if (badges.switching) return;
+            if (!badges.user) badgeSetUser(currentId() || null);
             if (!enabled("badges") || !badges.user) return;
             badgeRefreshDirectory(false);
             if (badgeNeedsGame() && !badges.current) badgeStartGame(null);
@@ -5695,8 +5789,9 @@
     }
     function badgesConnected(event) {
         const id = event && event.user && event.user.id || currentId();
-        if (id && badges.user && id !== badges.user) { badgesStop(); badges.cycled = 0; badges.secondsSession = 0; badges.played.clear(); badges.analytics = null; }
-        if (id) badges.user = id;
+        badgeSwitchDone();
+        if (id && badges.user && id !== badges.user) { badgesStop(); badges.cycled = 0; badges.secondsSession = 0; }
+        if (id) badgeSetUser(id);
         badgeAdoptLegacyGrant();
         if (!enabled("badges")) return;
         if (badges.current) badgeEntries().forEach((entry, i) => badgePresence(entry, i)); else badgesStart(6000);
@@ -5710,18 +5805,25 @@
         if (badges.attached || !dispatcher || typeof dispatcher.subscribe !== "function") return;
         badges.attached = true;
         dispatcher.subscribe("CONNECTION_OPEN", badgesConnected);
-        dispatcher.subscribe("LOGOUT", () => { badgesStop(); badges.user = null; badges.analytics = null; });
+        dispatcher.subscribe("LOGOUT", () => { badgesStop(); badgeSetUser(null); });
+        // Discord's account switcher sends this before it swaps the token. Games stop here, while their final reports can
+        // still go out as their own account, and nothing new is sent until the next account's CONNECTION_OPEN.
+        dispatcher.subscribe("MULTI_ACCOUNT_SWITCH_START", () => {
+            badgesStop(); badges.switching = true;
+            badgeClear("switchTimer"); badges.switchTimer = later(badgeSwitchDone, 60000, false);
+        });
         dispatcher.subscribe("UPDATE_CONSENTS", () => { if (enabled("badges")) notify("badges"); });
     }
     function badgesLoaded() {
-        badges.user = badges.user || currentId() || null;
+        badgeSetUser(badges.user || currentId() || null);
         badgeAdoptLegacyGrant();
         if (badges.user && !badges.current) badgesStart(4000);
     }
     function badgesSettingChanged(key, value) {
+        if (key === "badges") badgeAccountChanged(value);
         if (key === "badges" && !value) { badgesStop(); return; }
         if (!enabled("badges")) return;
-        if (key === "badges") { badges.user = badges.user || currentId() || null; badgesStart(300); return; }
+        if (key === "badges") { badgeSetUser(badges.user || currentId() || null); badgesStart(300); return; }
         if (key === "badgesGameTime" || key === "badgesUniqueGames" || key === "badgesGamesAtOnce") {
             if (!badgeNeedsGame()) badgesStop();
             else if (!badges.current) badgesStart(300);
@@ -5845,8 +5947,8 @@
     }
     function badgeGrantRecord() { badgeAdoptLegacyGrant(); return badges.user && badges.grants[badges.user] || {at:0, hours:0, recent:[], days:{}}; }
     // A day Venus played on in the background already has real-time play, so nothing is added to it later.
-    function badgeMarkLiveDay() {
-        const user = badges.user;
+    function badgeMarkLiveDay(forUser) {
+        const user = forUser || badges.user;
         if (!user) return;
         const key = badgeDayKey(Date.now()), record = badges.grants[user] || (badges.grants[user] = {at:0, hours:0, recent:[], days:{}});
         if (record.days[key] === -1) return;
@@ -5961,10 +6063,10 @@
         const record = badgeGrantRecord(), sessions = badgeGrantPlan(user, hours, games, record), reached = {};
         let sent = 0, ok = sessions.length > 0;
         // Oldest first, like a desktop app sending what it saved while it was offline.
-        for (let i = 0; i < sessions.length && ok && badges.user === user; i += BADGE_GRANT_BATCH) {
+        for (let i = 0; i < sessions.length && ok && badges.user === user && !badges.switching; i += BADGE_GRANT_BATCH) {
             const batch = sessions.slice(i, i + BADGE_GRANT_BATCH);
             try {
-                await badgeScience([].concat.apply([], batch.map(x => badgeSessionEvents(x.game, x.start, x.ms))));
+                await badgeScience([].concat.apply([], batch.map(x => badgeSessionEvents(x.game, x.start, x.ms))), user);
                 batch.forEach(x => { sent += x.ms; reached[x.key] = Math.max(reached[x.key] || 0, x.index + 1); });
                 badges.granting.done = Math.floor(sent / 3600000); notify("badges");
             } catch (error) { ok = false; badgeProblem(error); }
