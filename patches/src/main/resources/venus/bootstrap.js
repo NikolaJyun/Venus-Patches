@@ -3056,6 +3056,7 @@
             notify();
         }).finally(() => {archiveLoading = false;});
     }
+    let deletedMarks = 0;
     function markDeleted(message) {
         // Identity refresh only. Deletion styling belongs to row presentation, never
         // content: copying, replies, mentions, links and archives retain the original.
@@ -3064,7 +3065,8 @@
         // objEquiv (enumerable keys) and returns NOOP for equal ones, so an identical copy never
         // re-rendered the row until the chat was reopened. One enumerable marker key makes the
         // retained record differ and the red outline appear immediately; content is untouched.
-        try { Object.defineProperty(copy,"venusDeleted",{value:true,enumerable:true,configurable:true}); } catch (_) {}
+        // A new number each time, so a kept row can be redrawn again later (Bulk delete's circles come and go).
+        try { Object.defineProperty(copy,"venusDeleted",{value:++deletedMarks,enumerable:true,configurable:true}); } catch (_) {}
         return copy;
     }
     // Built on first save, not on every deletion: most people never turn saving on.
@@ -18860,8 +18862,15 @@
         const store = msgStore || (msgStore = inspectedExport(5532, "default"));
         if (!store || typeof store.getMessage !== "function") return;
         const restores = [], pending = bulkDelete.redrawing;
+        // Kept deleted messages are drawn from Keep deleted messages' own copy, not the store's record, so changing the
+        // record's text never reached them: Discord saw the same copy, skipped the row, and its circle stayed after the
+        // delete finished or selection was cancelled (#138). They get a fresh copy instead, and one store change redraws them.
+        const bucket = features.noDelete && enabled("noDelete") && deletedByChannel.get(channelId);
+        let keptChanged = false;
         for (let i = 0; i < ids.length; i++) {
             const id = String(ids[i]);
+            const kept = bucket && bucket.get(deletedKey(channelId, id));
+            if (kept) { kept.message = markDeleted(kept.message); keptChanged = true; continue; }
             let msg = null;
             try { msg = store.getMessage(channelId, id); } catch (_) {}
             // Not in the store means it isn't drawn either: nothing to redraw.
@@ -18875,6 +18884,10 @@
             const entry = {id, channel_id:channelId, content, temp};
             pending.set(key, entry);
             restores.push(entry);
+        }
+        if (keptChanged) {
+            invalidateDeleted();
+            try { if (typeof store.emitChange === "function") store.emitChange(); } catch (_) {}
         }
         if (restores.length) later(() => {
             for (let i = 0; i < restores.length; i++) {
