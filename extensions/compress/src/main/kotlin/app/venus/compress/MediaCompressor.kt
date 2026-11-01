@@ -219,6 +219,8 @@ object MediaCompressor {
         val transparent = current.hasAlpha() && (mime == "image/png" || mime == "image/webp")
         val directory = outputDirectory(context)
         var bytes: ByteArray? = null
+        var outWidth = 0
+        var outHeight = 0
         var extension = "jpg"
         var outMime = "image/jpeg"
         try {
@@ -246,6 +248,8 @@ object MediaCompressor {
                     bytes = bestQuality(current, lossy, 94, 88, budget, cancelled)
                 }
             }
+            outWidth = current.width
+            outHeight = current.height
         } finally { current.recycle() }
         val result = bytes ?: return unchanged(size)
         val output = File(directory, "$id.$extension")
@@ -253,6 +257,7 @@ object MediaCompressor {
         try { file.write(result) } finally { file.close() }
         return JSONObject().put("changed", true).put("uri", Uri.fromFile(output).toString()).put("mimeType", outMime)
             .put("extension", extension).put("size", output.length())
+            .put("width", outWidth).put("height", outHeight)
     }
 
     // ----------------------------------------------------------------- audio

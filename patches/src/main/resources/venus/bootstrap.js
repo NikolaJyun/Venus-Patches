@@ -56,6 +56,7 @@
     if (features.silentLeave) selectModules([2068, 7290]);
     if (features.guildLurk) targetModules[13422] = 1;
     if (features.quietReplies) selectModules([1392, 5532, 9990]);
+    if (features.compressUploads) selectModules([8023, 8046, 10006]);
     if (features.timeoutDuration) selectModules([2119, 2128, 8013]);
     if (features.dndBanners) selectModules([6015, 13511, 13523]);
     if (features.landscapeFull) targetModules[5075] = 1;
@@ -87,7 +88,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
@@ -104,7 +105,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
         }));
     }
     // Backup and restore (#68): when you last saved a backup, and whether a restore is being applied right now.
@@ -130,6 +131,8 @@
     let React, RN, files, activeReads = 0, writePending = false, nextSave;
     const conversions = new WeakMap();
     const readyUploads = new WeakMap();
+    const compressJobs = new WeakMap();
+    let compressCounter = 0;
     const activeJobs = new Map();
     let jobCounter = 0;
     const PREFS = "venus-patches.json";
@@ -1114,7 +1117,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1149,7 +1152,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
+        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
         const slot = id + ":" + name;
@@ -1204,6 +1207,7 @@
         voiceDownload:["Voice message", "Voice messages", "Download", "Save", "Audio", "Recording", "VoiceDownload"],
         dndBanners:["Do Not Disturb", "DND", "Banner", "Banners", "In-app notifications", "Pop-up", "Focus"],
         landscapeFull:["Landscape", "Sideways", "Rotate", "Full screen", "Sidebar", "Channel list"],
+        compressUploads:["Compress", "Compression", "Shrink", "Smaller", "Resize", "File size", "Too big", "Too large", "Upload limit", "Size limit", "Nitro", "Video", "Photo", "Audio", "Attachments"],
         quietReplies:["Ping", "Pings", "Mention", "Mentions", "Reply", "Replies", "@ ON", "@ OFF", "Notification", "Servers", "Group DMs", "When they mentioned you", "Silent replies", "No ping"],
         fullImages:["High-res profile pictures", "HighResProfileImages", "Avatars", "Profile pictures", "Banners", "Uncompressed", "Uncompressed images", "Original", "Full quality", "Lossless", "Compression", "Blurry", "Thumbnail", "Resolution", "Pictures", "Photos"],
         removedAlerts:["Removed", "Unfriend", "Friend", "Kicked", "Banned", "Server", "Left", "Alert", "Notifier", "Relationship", "Connection", "Removed connection alerts", "Relationship notifier", "Notify"],
@@ -1676,6 +1680,7 @@
         toggle("sending", "noTyping", "Hide typing indicator", "Others won't see when you're typing.");
         toggle("sending", "picker", "Show file sizes when attaching", "Photos and videos in the picker show their size.");
         toggle("sending", "anonFiles", "Anonymous file names", "Files you send get a random name instead of the one on your phone.");
+        withOptions("sending", "compressUploads", "VENUS_COMPRESSUPLOADS", "Compress big files", "Photos, videos and audio over Discord's file size limit are made smaller to fit as you send them, instead of being refused.", "Compress big files", CompressUploadsSettings);
         withOptions("sending", "quietReplies", "VENUS_QUIETREPLIES", "Reply without pinging", "Replies start with the ping off, so nobody gets pinged unless you turn it on.", "Reply without pinging", QuietRepliesSettings);
         toggle("messages", "voiceDownload", "Download voice messages", "A Download button under each voice message saves it to your phone.");
         toggle("messages", "dndBanners", "Banners in Do Not Disturb", "New messages still pop up at the top while you're on Do Not Disturb, without a sound.");
@@ -18594,6 +18599,280 @@
             footnote("note", "Tap @ on the reply bar to ping someone for just one reply.")];
         return settingsBody(ui, groups);
     }
+    // Compress big files (#136): a photo, video or sound over Discord's file size limit is made smaller to fit as you send it,
+    // instead of being refused. The limit is Discord's own for this chat and account (UploadTargets 8057 getMaxFileSize, which
+    // already counts Nitro and boosts), so a file that fits, and anyone whose limit is bigger, is never touched.
+    //  - Gate: CloudUploader (9999) turns a file away before it is prepared, from getPreCompressionFileSize (10006). For a kind that
+    //    can be made smaller that size is capped at the limit, so the file goes on to be prepared; anything else is refused as before.
+    //  - Photos and sound: after Discord has prepared the file (CloudUpload 8023 reactNativeCompressAndExtractData), what is still
+    //    too big goes to the native extension (extensions/compress, reached through FileModule.removeFile with a private prefix).
+    //    Photos keep every pixel while quality 88 or better fits, then shrink a little at a time; sound is re-saved as AAC at the best
+    //    bitrate that fits.
+    //  - Video: Discord's own transcoder does the work and Venus only picks its numbers (VideoUploadUtils 8046): the bitrate that
+    //    fills the limit for this length, and, only when that is too few bits per pixel for a clean picture, a smaller size. A result
+    //    that still comes out over the limit is made again with a lower bitrate.
+    const COMPRESS_PREFIX = "venus-compress-v1:", COMPRESS_FILL = {image:0.93, audio:0.93, video:0.9};
+    const COMPRESS_KEYS = {image:"compressUploadsPhotos", video:"compressUploadsVideos", audio:"compressUploadsAudio"};
+    const COMPRESS_MAX = {image:268435456, audio:1073741824, video:4294967296};
+    const COMPRESS_BPP = 0.04, COMPRESS_HEIGHTS = [1080, 720, 540, 480, 360, 270, 240];
+    const compressInstrumented = new WeakSet(), videoSeen = new WeakMap(), compressVideoState = {shrink:1};
+    let videoChain = Promise.resolve();
+    const imageName = /\.(jpe?g|png|webp|heic|heif|bmp)$/i, videoName = /\.(mp4|m4v|mov|mkv|webm|3gp|3gpp)$/i;
+    function compressEven(n) { return Math.max(2, Math.round(n / 2) * 2); }
+    // The video's bitrate and size for a limit, or null when it can't be made to fit (too long for a watchable picture).
+    // Bits go to the picture first: keep the size while there are at least COMPRESS_BPP bits per pixel per frame (about what
+    // a hardware encoder needs to look clean), otherwise take the biggest standard height that gets there.
+    function compressVideoPlan(meta, limit, width, height) {
+        const seconds = meta && meta.durationMs > 0 ? meta.durationMs / 1000 : 0;
+        if (!(seconds > 0.5) || !(width > 0) || !(height > 0) || !(limit > 0)) return null;
+        const bits = limit * COMPRESS_FILL.video * 8, audio = Math.min(128000, Math.max(24000, bits / seconds * 0.1));
+        const video = Math.floor(bits / seconds - audio);
+        if (!(video >= 100000)) return null;
+        const fps = Math.min(30, meta.frameRate > 0 ? meta.frameRate : 30), bpp = video / (fps * width * height);
+        let w = width, h = height;
+        if (bpp < COMPRESS_BPP) {
+            const short = Math.min(w, h), reach = short * Math.sqrt(bpp / COMPRESS_BPP);
+            let target = COMPRESS_HEIGHTS[COMPRESS_HEIGHTS.length - 1];
+            for (let i = 0; i < COMPRESS_HEIGHTS.length; i++) if (COMPRESS_HEIGHTS[i] <= reach) { target = COMPRESS_HEIGHTS[i]; break; }
+            if (target < short) { const f = target / short; w = compressEven(w * f); h = compressEven(h * f); }
+        }
+        return {width:w, height:h, bitrate:video};
+    }
+    function compressKind(upload) {
+        if (!upload) return null;
+        const item = upload.item || {};
+        // Voice messages carry their length and waveform; re-saving them would break both.
+        if (item.waveform || upload.waveform || item.durationSecs || upload.durationSecs) return null;
+        const mime = String(upload.mimeType || item.mimeType || "").toLowerCase().split(";")[0].trim();
+        const name = String(upload.filename || item.filename || "");
+        if (mime.startsWith("image/")) return mime === "image/gif" ? null : "image";
+        if (mime.startsWith("video/")) return audioOnlyName.test(name) ? "audio" : "video";
+        if (mime.startsWith("audio/") || AUDIO_APPLICATION_TYPES.has(mime)) return "audio";
+        if (mime && mime !== "application/octet-stream" && mime !== "binary/octet-stream") return null;
+        return imageName.test(name) ? "image" : videoName.test(name) ? "video" : audioName.test(name) ? "audio" : null;
+    }
+    function compressLimit(item, channelId) {
+        try {
+            const get = inspectedExport(8057, "getUploadTarget"), target = typeof get === "function" ? get(item && item.target) : null;
+            if (target && typeof target.getMaxFileSize === "function") {
+                const value = target.getMaxFileSize(channelId);
+                if (Number.isFinite(value) && value > 0) return value;
+            }
+        } catch (_) {}
+        const free = inspectedExport(8047, "FREE_UPLOAD_LIMIT_BYTES");
+        return Number.isFinite(free) && free > 0 ? free : 20971520;
+    }
+    function selectedChannelId() {
+        const selected = inspectedExport(2119, "default");
+        try { return selected && typeof selected.getChannelId === "function" ? selected.getChannelId() : undefined; } catch (_) { return undefined; }
+    }
+    // The gate: what can be made smaller is let through to be prepared; the rest is refused exactly as Discord always did.
+    function compressPreSize(orig, self, args) {
+        const item = args[0];
+        return Promise.resolve(orig.apply(self, args)).then(size => {
+            if (!enabled("compressUploads") || !Number.isFinite(size)) return size;
+            const kind = compressKind({item});
+            if (!kind || !enabled(COMPRESS_KEYS[kind]) || size > COMPRESS_MAX[kind]) return size;
+            const limit = compressLimit(item, selectedChannelId());
+            return size > limit ? limit : size;
+        });
+    }
+    function compressSkipCheck(orig, self, args) {
+        const meta = args[1], size = args[2], limit = args[3];
+        if (enabled("compressUploadsVideos") && meta && typeof meta === "object" && typeof size === "number" && typeof limit === "number" && size > limit)
+            videoSeen.set(meta, {limit, plan:null});
+        return orig.apply(self, args);
+    }
+    function compressDimensions(orig, self, args) {
+        const out = orig.apply(self, args), meta = args[0], seen = meta && typeof meta === "object" ? videoSeen.get(meta) : null;
+        if (!seen || !out || !(out.width > 0) || !(out.height > 0)) return out;
+        seen.plan = compressVideoPlan(meta, seen.limit, out.width, out.height);
+        return seen.plan ? {width:seen.plan.width, height:seen.plan.height} : out;
+    }
+    function compressBitrate(orig, self, args) {
+        const out = orig.apply(self, args), meta = args[0], seen = meta && typeof meta === "object" ? videoSeen.get(meta) : null;
+        if (!seen) return out;
+        const plan = seen.plan || compressVideoPlan(meta, seen.limit, meta.width, meta.height);
+        if (!plan) return out;
+        const bitrate = Math.floor(plan.bitrate * compressVideoState.shrink);
+        return typeof out === "number" && out < bitrate ? out : bitrate;
+    }
+    function hookCompressVideo(exports) {
+        return hookExport(hookExport(hookExport(exports, "canSkipVideoTranscode", compressSkipCheck), "calculateTargetDimensions", compressDimensions),
+            "calculateOptimalBitrate", compressBitrate);
+    }
+    function nativeCompress(action, id, uri, kind, limit, budget) {
+        if (!files || typeof files.removeFile !== "function") return Promise.reject(new Error("Discord file bridge has not loaded"));
+        return Promise.resolve().then(() => files.removeFile(COMPRESS_PREFIX + JSON.stringify({action, id, uri, kind, limit, budget}), ""));
+    }
+    function compressSizeOf(uri) {
+        if (typeof uri !== "string" || !files || typeof files.getSize !== "function") return Promise.resolve(NaN);
+        return Promise.resolve().then(() => files.getSize(uri)).then(value => {
+            const bytes = typeof value === "number" || typeof value === "string" && value.trim() ? Number(value) : NaN;
+            return Number.isFinite(bytes) && bytes >= 0 ? bytes : NaN;
+        }, () => NaN);
+    }
+    function compressUri(upload) { return upload && (upload.item && upload.item.uri || upload.uri); }
+    function compressCancelled(upload, job) { return job.cancelled || typeof upload.isCancelled === "function" && upload.isCancelled(); }
+    function compressName(name, extension) { return String(name || "file").replace(/\.[^./\\]+$/, "") + "." + extension; }
+    function compressToast(text) { showToast(reviewUI(), "venus-toast:" + (++reviewToastSeq), text, venusIcon(11636, "FileUpIcon")); }
+    function compressDoneToast(from, to) {
+        if (Number.isFinite(from) && Number.isFinite(to) && to < from) compressToast(tr("Made smaller: {from} to {to}", {from:formatSize(from), to:formatSize(to)}));
+    }
+    // Photos and sound: what Discord left too big goes to the native extension.
+    function compressNative(upload, job, limit) {
+        const uri = compressUri(upload);
+        if (typeof uri !== "string" || !/^(content|file):\/\//.test(uri)) return Promise.resolve();
+        return compressSizeOf(uri).then(size => {
+            if (!(size > limit) || compressCancelled(upload, job)) return undefined;
+            compressToast(tr("Making it smaller to fit\u2026"));
+            job.native = true;
+            return nativeCompress("prepare", job.id, uri, job.kind, limit, Math.floor(limit * COMPRESS_FILL[job.kind])).then(text => {
+                const result = JSON.parse(text);
+                if (!result || result.changed === false) return undefined;
+                if (typeof result.uri !== "string" || !result.uri.startsWith("file://") || typeof result.mimeType !== "string" ||
+                    typeof result.extension !== "string" || !/^[a-z0-9]{1,5}$/.test(result.extension) ||
+                    !Number.isSafeInteger(result.size) || !(result.size > 0) || result.size > limit)
+                    throw new Error("Native compression returned invalid metadata");
+                if (compressCancelled(upload, job)) { releaseCompress(upload, false); return undefined; }
+                const item = upload.item || {}, filename = compressName(upload.filename || item.filename, result.extension);
+                const changes = {uri:result.uri, mimeType:result.mimeType, filename, size:result.size};
+                if (result.width > 0 && result.height > 0) { changes.width = result.width; changes.height = result.height; }
+                upload.item = Object.assign({}, item, changes);
+                upload.uri = result.uri;
+                upload.mimeType = result.mimeType;
+                upload.filename = filename;
+                upload.currentSize = result.size;
+                upload.postCompressionSize = result.size;
+                if (upload.uploadAnalytics && typeof upload.uploadAnalytics === "object") upload.uploadAnalytics.convertedMimeType = result.mimeType;
+                compressDoneToast(size, result.size);
+                return undefined;
+            });
+        });
+    }
+    // Video: made by Discord's transcoder with Venus's numbers (compressBitrate); made again, lower, when the first one overshoots.
+    function compressVideo(orig, upload, args, job, limit) {
+        const go = () => compressSizeOf(compressUri(upload)).then(first => {
+            if (first > limit) compressToast(tr("Making it smaller to fit\u2026"));
+            const turn = (shrink, tries) => {
+                const before = Object.assign({}, upload);
+                compressVideoState.shrink = shrink;
+                return Promise.resolve(orig.apply(upload, args)).then(result => {
+                    compressVideoState.shrink = 1;
+                    return compressSizeOf(compressUri(upload)).then(size => {
+                        if (!(size > limit) || tries >= 1 || compressCancelled(upload, job)) { compressDoneToast(first, size); return result; }
+                        const kept = Object.assign({}, upload);
+                        Object.keys(before).forEach(key => { try { upload[key] = before[key]; } catch (_) {} });
+                        return turn(Math.max(0.4, shrink * limit * COMPRESS_FILL.video / size), tries + 1).catch(() => {
+                            Object.keys(kept).forEach(key => { try { upload[key] = kept[key]; } catch (_) {} });
+                            return result;
+                        });
+                    });
+                }, error => { compressVideoState.shrink = 1; throw error; });
+            };
+            return turn(1, 0);
+        });
+        const next = videoChain.then(go, go);
+        videoChain = next.then(() => undefined, () => undefined);
+        return next;
+    }
+    function compressUpload(orig, upload, args) {
+        const old = compressJobs.get(upload);
+        if (old) return old.promise;
+        const kind = enabled("compressUploads") ? compressKind(upload) : null;
+        if (!kind || !enabled(COMPRESS_KEYS[kind])) return orig.apply(upload, args);
+        const job = {id:"c" + Date.now().toString(36) + "-" + (++compressCounter), kind, cancelled:false, released:false, native:false};
+        const limit = compressLimit(upload.item, upload.channelId);
+        const done = result => compressSizeOf(compressUri(upload)).then(size => {
+            // Still too big: Discord turns the file away next, so say why and what to do.
+            if (size > limit && !compressCancelled(upload, job))
+                showProblem("Couldn't make it small enough", tr("It can't be made small enough without losing too much quality. Try a shorter clip or a smaller file, or get Nitro for a bigger limit."));
+            return result;
+        });
+        const promise = (kind === "video" ? compressVideo(orig, upload, args, job, limit) :
+            Promise.resolve(orig.apply(upload, args)).then(result => compressNative(upload, job, limit).then(() => result, () => result))).then(done);
+        job.promise = promise;
+        compressJobs.set(upload, job);
+        return promise;
+    }
+    function releaseCompress(upload, cancelInflight) {
+        const job = compressJobs.get(upload);
+        if (!job) return;
+        if (cancelInflight && !job.cancelled) { job.cancelled = true; nativeCompress("cancel", job.id).catch(() => {}); }
+        if (job.native && !job.released) { job.released = true; nativeCompress("release", job.id).catch(() => {}); }
+    }
+    function instrumentCompressUpload(CloudUpload) {
+        if (!features.compressUploads || typeof CloudUpload !== "function" || !CloudUpload.prototype || compressInstrumented.has(CloudUpload.prototype)) return;
+        const prototype = CloudUpload.prototype, orig = prototype.reactNativeCompressAndExtractData;
+        if (typeof orig !== "function") return;
+        compressInstrumented.add(prototype);
+        prototype.reactNativeCompressAndExtractData = function () { return compressUpload(orig, this, arguments); };
+        // One function scope per method (see instrumentCloudUpload).
+        function stopFirst(key, cancelInflight) {
+            const method = prototype[key];
+            if (typeof method !== "function") return;
+            prototype[key] = function () { releaseCompress(this, cancelInflight); return method.apply(this, arguments); };
+        }
+        stopFirst("_cancel", true); stopFirst("cancel", true); stopFirst("removeFromMsgDraft", true);
+        stopFirst("delete", true); stopFirst("handleComplete", false); stopFirst("handleError", false);
+    }
+    // The preview: a 25 MB video in the message box, over the limit, shrinks to just under it and is sent.
+    const COMPRESS_PREVIEW = {big:25 * 1048576, fit:19.2 * 1048576, limit:20 * 1048576};
+    function compressCard(k, s, bytes, bar) {
+        const over = bytes > COMPRESS_PREVIEW.limit, Video = venusIcon(11187, "VideoIcon");
+        const percent = Math.min(100, Math.round(bytes / COMPRESS_PREVIEW.limit * 100));
+        return el(RN.View, {key:"card", style:[k.card, {flexDirection:"row", alignItems:"center", gap:10, padding:10, borderRadius:8, borderWidth:1, marginTop:4}]},
+            el(RN.View, {style:[k.secondary, {width:36, height:36, borderRadius:8, alignItems:"center", justifyContent:"center"}]}, el(Video, {size:"md", color:k.icon.color})),
+            el(RN.View, {style:{flex:1, gap:4}},
+                el(RN.View, {style:{flexDirection:"row", alignItems:"baseline", justifyContent:"space-between"}},
+                    el(RN.Text, {style:[s.name, {fontSize:14, flexShrink:1}], numberOfLines:1}, "holiday.mp4"),
+                    el(RN.Text, {style:[s.muted, over ? {color:"#f23f43", fontWeight:"700"} : {fontWeight:"600"}]}, formatSize(bytes))),
+                bar ? el(RN.View, {style:[k.track, {height:4, borderRadius:2, overflow:"hidden"}]},
+                    el(RN.View, {style:[over ? {backgroundColor:"#f23f43"} : k.fill, {height:4, width:percent + "%"}]})) : null));
+    }
+    function CompressUploadsPreview(props) {
+        useSettings("compressUploads");
+        const s = useChatPreviewStyles(), k = usePreviewChrome();
+        const active = !!props.on && !!(settings.compressUploadsPhotos || settings.compressUploadsVideos || settings.compressUploadsAudio);
+        const start = {phase:0, bytes:COMPRESS_PREVIEW.big};
+        const [state, setState] = React.useState(start);
+        const story = useStory(active, () => {
+            const steps = [[0, () => setState(start), tr("You attach a video over the size limit")], [900, () => {}, tr("Venus makes it smaller to fit")]];
+            for (let i = 1; i <= 6; i++) {
+                const bytes = COMPRESS_PREVIEW.big - (COMPRESS_PREVIEW.big - COMPRESS_PREVIEW.fit) * i / 6;
+                steps.push([170, () => setState({phase:1, bytes})]);
+            }
+            steps.push([700, () => { animateLayout(); setState({phase:2, bytes:COMPRESS_PREVIEW.fit}); }, tr("Sent, just under the limit")], [1700, () => {}]);
+            return steps;
+        }, []);
+        const view = active ? state : start;
+        const theirs = previewMessage(s, "theirs", "Sam", "#eb459e", tr("Today at 4:01 PM"), el(RN.Text, {style:s.text}, tr("Anyone up for a game later?")));
+        const mine = view.phase === 2 ? el(RN.View, {key:"mine"}, popIn("mine", el(RN.View, null,
+            previewMessage(s, "mine", tr("You"), "#5865f2", tr("Today at 4:02 PM"), compressCard(k, s, view.bytes, false))))) : null;
+        const chip = view.phase < 2 ? el(RN.View, {key:"chip", style:{paddingHorizontal:12, paddingBottom:4}}, compressCard(k, s, view.bytes, true)) : null;
+        return el(RN.View, {key:"preview"},
+            previewScreen(s, "chat", "File size preview", [theirs, mine],
+                {header:previewHeader(k, {title:"general"}),
+                 footer:el(RN.View, {key:"foot"}, previewInput(k, s, {above:chip, text:"", placeholder:tr("Message {channel}", {channel:"#general"})}),
+                    active ? storyStrip(k, s, story) : null)}));
+    }
+    function CompressUploadsSettings() {
+        useSettings("compressUploads");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("compressUploads"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const Icon = venusIcon(11636, "FileUpIcon");
+        const any = !!(settings.compressUploadsPhotos || settings.compressUploadsVideos || settings.compressUploadsAudio);
+        const groups = [
+            !on ? offCard("status", Icon, "compressUploads") : !any ? statusCard("status", "Turn on at least one option below.", {title:tr("Nothing is made smaller"), IconComponent:Icon}) : null,
+            el(CompressUploadsPreview, {key:"preview", on}),
+            el(Group, {key:"what", title:tr("What to make smaller")},
+                switchRow(Switch, "compressUploadsPhotos", "Photos", "Keeps the picture whole and sharp, and only shrinks it when nothing else fits.", rowIcon(8487, "ImageIcon")),
+                switchRow(Switch, "compressUploadsVideos", "Videos", "Picks the best quality that fits, and lowers the resolution only for long videos.", rowIcon(11187, "VideoIcon")),
+                switchRow(Switch, "compressUploadsAudio", "Audio", "Re-saves the sound as AAC at the best quality that fits.", rowIcon(10551, "MusicIcon"))),
+            footnote("note", "Files under the limit are never touched. Nitro and boosted servers raise the limit, so they need less or no compression.")];
+        return settingsBody(ui, groups);
+    }
     // Show timeout duration (#125, after ShowTimeoutDuration): Discord marks a timed-out person with a small clock that
     // says nothing about how long. Their member record (GuildMemberStore 2128) keeps communicationDisabledUntil, so their
     // messages get the same native tag Discord draws for BOT and Venus draws for staff: "Timed out · 2h 14m", with the
@@ -20182,6 +20461,8 @@
             case 1417: return features.fullImages ? hookFullAvatars(exports) : exports;
             case 8766: return features.alwaysTrust && exports && exports.default ? replaceValue(exports, "default", hookExport(exports.default, "isTrustedDomain", alwaysTrustDomain)) : exports;
             case 8537: return features.alwaysTrust ? hookExport(exports, "isSuspiciousDownload", alwaysTrustFile) : exports;
+            case 8046: return features.compressUploads ? hookCompressVideo(exports) : exports;
+            case 10006: return features.compressUploads ? hookExport(exports, "getPreCompressionFileSize", compressPreSize) : exports;
             case 13422: return features.guildLurk ? hookComponent(exports, invitePreviewDetails) : exports;
             case 7290: return features.silentLeave && exports && exports.default ? replaceValue(exports, "default", hookExport(exports.default, "closePrivateChannel", silentLeaveClose)) : exports;
             case 12337: return features.clickableMentions && exports && exports.default ? replaceValue(exports, "default", propsComponent(exports.default, clickableMentionsProps)) : exports;
@@ -20344,6 +20625,7 @@
         if (typeof data(exports, "getSize") === "function" && typeof data(exports, "readFile") === "function" &&
             typeof data(exports, "writeFile") === "function") initFiles(exports);
         if (features.voice && owns(exports, "CloudUpload")) instrumentCloudUpload(exports.CloudUpload);
+        if (features.compressUploads && owns(exports, "CloudUpload")) instrumentCompressUpload(exports.CloudUpload);
         if (features.picker) {
             const patched = pickerComponent(exports);
             if (patched !== exports) return patched;
