@@ -482,7 +482,6 @@ BOOTSTRAP_MODULES = [
     (9845, 'actions/EmojiActionCreators.tsx', ['uploadEmoji'], 'EmojiActionCreators (Clone emojis and stickers)'),
     (10058, 'modules/stickers/StickersActionCreators.tsx', ['createGuildSticker'], 'StickersActionCreators (Clone emojis and stickers)'),
     (8294, 'utils/GuildBoostingUtils.tsx', ['getMaxEmojiSlots', 'getTotalStickerCountForTier'], 'GuildBoostingUtils (Clone emojis and stickers: free slots)'),
-    (5075, 'modules/chat/native/useChatLayout.tsx', ['default', 'getChatLayout'], 'useChatLayout (Full-screen chat in landscape)'),
 ]
 
 
