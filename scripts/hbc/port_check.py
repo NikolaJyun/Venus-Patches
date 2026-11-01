@@ -468,6 +468,11 @@ BOOTSTRAP_MODULES = [
     (13523, 'modules/notifications/native/playInAppMessageSound.tsx', ['playInAppMessageSound'], 'playInAppMessageSound (Banners in Do Not Disturb: no sound)'),
     (1447, '../discord_common/js/packages/rtn-codegen/js/NativeMediaManagerModule.tsx', ['default'], 'NativeMediaManagerModule (Download voice messages)'),
     (9976, 'modules/messages/native/snowflake/MessageDataSnowflakeUtils.tsx', ['getNativeSyntheticEventData'], 'MessageDataSnowflakeUtils (Download voice messages)'),
+    (9839, 'modules/messages/native/emoji/MessageEmojiActionSheet.tsx', ['default'], 'MessageEmojiActionSheet (Clone emojis and stickers)'),
+    (10078, 'modules/stickers/native/StickerDetailActionSheet.tsx', ['default'], 'StickerDetailActionSheet (Clone emojis and stickers)'),
+    (9845, 'actions/EmojiActionCreators.tsx', ['uploadEmoji'], 'EmojiActionCreators (Clone emojis and stickers)'),
+    (10058, 'modules/stickers/StickersActionCreators.tsx', ['createGuildSticker'], 'StickersActionCreators (Clone emojis and stickers)'),
+    (8294, 'utils/GuildBoostingUtils.tsx', ['getMaxEmojiSlots', 'getTotalStickerCountForTier'], 'GuildBoostingUtils (Clone emojis and stickers: free slots)'),
     (5075, 'modules/chat/native/useChatLayout.tsx', ['default', 'getChatLayout'], 'useChatLayout (Full-screen chat in landscape)'),
 ]
 

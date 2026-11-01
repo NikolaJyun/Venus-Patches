@@ -59,6 +59,7 @@
     if (features.dndBanners) selectModules([6015, 13511, 13523]);
     if (features.landscapeFull) targetModules[5075] = 1;
     if (features.voiceDownload) selectModules([1447, 5532, 8013, 11114]);
+    if (features.cloneExpressions) selectModules([9839, 10078]);
     if (features.removedAlerts) selectModules([584, 1392, 6377, 7293, 8910, 10002, 14713, 14748]);
     if (features.bulkDelete) selectModules([584, 1087, 1392, 2068, 2119, 4845, 5532, 7445, 8013, 9978, 10692, 11114]);
     if (features.experiments) selectModules([584, 1392, 1403]);
@@ -85,7 +86,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
@@ -102,7 +103,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
         }));
     }
     // Backup and restore (#68): when you last saved a backup, and whether a restore is being applied right now.
@@ -1124,7 +1125,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
+        customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
         const slot = id + ":" + name;
@@ -1174,6 +1175,7 @@
         silentLeave:["SilentLeave", "Silent leave", "Group DM", "Leave group"],
         guildLurk:["GuildLurk", "Guild lurk", "Lurk", "Lurker", "Preview", "Invite link", "Server ID"],
         timeoutDuration:["Timeout", "Timed out", "Muted", "Mute", "Communication disabled", "Moderation", "ShowTimeoutDuration"],
+        cloneExpressions:["Clone", "Copy", "Steal", "Emoji", "Emojis", "Sticker", "Stickers", "Expressions", "ExpressionCloner", "Add to a server"],
         voiceDownload:["Voice message", "Voice messages", "Download", "Save", "Audio", "Recording", "VoiceDownload"],
         dndBanners:["Do Not Disturb", "DND", "Banner", "Banners", "In-app notifications", "Pop-up", "Focus"],
         landscapeFull:["Landscape", "Sideways", "Rotate", "Full screen", "Sidebar", "Channel list"],
@@ -1663,6 +1665,7 @@
              section("Avatars", [option("piHideMobile", "Hide the phone badge", "Avatars show a plain status dot, since the icons already show mobile.", "VENUS_PLATFORMINDICATORS")])]}));
         toggle("people", "validUser", "Fix unknown mentions", "Shows names instead of @unknown-user.");
         toggle("people", "copyBios", "Copy profile bios", "Hold a bio to select and copy it.");
+        toggle("servers", "cloneExpressions", "Clone emojis and stickers", "Tap a custom emoji or sticker in chat to add it to one of your servers.");
         toggle("people", "timeoutDuration", "Show timeout duration", "A tag next to timed-out people says how long until they can talk again.");
         toggle("people", "silentLeave", "Leave group DMs silently", "Leave group DMs without the \"left the group\" message.");
         withOptions("people", "reviewDB", "VENUS_REVIEWDB", "User and server reviews", "Read and write ReviewDB reviews on profiles and servers.", "Reviews", ReviewSettings);
@@ -18438,6 +18441,158 @@
         Promise.resolve().then(() => media.downloadMediaAssetWithContentType(file.url, 0, file.content_type || file.contentType || "audio/ogg"))
             .then(() => done(true), () => done(false));
     }
+    // Clone emojis and stickers (#125, after ExpressionCloner): tapping a custom emoji or a server sticker in chat opens
+    // Discord's own sheet for it (MessageEmojiActionSheet 9839, StickerDetailActionSheet 10078); Venus adds one button at
+    // its bottom, "Add to a server". It opens a sheet listing only the servers where you can add expressions
+    // (CREATE_GUILD_EXPRESSIONS or MANAGE_GUILD_EXPRESSIONS), each with how many free slots it has, and a name you can
+    // change first. The upload goes through Discord's own action creators (EmojiActionCreators.uploadEmoji 9845,
+    // StickersActionCreators.createGuildSticker 10058), so its stores update and errors come back the usual way.
+    const CLONE_SHEET = "VenusCloneExpression";
+    function cloneName(text, sticker) {
+        const raw = String(text || "").replace(/^:|:$/g, "");
+        if (sticker) return raw.replace(/\s+/g, " ").trim().slice(0, 30) || "sticker";
+        const clean = raw.replace(/[^\w]/g, "_").replace(/_+/g, "_").slice(0, 32);
+        return clean.length >= 2 ? clean : "emoji";
+    }
+    // Servers you can add it to, with their free slots for this kind of expression.
+    function cloneTargets(kind, animated) {
+        const guildStore = inspectedExport(2090, "default"), perms = permissions || inspectedExport(4845, "default");
+        const P = inspectedExport(1087, "Permissions") || inspectedExport(1098, "Permissions");
+        if (!guildStore || !perms || !P) return [];
+        let guilds = {};
+        try { guilds = guildStore.getGuilds() || {}; } catch (_) {}
+        const emojiStore = inspectedExport(6243, "default"), stickerStore = inspectedExport(6286, "default");
+        const maxEmoji = inspectedExport(8294, "getMaxEmojiSlots"), maxStickers = inspectedExport(8294, "getTotalStickerCountForTier");
+        const out = [];
+        Object.keys(guilds).forEach(id => {
+            const guild = guilds[id];
+            let allowed = false;
+            try { allowed = (P.CREATE_GUILD_EXPRESSIONS != null && perms.can(P.CREATE_GUILD_EXPRESSIONS, guild)) || (P.MANAGE_GUILD_EXPRESSIONS != null && perms.can(P.MANAGE_GUILD_EXPRESSIONS, guild)); } catch (_) {}
+            if (!allowed) return;
+            let used = 0, max = 0;
+            try {
+                if (kind === "emoji") {
+                    const list = emojiStore && typeof emojiStore.getGuildEmoji === "function" ? emojiStore.getGuildEmoji(id) || [] : [];
+                    used = list.filter(e => e && !!e.animated === !!animated).length;
+                    max = typeof maxEmoji === "function" ? maxEmoji(guild) : 50;
+                } else {
+                    const list = stickerStore && typeof stickerStore.getStickersByGuildId === "function" ? stickerStore.getStickersByGuildId(id) || [] : [];
+                    used = list.length;
+                    max = typeof maxStickers === "function" ? maxStickers(guild.premiumTier || 0) : 5;
+                }
+            } catch (_) {}
+            out.push({id, guild, name:guild.name || id, free:Math.max(0, (Number(max) || 0) - used), max:Number(max) || 0});
+        });
+        return out.sort((a, b) => (b.free > 0) - (a.free > 0) || a.name.localeCompare(b.name));
+    }
+    function cloneDataUri(url, type) {
+        return fetch(url).then(response => {
+            if (!response.ok) throw new Error("HTTP " + response.status);
+            return response.blob();
+        }).then(blob => new Promise((resolve, reject) => {
+            const reader = new FileReader();
+            reader.onload = () => resolve(String(reader.result).replace(/^data:[^;,]*/, "data:" + type));
+            reader.onerror = () => reject(new Error("read"));
+            reader.readAsDataURL(blob);
+        }));
+    }
+    function cloneError(error) {
+        const body = error && error.body, text = body && (body.message || body.errors && JSON.stringify(body.errors));
+        return typeof text === "string" && text ? text.slice(0, 160) : tr("Try again in a moment.");
+    }
+    function cloneUpload(item, guildId, name) {
+        if (item.kind === "emoji") {
+            const upload = inspectedExport(9845, "uploadEmoji");
+            if (typeof upload !== "function") return Promise.reject(new Error("unavailable"));
+            return cloneDataUri(item.url, item.animated ? "image/gif" : "image/png").then(image => upload({guildId, image, name, roles:[]}));
+        }
+        const create = inspectedExport(10058, "createGuildSticker");
+        if (typeof create !== "function") return Promise.reject(new Error("unavailable"));
+        return Promise.resolve(create({guildId, name, tags:item.tags || name, description:item.description || "", uri:item.url, mimeType:item.mimeType, platform:"mobile"}));
+    }
+    function CloneSheet(props) {
+        useSettings("cloneExpressions");
+        const ui = reviewUI(), item = props.item, Group = ui.TableRowGroup || RN.View, Text = inspectedExport(5187, "Text");
+        const [name, setName] = React.useState(item.name), [busy, setBusy] = React.useState(""), targets = React.useMemo(() => cloneTargets(item.kind, item.animated), []);
+        const iconUrl = inspectedExport(1417, "default");
+        const pick = target => {
+            if (busy || !target.free) return;
+            const clean = cloneName(name, item.kind === "sticker");
+            haptic("IMPACT_LIGHT"); setBusy(target.id);
+            cloneUpload(item, target.id, clean).then(() => {
+                hideReviewSheet(ui, CLONE_SHEET);
+                showToast(ui, "venus-clone", tr("Added to {server}", {server:target.name}), venusIcon(7144, "CircleCheckIcon"));
+            }, error => {
+                setBusy("");
+                showToast(ui, "venus-clone", tr("Couldn't add it: {reason}", {reason:cloneError(error)}), venusIcon(6573, "CircleXIcon"));
+            });
+        };
+        const preview = el(RN.View, {style:{alignItems:"center", gap:8, paddingTop:4}},
+            el(RN.Image, {source:{uri:item.url}, style:{width:item.kind === "sticker" ? 96 : 56, height:item.kind === "sticker" ? 96 : 56}, resizeMode:"contain"}),
+            Text ? el(Text, {variant:"text-sm/medium", color:"text-muted"}, item.kind === "sticker" ? tr("Sticker") : item.animated ? tr("Animated emoji") : tr("Emoji")) : null);
+        const nameField = ui.TextInput ? el(ui.TextInput, {label:tr("Name"), value:name, onChange:setName, maxLength:item.kind === "sticker" ? 30 : 32, autoCorrect:false, isClearable:true}) : null;
+        const rows = targets.map(target => {
+            let src = null;
+            try { const uri = iconUrl && iconUrl.getGuildIconURL({id:target.id, icon:target.guild.icon, size:64}); src = uri ? {uri} : null; } catch (_) {}
+            const icon = el(RN.View, {style:{width:32, height:32, borderRadius:12, overflow:"hidden", alignItems:"center", justifyContent:"center", backgroundColor:"#5865f233"}},
+                src ? el(RN.Image, {source:src, style:{width:32, height:32}}) : el(RN.Text, {style:{color:"#ffffff", fontWeight:"700", fontSize:12}}, target.name.split(/\s+/).map(w => w[0]).join("").slice(0, 3)));
+            const sub = !target.free ? tr("No free slots") : busy === target.id ? tr("Adding…") : pl(target.free, "{n} free slot", "{n} free slots");
+            return ui.TableRow ? el(ui.TableRow, {key:target.id, label:target.name, subLabel:sub, icon, disabled:!target.free || !!busy && busy !== target.id, arrow:!!target.free, onPress:() => pick(target)}) : null;
+        });
+        const empty = statusCard("empty", item.kind === "sticker" ? "You can't add stickers to any of your servers. You need the Create Expressions permission." :
+            "You can't add emojis to any of your servers. You need the Create Expressions permission.", {title:tr("No servers to add it to"), IconComponent:venusIcon(9545, "ServerIcon")});
+        const Sheet = ui.ActionSheet || RN.View;
+        return el(Sheet, {startExpanded:true},
+            ui.Header ? el(ui.Header, {title:tr("Add to a server"), trailing:ui.Close ? el(ui.Close, {onPress:() => hideReviewSheet(ui, CLONE_SHEET)}) : undefined}) : null,
+            el(RN.View, {style:{paddingHorizontal:16, paddingBottom:24, gap:16}},
+                preview, targets.length ? nameField : null,
+                targets.length ? el(Group, {title:tr("Your servers")}, rows) : empty));
+    }
+    function cloneOpen(item) {
+        const ui = reviewUI();
+        if (!enabled("cloneExpressions") || typeof ui.showSheet !== "function") return;
+        haptic("SELECTION");
+        try { ui.showSheet({key:CLONE_SHEET, content:el(CloneSheet, {item}), stackingBehavior:"stack"}); } catch (_) {}
+    }
+    // The button at the bottom of Discord's sheet, in its own secondary style.
+    function cloneButton(item) {
+        const Button = inspectedExport(5479, "Button");
+        return el(RN.View, {key:"venus-clone", style:{paddingHorizontal:16, paddingTop:12, paddingBottom:8}},
+            Button ? el(Button, {text:tr("Add to a server"), variant:"secondary", size:"md", grow:true, icon:venusIcon(11657, "ImagePlusIcon"), onPress:() => cloneOpen(item)}) : null);
+    }
+    function cloneIntoSheet(tree, item) {
+        if (!tree || !item || !React) return tree;
+        let added = false;
+        return cloneTree(tree, (node, nodeProps) => {
+            if (added || nodeProps.startExpanded === undefined) return nodeProps;
+            added = true;
+            const kids = Array.isArray(nodeProps.children) ? nodeProps.children : [nodeProps.children];
+            return Object.assign({}, nodeProps, {children:kids.concat([cloneButton(item)])});
+        }, 0, () => added);
+    }
+    function cloneEmojiSheet(orig, self, args) {
+        const tree = orig.apply(self, args), props = args[0], node = props && props.emojiNode;
+        if (!enabled("cloneExpressions") || !node || !node.id || !/^\d{17,20}$/.test(String(node.id))) return tree;
+        const store = inspectedExport(6243, "default");
+        let custom = null;
+        try { custom = store && typeof store.getCustomEmojiById === "function" ? store.getCustomEmojiById(String(node.id)) : null; } catch (_) {}
+        const animated = !!(custom && custom.animated) || /\.gif|animated=true/.test(String(node.src || ""));
+        return cloneIntoSheet(tree, {kind:"emoji", id:String(node.id), animated, name:cloneName(custom && custom.name || node.alt || "emoji"),
+            url:"https://cdn.discordapp.com/emojis/" + node.id + (animated ? ".gif" : ".png")});
+    }
+    function cloneStickerSheet(orig, self, args) {
+        const tree = orig.apply(self, args), props = args[0], shown = props && (props.renderableSticker || props.sticker);
+        if (!enabled("cloneExpressions") || !shown || !shown.id) return tree;
+        const store = inspectedExport(6286, "default");
+        let sticker = shown;
+        try { sticker = store && typeof store.getStickerById === "function" && store.getStickerById(String(shown.id)) || shown; } catch (_) {}
+        const format = Number(sticker.format_type != null ? sticker.format_type : sticker.formatType);
+        // Lottie stickers (3) only exist in Discord's own packs; servers can't upload them.
+        if (format === 3 || !sticker.guild_id && sticker.pack_id) return tree;
+        const gif = format === 4;
+        return cloneIntoSheet(tree, {kind:"sticker", id:String(sticker.id), name:cloneName(sticker.name, true), tags:sticker.tags || "", description:sticker.description || "",
+            mimeType:gif ? "image/gif" : "image/png", url:(gif ? "https://media.discordapp.net/stickers/" : "https://cdn.discordapp.com/stickers/") + sticker.id + (gif ? ".gif" : ".png")});
+    }
     function AlwaysTrustSettings() {
         useSettings("alwaysTrust");
         const ui = reviewUI();
@@ -19591,6 +19746,8 @@
             case 14713: return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookGatewaySocket(exports) : exports;
             case 14748: return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookPauseGateway(exports) : exports;
             case 6015: if (features.dndBanners && exports && exports.default) dndBanners.presence = exports.default; return features.badges ? hookSelfPresenceStore(exports) : exports;
+            case 9839: return features.cloneExpressions ? hookComponent(exports, cloneEmojiSheet) : exports;
+            case 10078: return features.cloneExpressions ? hookComponent(exports, cloneStickerSheet) : exports;
             case 13511: return features.dndBanners ? hookExport(exports, "shouldNotify", dndShouldNotify) : exports;
             case 13523: return features.dndBanners ? hookExport(exports, "playInAppMessageSound", dndBannerSound) : exports;
             case 5075: return features.landscapeFull ? hookExport(hookExport(exports, "default", landscapeChatLayout), "getChatLayout", landscapeChatLayout) : exports;
