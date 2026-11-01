@@ -74,6 +74,7 @@ Open **Discord Settings → Venus → Features** to turn things on or off at any
 | | Venus button on profile bar | A shortcut to Venus, next to the notifications bell |
 | | Unlock app icons | Use any Discord app icon in Settings without Nitro |
 | | Unlock Nitro themes | Use Discord's gradient themes in Settings > Appearance without Nitro. Each account keeps its own, so switching accounts never loses it. Only this phone sees them |
+| | Full-screen chat in landscape | Turn your phone sideways and the chat fills the whole screen, instead of sharing it with the server and channel lists. Swipe from the left edge to open them, like in portrait. Tablets keep Discord's side-by-side layout |
 | | Material You colors | Colors Discord to match your wallpaper, in light and dark, like Android 12+ apps. Or pick one of five colors or any color; choose how much the backgrounds take the tint. Wallpaper colors need Android 12 or newer |
 | | Custom themes | Install Revenge and Vendetta color themes from a link, then pick one from a gallery that previews each in its own colors |
 | | Icon packs | Replace Discord's icons across the app with built-in community icon packs (Rosiecord Plumpy, Rosiecord Iconsax, MD3, Solar, Deco, Material Two Tone, Iconsax Bulk) or a custom icon pack link |
