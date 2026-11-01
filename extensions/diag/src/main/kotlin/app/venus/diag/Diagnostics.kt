@@ -357,7 +357,7 @@ object Diagnostics {
                     i = end
                     continue
                 }
-                seen.put(key, prefix(first).trim())
+                seen.put(key, (prefix(first) as java.lang.String).trim())
             }
             var k = i
             while (k < end) {
