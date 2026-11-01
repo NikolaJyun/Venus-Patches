@@ -19258,6 +19258,14 @@
         const layout = orig.apply(self, args);
         return layout && layout.isChatBesideChannelList && landscapePhone() ? LANDSCAPE_PHONE_LAYOUT : layout;
     }
+    // useChatLayout is a hook: Discord's screens only call it again when the window changes size. Without subscribing
+    // here, flipping the switch changed nothing until the next rotation or restart, so every change showed up one step
+    // late: turning it on seemed to do nothing, and turning it off kept the full-screen chat. The same subscription also
+    // redraws once the saved settings finish loading, after Discord's first frame. Always called, so the hook count is stable.
+    function landscapeChatLayoutHook(orig, self, args) {
+        try { if (React) useSettings("landscapeFull"); } catch (_) {}
+        return landscapeChatLayout(orig, self, args);
+    }
     // Download voice messages (#125, after VoiceDownload): a voice message gets a Download button of its own, right under its
     // waveform: the native call-to-action button Discord's message view already draws (Message.ctaButton, the one under
     // age-verification DMs), so it looks and feels like the rest of the chat and needs no hold menu. Its tap reaches
@@ -20861,7 +20869,7 @@
             case 10078: return features.cloneExpressions ? hookComponent(exports, cloneStickerSheet) : exports;
             case 13511: return features.dndBanners ? hookExport(exports, "shouldNotify", dndShouldNotify) : exports;
             case 13523: return features.dndBanners ? hookExport(exports, "playInAppMessageSound", dndBannerSound) : exports;
-            case 5075: return features.landscapeFull ? hookExport(hookExport(exports, "default", landscapeChatLayout), "getChatLayout", landscapeChatLayout) : exports;
+            case 5075: return features.landscapeFull ? hookExport(hookExport(exports, "default", landscapeChatLayoutHook), "getChatLayout", landscapeChatLayout) : exports;
             case 8590: if (features.badges && exports && exports.default) badgesAttachStore(exports.default); return exports;
             case 9978:
                 if (features.translate) exports = hookComponent(exports, translateSheet);
