@@ -54,6 +54,8 @@
     if (features.listenAlong) targetModules[14082] = 1;
     if (features.clickableMentions) selectModules([1392, 2068, 2119, 12337]);
     if (features.silentLeave) selectModules([2068, 7290]);
+    if (features.silentEdit || features.silentDelete) selectModules([584, 1392, 5532, 7445]);
+    if (features.localEdit) selectModules([584, 1392, 5532, 8013, 9978]);
     if (features.guildLurk) targetModules[13422] = 1;
     if (features.quietReplies) selectModules([1392, 5532, 9990]);
     if (features.compressUploads) selectModules([8023, 8046, 10006]);
@@ -88,7 +90,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
@@ -105,7 +107,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
         }));
     }
     // Backup and restore (#68): when you last saved a backup, and whether a restore is being applied right now.
@@ -355,6 +357,7 @@
         if (features.hideAnything && settings.hideAnythingSpots) { const labels = hideRowLabels(); if (labels) extra.hideAnythingLabels = labels; }
         if (features.materialYou && materialYou.system) extra.materialYouSystem = materialYou.system;
         if (features.serverEdit && serverEdits.size) extra.serverEdits = serverEditData(false);
+        if (features.localEdit && localEdits.size) extra.localEdits = localEditData();
         if ((features.nitroThemes || features.accountSwitcher) && nitroThemeHasAny()) extra.nitroThemes = nitroThemeData();
         return JSON.stringify(Object.keys(extra).length ? Object.assign({}, settings, extra) : settings);
     }
@@ -719,6 +722,7 @@
                 }
                 if (features.removedAlerts) removedLoad(loaded.removedSeen);
                 if (features.serverEdit && !serverEdit.dirty) serverEditLoad(serverEditClean(loaded.serverEdits, false));
+                if (features.localEdit) localEditLoad(loaded.localEdits);
                 if (features.badges) {
                     const accounts = loaded.badgesAccounts, played = loaded.badgesPlayed, snowflake = id => typeof id === "string" && /^\d{17,20}$/.test(id);
                     if (Array.isArray(accounts)) accounts.slice(0, 50).forEach(id => { if (snowflake(id)) badges.accounts.add(id); });
@@ -1132,7 +1136,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1167,7 +1171,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"]};
+        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
         const slot = id + ":" + name;
@@ -1216,6 +1220,9 @@
         listenAlong:["Listen along", "Spotify", "Music", "Friends", "Profile", "Sync"],
         clickableMentions:["ClickableMentions", "Mentions", "Profile", "Message bar"],
         silentLeave:["SilentLeave", "Silent leave", "Group DM", "Leave group"],
+        silentEdit:["Silent edit", "Edited", "(edited)", "Edit message", "No edit mark"],
+        silentDelete:["Silent delete", "Anti log", "Message logger", "Delete without logs"],
+        localEdit:["Local edit", "Edit locally", "Fake message", "Edit other people's messages"],
         guildLurk:["GuildLurk", "Guild lurk", "Lurk", "Lurker", "Preview", "Invite link", "Server ID"],
         timeoutDuration:["Timeout", "Timed out", "Muted", "Mute", "Communication disabled", "Moderation", "ShowTimeoutDuration"],
         cloneExpressions:["Clone", "Copy", "Steal", "Emoji", "Emojis", "Sticker", "Stickers", "Expressions", "ExpressionCloner", "Add to a server"],
@@ -1714,6 +1721,9 @@
         toggle("servers", "cloneExpressions", "Clone emojis and stickers", "Tap a custom emoji or sticker in chat to add it to one of your servers.");
         toggle("people", "timeoutDuration", "Show timeout duration", "A tag next to timed-out people says how long until they can talk again.");
         toggle("people", "silentLeave", "Leave group DMs silently", "Leave group DMs without the \"left the group\" message.");
+        withOptions("messages", "silentEdit", "VENUS_SILENTEDIT", "Edit without the (edited) mark", "Only works when your message is the latest in the chat. Others see a new message, not an edit.", "Silent edit", SilentEditSettings);
+        toggle("messages", "silentDelete", "Delete without a trace", "Blanks your message before deleting it, so message loggers have nothing to keep.");
+        withOptions("messages", "localEdit", "VENUS_LOCALEDIT", "Edit messages locally", "Change how any message reads on this phone. Only you see it.", "Edit locally", LocalEditSettings);
         withOptions("people", "reviewDB", "VENUS_REVIEWDB", "User and server reviews", "Read and write ReviewDB reviews on profiles and servers.", "Reviews", ReviewSettings);
         withOptions("people", "userNotif", "VENUS_USERNOTIF", "User activity notifications", "Get notified when chosen people change status, type or message.", "Activity notifications", UserNotifSettings);
         // The two logs open from their feature's page, one level below it, like Discord's own nested settings.
@@ -3453,6 +3463,7 @@
         // A bulk delete is meant to clear messages for real: keeping each one first flashed it red, saved the archive and
         // took a second removal right after.
         if (features.bulkDelete && bulkDelete.removing.size && bulkDelete.removing.has(key)) return false;
+        if (silentRemoving.size && silentRemoving.has(key)) return false;
         const message = msgStore && msgStore.getMessage(event.channelId,event.id);
         if (!retainable(message, event)) return false;
         logMessage("d", message, event.channelId, message.content || "");
@@ -8259,9 +8270,9 @@
             }
         });
     }
-    function messageRow(orig, self, args) { return messageRowResult(orig.apply(self, args), args[0]); }
+    function messageRow(orig, self, args) { const row = features.localEdit ? localEditRow(args[0]) : args[0]; return messageRowResult(orig.call(self, row), row); }
     // generate(row) is called once per chat row as you scroll: skip the arguments object (2.3x).
-    messageRow.call1 = (orig, self, row) => messageRowResult(orig.call(self, row), row);
+    messageRow.call1 = (orig, self, row) => { if (features.localEdit) row = localEditRow(row); return messageRowResult(orig.call(self, row), row); };
     function messageRowResult(result, row) {
         if (!result || !row || row.rowType !== 1 || !result.message) return result;
         const pastelOn = enabled("pastelize"), translateOn = enabled("translate"), noDeleteOn = enabled("noDelete"), highlightOn = enabled("messageHighlight"), bulkOn = features.bulkDelete && bulkDelete.active;
@@ -10265,7 +10276,7 @@
         ["guild.reviews", "guild", 9851, "StarIcon"], ["guild.serverTag", "guild", 9365, "TagIcon"],
         ["you.status", "you", 8471, "ChatIcon"], ["you.friends", "you", 8489, "GroupIcon"], ["you.orbs", "you", 9331, "OrbsIcon"],
         ["message.reactions", "message", 9252, "ReactionIcon"], ["message.edit", "message", 10023, "PencilIcon"], ["message.reply", "message", 12274, "ArrowAngleLeftUpIcon"],
-        ["message.forward", "message", 12696, "ArrowAngleRightUpIcon"], ["message.thread", "message", 8473, "ThreadIcon"], ["message.translate", "message", 9415, "LanguageIcon"],
+        ["message.forward", "message", 12696, "ArrowAngleRightUpIcon"], ["message.thread", "message", 8473, "ThreadIcon"], ["message.translate", "message", 9415, "LanguageIcon"], ["message.localEdit", "message", 10023, "PencilIcon"],
         ["message.copyText", "message", 5141, "CopyIcon"], ["message.markUnread", "message", 10650, "ChatMarkUnreadIcon"], ["message.pin", "message", 10641, "PinIcon"],
         ["message.bookmark", "message", 13769, "BookmarkOutlineIcon"], ["message.reminder", "message", 5150, "ClockIcon"], ["message.apps", "message", 8506, "AppsIcon"],
         ["message.mention", "message", 8490, "AtIcon"], ["message.copyLink", "message", 5137, "LinkIcon"], ["message.copyId", "message", 10316, "IdIcon"],
@@ -10310,7 +10321,7 @@
         "message.save":"Save Image", "message.copyMedia":"Copy Media Link", "message.publish":"Publish", "message.removeEmbeds":"Remove Embeds",
         "message.removeReactions":"Remove All Reactions", "message.report":"Report to Discord", "message.delete":"Delete Message"};
     // Rows Venus adds to that menu, by the key it gives them.
-    const MESSAGE_VENUS_ROWS = {"venus-translate":"message.translate", "venus-bulk-delete":"message.select"};
+    const MESSAGE_VENUS_ROWS = {"venus-translate":"message.translate", "venus-local-edit":"message.localEdit", "venus-bulk-delete":"message.select"};
     // A message in Discord's language (intl 1126), or "" when it isn't there.
     function discordText(hash) {
         try { const m = global.__r(1128), msg = m && m.t && m.t[hash]; return msg != null && m.intl ? String(m.intl.string(msg) || "") : ""; } catch (_) { return ""; }
@@ -10377,6 +10388,7 @@
             case "guild.reviews": return tr("Reviews");
             case "message.reactions": return tr("Quick reactions");
             case "message.translate": return tr("Translate");
+            case "message.localEdit": return tr("Edit locally");
             case "message.select": return tr("Select Messages");
         }
         return key;
@@ -19656,6 +19668,223 @@
             footnote("note", "Only servers that allow previews, like Discoverable communities, open this way. You won't show in the member list, and you join to send messages.")];
         return settingsBody(ui, groups);
     }
+    // Silent edit, Silent delete and Local edit (issues #46 and #129, based on the Silent Edit, Silentdeletee and localedit
+    // plugins). Silent edit sends the edited text as a new message and deletes the old one, so nothing says "(edited)";
+    // that only makes sense for the newest message in a chat, which is the one the new message lands right under.
+    // Silent delete blanks your message first, so a message logger that reads the edit, not the delete, sees nothing.
+    // Local edit changes how one message reads on this phone only: the row is drawn from a copy with your text.
+    const silentRemoving = new Set();
+    // Gateway deletes caused by these two aren't kept by Keep deleted messages: they were meant to vanish.
+    function silentRemovingKey(key) { silentRemoving.add(key); later(() => silentRemoving.delete(key), 20000, false); }
+    function httpCall(method, request) {
+        const http = inspectedExport(1297, "HTTP"), send = http && http[method];
+        if (typeof send !== "function") return Promise.reject(new Error("Discord's network client isn't ready"));
+        return Promise.resolve().then(() => send.call(http, request));
+    }
+    function ownMessage(message) {
+        const me = currentUser(), author = message && message.author;
+        return !!(me && author && author.id === me.id);
+    }
+    function silentNonce() { return String(Math.floor((Date.now() - 1420070400000) * 4194304)); }
+    // Why an edit can't be silent, or "" when it can.
+    function silentEditBlocker(channelId, message, content) {
+        if (!message || !message.id || !ownMessage(message)) return "mine";
+        if (message.type !== 0 && message.type !== 19) return "kind";
+        if (content === message.content) return "same";
+        if (message.poll || Array.isArray(message.components) && message.components.length || Array.isArray(message.stickerItems) && message.stickerItems.length ||
+            Array.isArray(message.messageSnapshots) && message.messageSnapshots.length) return "files";
+        if (Array.isArray(message.attachments) && message.attachments.length) return "files";
+        let list = null;
+        try { list = msgStore && typeof msgStore.getMessages === "function" ? msgStore.getMessages(channelId) : null; } catch (_) { list = null; }
+        const last = list && typeof list.last === "function" ? list.last() : null;
+        if (!last || String(last.id) !== String(message.id) || list.hasMoreAfter) return "latest";
+        return "";
+    }
+    // editMessage(channelId, messageId, {content}): the hook sits under the other edit hooks, so it gets their final text.
+    function silentEdit(orig, self, args) {
+        if (!enabled("silentEdit")) return orig.apply(self, args);
+        const edit = args[2], channelId = String(args[0]), messageId = String(args[1]);
+        const content = edit && typeof edit.content === "string" ? edit.content : null;
+        if (content === null || !content.trim() || content.length > 2000) return orig.apply(self, args);
+        let message = null;
+        try { message = msgStore && typeof msgStore.getMessage === "function" ? msgStore.getMessage(channelId, messageId) : null; } catch (_) { message = null; }
+        const blocker = silentEditBlocker(channelId, message, content);
+        if (blocker) {
+            if (settings.silentEditNotice && (blocker === "latest" || blocker === "files")) later(() => reviewToast(reviewUI(),
+                blocker === "latest" ? "Edited the normal way: only your latest message can be edited silently" :
+                    "Edited the normal way: a message with files can't be edited silently", venusIcon(10023, "PencilIcon")), 0);
+            return orig.apply(self, args);
+        }
+        const body = {content, tts:false, nonce:silentNonce(), allowed_mentions:{parse:[], replied_user:false}};
+        const flags = Number(message.flags) & (4 | 4096);
+        if (flags) body.flags = flags;
+        const reference = message.messageReference || message.message_reference;
+        const quoted = reference && (reference.message_id || reference.messageId);
+        if (quoted) body.message_reference = {message_id:String(quoted), channel_id:String(reference.channel_id || reference.channelId || channelId),
+            guild_id:reference.guild_id || reference.guildId || undefined};
+        return httpCall("post", {url:"/channels/" + channelId + "/messages", body}).then(response => {
+            silentRemovingKey(deletedKey(channelId, messageId));
+            return httpCall("del", {url:"/channels/" + channelId + "/messages/" + messageId}).then(() => response, () => response);
+        }, () => orig.apply(self, args));
+    }
+    // deleteMessage(channelId, messageId): your own message is made blank, then deleted a moment later.
+    function silentDelete(orig, self, args) {
+        if (!enabled("silentDelete")) return orig.apply(self, args);
+        const channelId = String(args[0]), messageId = String(args[1]), key = deletedKey(channelId, messageId);
+        let message = null;
+        try { message = msgStore && typeof msgStore.getMessage === "function" ? msgStore.getMessage(channelId, messageId) : null; } catch (_) { message = null; }
+        if (!message || !ownMessage(message) || features.noDelete && deleted.has(key) || message.type !== 0 && message.type !== 19) return orig.apply(self, args);
+        silentRemovingKey(key);
+        const url = "/channels/" + channelId + "/messages/" + messageId;
+        return httpCall("patch", {url, body:{content:"\u200b", embeds:[], attachments:[]}}).then(() => null, () => null).then(() =>
+            new Promise(resolve => later(() => resolve(orig.apply(self, args)), 350)));
+    }
+    // One new row in a message's hold menu (LongPressMessageActionSheet 9978), styled like Discord's own rows.
+    function sheetAddRow(tree, props, key, label, IconComponent, onPress) {
+        let added = false;
+        return cloneTree(tree, function (node, nodeProps) {
+            if (added || !Array.isArray(nodeProps.children)) return nodeProps;
+            const rows = nodeProps.children.filter(child => child && child.props && typeof child.props.label === "string" && typeof child.props.onPress === "function");
+            if (!rows.length || nodeProps.children.some(child => child && child.key === key)) return nodeProps;
+            added = true;
+            const template = rows[rows.length - 1], icon = template.props.icon;
+            const row = React.cloneElement(template, {key, label, arrow:false, variant:undefined, disabled:false,
+                icon:icon && icon.props && "IconComponent" in icon.props ? React.cloneElement(icon, {IconComponent}) : icon,
+                onPress:function () {
+                    const sheets = reviewUI().sheets;
+                    try { if (sheets && typeof sheets.hideActionSheet === "function") sheets.hideActionSheet("MessageLongPressActionSheet"); } catch (_) {}
+                    if (props && typeof props.onClose === "function") try { props.onClose(); } catch (_) {}
+                    later(onPress, 60);
+                }});
+            const index = nodeProps.children.indexOf(template) + 1;
+            return Object.assign({}, nodeProps, {children:nodeProps.children.slice(0, index).concat([row], nodeProps.children.slice(index))});
+        }, 0, () => added);
+    }
+    const LOCAL_EDIT_MAX = 300, LOCAL_EDIT_TEXT = 4000, LOCAL_EDIT_SHEET = "VenusLocalEdit";
+    // "channel:message" -> the text you gave it, oldest first.
+    const localEdits = new Map(), localEditCopies = new WeakMap();
+    function localEditLoad(raw) {
+        if (!raw || typeof raw !== "object" || Array.isArray(raw)) return;
+        Object.keys(raw).slice(-LOCAL_EDIT_MAX).forEach(key => {
+            if (/^\d{17,20}:\d{17,20}$/.test(key) && typeof raw[key] === "string" && raw[key].length <= LOCAL_EDIT_TEXT && !localEdits.has(key)) localEdits.set(key, raw[key]);
+        });
+    }
+    function localEditData() { const out = {}; localEdits.forEach((text, key) => { out[key] = text; }); return out; }
+    // A copy of an object with one own property replaced, keeping its prototype (message records are classes).
+    function copyWith(object, key, value) {
+        const copy = Object.create(Object.getPrototypeOf(object), Object.getOwnPropertyDescriptors(object));
+        Object.defineProperty(copy, key, {value, enumerable:true, configurable:true, writable:true});
+        return copy;
+    }
+    // generate(row): the row, or a copy whose message reads as you wrote it.
+    function localEditRow(row) {
+        if (!row || row.rowType !== 1 || !row.message || !localEdits.size || !enabled("localEdit")) return row;
+        const message = row.message, key = (message.channel_id || message.channelId) + ":" + message.id, text = localEdits.get(key);
+        if (text === undefined) return row;
+        const shown = settings.localEditMark ? text + "\n-# " + tr("Edited on this phone") : text;
+        let hit = localEditCopies.get(message);
+        if (!hit || hit.shown !== shown) { hit = {shown, row:null}; localEditCopies.set(message, hit); }
+        if (!hit.row || hit.source !== row) { hit.source = row; hit.row = copyWith(row, "message", copyWith(message, "content", shown)); }
+        return hit.row;
+    }
+    // A row is drawn again only when its message changes, so the message is updated twice, to what it is.
+    function localEditRedraw(channelId, id) {
+        const d = dispatcher;
+        if (typeof d !== "function") return;
+        let live = null;
+        try { live = msgStore && typeof msgStore.getMessage === "function" ? msgStore.getMessage(channelId, id) : null; } catch (_) { live = null; }
+        const content = live && typeof live.content === "string" ? live.content : null;
+        if (content === null) return;
+        const update = value => { try { d({type:"MESSAGE_UPDATE", message:{id, channel_id:channelId, content:value}}); } catch (_) {} };
+        update(content + "\u200b"); later(() => update(content), 80);
+    }
+    function localEditSet(channelId, id, text) {
+        const key = channelId + ":" + id;
+        if (text === undefined) localEdits.delete(key);
+        else { localEdits.delete(key); if (localEdits.size >= LOCAL_EDIT_MAX) localEdits.delete(localEdits.keys().next().value); localEdits.set(key, text); }
+        save(); notify("localEdit"); localEditRedraw(channelId, id);
+    }
+    function localEditClear() {
+        const keys = Array.from(localEdits.keys());
+        localEdits.clear(); save(); notify("localEdit");
+        keys.forEach(key => { const at = key.indexOf(":"); localEditRedraw(key.slice(0, at), key.slice(at + 1)); });
+    }
+    function localEditSheet(orig, self, args) {
+        const tree = orig.apply(self, args), props = args[0], message = props && props.message;
+        if (!enabled("localEdit") || !React || !tree || !message || !message.id) return tree;
+        const channelId = String(message.channel_id || message.channelId || props.channel && props.channel.id || "");
+        if (!channelId || message.type !== 0 && message.type !== 19) return tree;
+        const text = typeof message.content === "string" ? message.content : "";
+        if (!text.trim() && !localEdits.has(channelId + ":" + message.id)) return tree;
+        const id = String(message.id), name = message.author && (message.author.globalName || message.author.username) || "";
+        return sheetAddRow(tree, props, "venus-local-edit", tr("Edit locally"), venusIcon(10023, "PencilIcon"),
+            () => localEditOpen(channelId, id, text, String(name)));
+    }
+    function localEditOpen(channelId, id, original, name) {
+        const ui = reviewUI();
+        if (!enabled("localEdit") || typeof ui.showSheet !== "function") return;
+        try { ui.showSheet({key:LOCAL_EDIT_SHEET, content:el(LocalEditSheet, {channelId, id, original, name}), stackingBehavior:"stack"}); } catch (_) {}
+    }
+    function LocalEditSheet(props) {
+        useSettings("localEdit");
+        const ui = reviewUI(), Button = inspectedExport(5479, "Button"), key = props.channelId + ":" + props.id;
+        const saved = localEdits.get(key), start = saved !== undefined ? saved : props.original;
+        const [text, setText] = React.useState(start);
+        const changed = text !== start && String(text).trim().length > 0;
+        const close = () => hideReviewSheet(ui, LOCAL_EDIT_SHEET);
+        const save = () => {
+            if (!changed) return;
+            haptic("IMPACT_LIGHT");
+            const clean = String(text).slice(0, LOCAL_EDIT_TEXT);
+            localEditSet(props.channelId, props.id, clean === props.original ? undefined : clean);
+            close();
+            reviewToast(ui, "Edited on this phone", venusIcon(10023, "PencilIcon"));
+        };
+        const restore = () => {
+            haptic("IMPACT_LIGHT"); localEditSet(props.channelId, props.id, undefined); close();
+            reviewToast(ui, "Original message back", venusIcon(12093, "UndoIcon"));
+        };
+        const button = (id, label, onPress, variant, disabled) => Button ? el(Button, {key:id, text:label, variant, size:"lg", grow:true, disabled:!!disabled, onPress}) : null;
+        const header = ui.Header ? el(ui.Header, {title:tr("Edit locally"), trailing:ui.Close ? el(ui.Close, {onPress:close}) : undefined}) : null;
+        const input = ui.TextInput ? el(ui.TextInput, {value:text, onChange:value => setText(String(value == null ? "" : value)), multiline:true, numberOfLines:6, autoFocus:true,
+                maxLength:LOCAL_EDIT_TEXT, accessibilityLabel:tr("Message")}) :
+            el(RN.TextInput, {value:text, onChangeText:setText, multiline:true, maxLength:LOCAL_EDIT_TEXT, style:{fontSize:16, padding:12, minHeight:120, color:"#f2f3f5"}});
+        const body = [props.name ? groupTitle("who", tr("Message from {name}", {name:props.name})) : null, el(RN.View, {key:"input"}, input),
+            footnote("note", "Only you see this, on this phone. Nobody else sees the change, and the message stays as it was on Discord."),
+            el(RN.View, {key:"buttons", style:{gap:10, paddingTop:4}}, button("save", tr("Save"), save, "primary", !changed),
+                saved !== undefined ? button("restore", tr("Restore original"), restore, "secondary") : null)];
+        return serverEditScroll(ui, header, el(RN.View, {style:{paddingHorizontal:12, paddingBottom:24, gap:16}}, body.filter(Boolean)));
+    }
+    function SilentEditSettings() {
+        useSettings("silentEdit");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("silentEdit"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const groups = [
+            on ? null : offCard("status", venusIcon(10023, "PencilIcon"), "silentEdit"),
+            statusCard("limit", "Only works when your message is the latest in the chat. Edit an older message and it's edited the normal way, with (edited).",
+                {title:tr("Latest message only"), IconComponent:venusIcon(7838, "WarningIcon")}),
+            el(Group, {key:"opts", title:tr("When it can't be silent")},
+                switchRow(Switch, "silentEditNotice", "Tell me", "A short message says the edit was sent the normal way.", rowIcon(5145, "CircleInformationIcon"))),
+            footnote("note", "Venus sends your new text as a message and deletes the old one, so it has a new time and loses its reactions. Messages with files, stickers or polls are always edited the normal way.")];
+        return settingsBody(ui, groups);
+    }
+    function LocalEditSettings() {
+        useSettings("localEdit");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("localEdit"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow, n = localEdits.size;
+        const groups = [
+            on ? null : offCard("status", venusIcon(10023, "PencilIcon"), "localEdit"),
+            statusCard("count", n ? pl(n, "{n} message reads differently on this phone.", "{n} messages read differently on this phone.") :
+                "Hold any message in a chat and tap Edit locally to change how it reads here.", {IconComponent:venusIcon(10023, "PencilIcon")}),
+            el(Group, {key:"opts", title:tr("In chat")},
+                switchRow(Switch, "localEditMark", "Mark edited messages", "A small line under the message says you changed it.", rowIcon(5145, "CircleInformationIcon"))),
+            n ? el(Group, {key:"clear"}, actionRow(ui, "restore", "Restore all messages", "Every message goes back to what was sent.",
+                () => confirmAction("Restore all messages?", "Every message you edited locally goes back to what was sent.", "Restore all", localEditClear), !on, true, rowIcon(12093, "UndoIcon"))) : null,
+            footnote("note", "Only you see these changes, and only on this phone. Nothing is sent to Discord.")];
+        return settingsBody(ui, groups);
+    }
     // Tap mentions to open profiles (based on ClickableMentions by mwittrien). The message bar is a native view
     // (ChatInputNativeComponent, 12337) that only reports taps on attachments, but every tap moves the cursor and arrives
     // as onSelectionOrTextChange. When the text hasn't changed and the cursor lands inside an @mention, Venus opens that
@@ -20637,6 +20866,7 @@
             case 9978:
                 if (features.translate) exports = hookComponent(exports, translateSheet);
                 if (features.noDelete) exports = hookComponent(exports, noDeleteSheet);
+                if (features.localEdit) exports = hookComponent(exports, localEditSheet);
                 return features.bulkDelete ? hookComponent(exports, bulkDeleteSheet) : exports;
             case 9561: return features.splitMessages ? maxLengthModule(exports) : exports;
             case 17538: return (features.youBarSettings || features.accountSwitcher) ? hookComponent(exports, youBarButtons) : exports;
@@ -20644,7 +20874,7 @@
             case 1266: if (features.pastelize) pastelHash = typeof exports === "function" ? exports : exports.default; return exports;
             case 2128: if (features.pastelize) guildMembers = exports.default; if (features.timeoutDuration && exports && exports.default) timeoutTag.members = exports.default; return exports;
             case 8013:
-                if ((features.pastelize || features.noDelete || features.translate || features.messageHighlight || features.bulkDelete || features.staffTag || features.timeoutDuration || features.voiceDownload) && exports.default && exports.default.prototype)
+                if ((features.pastelize || features.noDelete || features.translate || features.messageHighlight || features.bulkDelete || features.staffTag || features.timeoutDuration || features.voiceDownload || features.localEdit) && exports.default && exports.default.prototype)
                     hookExport(exports.default.prototype, "generate", messageRow);
                 return exports;
             case 5207: if (features.platformIndicators || features.userNotif) { presenceStore = exports.default; if (features.userNotif) userNotifSeedStatuses(); } return exports;
@@ -20733,12 +20963,12 @@
             case 5400: return features.quickDelete || features.noConfirmPin ? replaceValue(exports, "default", hookExport(exports.default, "show", quickConfirm)) : exports;
             case 5534: if (features.noDelete) { messageRecords = exports; restoreDeleted(); } return exports;
             case 1392:
-                if (exports && exports.default && (features.validUser || features.splitMessages || features.fixEmbeds || features.translate || features.userNotif || features.removedAlerts || features.accountSwitcher || features.appIcons || features.nitroThemes || features.messageHighlight || features.serverInfo || features.noDelete || features.reviewDB || features.platformIndicators || features.hiddenChannels || features.gestures || features.freeNitro || features.badges || features.bulkDelete || features.experiments || features.quietReplies))
+                if (exports && exports.default && (features.validUser || features.splitMessages || features.fixEmbeds || features.translate || features.userNotif || features.removedAlerts || features.accountSwitcher || features.appIcons || features.nitroThemes || features.messageHighlight || features.serverInfo || features.noDelete || features.reviewDB || features.platformIndicators || features.hiddenChannels || features.gestures || features.freeNitro || features.badges || features.bulkDelete || features.experiments || features.quietReplies || features.silentEdit || features.silentDelete || features.localEdit))
                     userStore = exports.default;
                 if (features.noDelete || features.reviewDB || features.platformIndicators || features.hiddenChannels) restoreDeleted();
                 return exports;
             case 5532:
-                if (features.jumpToTop || features.messageHighlight || features.noDelete || features.translate || features.hideBlocked || features.bulkDelete) msgStore = exports.default;
+                if (features.jumpToTop || features.messageHighlight || features.noDelete || features.translate || features.hideBlocked || features.bulkDelete || features.silentEdit || features.silentDelete || features.localEdit) msgStore = exports.default;
                 if (features.noDelete) {
                     exports = replaceValue(exports, "default", hookExport(hookExport(msgStore, "getMessage", retainedMessage), "getMessages", retainedMessages));
                     restoreDeleted();
@@ -20770,7 +21000,7 @@
                 if (features.bulkDelete && exports && exports.default) bulkDeleteInit(exports.default);
                 if (features.experiments && exports && exports.default) experimentsInit(exports.default);
                 if (features.voiceOptions && exports && exports.default) voiceOptionsInit(exports.default);
-                if ((features.messageHighlight || features.bulkDelete) && exports && exports.default && !dispatcher)
+                if ((features.messageHighlight || features.bulkDelete || features.localEdit) && exports && exports.default && !dispatcher)
                     dispatcher = exports.default.dispatch.bind(exports.default);
                 if ((features.noDelete || features.reviewDB || features.hiddenChannels) && id === 584) {
                     dispatcher = exports.default.dispatch.bind(exports.default);
@@ -20838,6 +21068,7 @@
                 let actions = exports.default;
                 if (!actions) return exports;
                 if (features.noDelete) actions = hookExport(actions, "deleteMessage", deleteMessage);
+                if (features.silentDelete) actions = hookExport(actions, "deleteMessage", silentDelete);
                 // Split Large Messages wraps FreeNitro's hook (added below), so every part still gets its emoji links.
                 const splitLater = features.splitMessages;
                 if (features.hiddenChannels) actions = hookExport(actions, "fetchMessages", hiddenFetch);
@@ -20850,6 +21081,8 @@
                     actions = hookExport(actions, "sendMessage", splitSend);
                     actions = hookExport(actions, "editMessage", splitEdit);
                 }
+                // Under the other edit hooks: it only ever sees the final text.
+                if (features.silentEdit) actions = hookExport(actions, "editMessage", silentEdit);
                 // Outermost, so Send long messages splits (and Nitro links converts) a message whose links are already fixed.
                 if (features.fixEmbeds) {
                     actions = hookExport(actions, "sendMessage", fixEmbedsSend);
