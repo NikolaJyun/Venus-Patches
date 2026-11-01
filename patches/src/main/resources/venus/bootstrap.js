@@ -18614,14 +18614,14 @@
     const COMPRESS_PREFIX = "venus-compress-v1:", COMPRESS_FILL = {image:0.93, audio:0.93, video:0.9};
     const COMPRESS_KEYS = {image:"compressUploadsPhotos", video:"compressUploadsVideos", audio:"compressUploadsAudio"};
     const COMPRESS_MAX = {image:268435456, audio:1073741824, video:4294967296};
-    const COMPRESS_BPP = 0.04, COMPRESS_HEIGHTS = [1080, 720, 540, 480, 360, 270, 240];
+    const COMPRESS_BPP = 0.03, COMPRESS_HEIGHTS = [1080, 720, 540, 480, 360, 270, 240];
     const compressInstrumented = new WeakSet(), videoSeen = new WeakMap(), compressVideoState = {shrink:1};
     let videoChain = Promise.resolve();
     const imageName = /\.(jpe?g|png|webp|heic|heif|bmp)$/i, videoName = /\.(mp4|m4v|mov|mkv|webm|3gp|3gpp)$/i;
     function compressEven(n) { return Math.max(2, Math.round(n / 2) * 2); }
     // The video's bitrate and size for a limit, or null when it can't be made to fit (too long for a watchable picture).
-    // Bits go to the picture first: keep the size while there are at least COMPRESS_BPP bits per pixel per frame (about what
-    // a hardware encoder needs to look clean), otherwise take the biggest standard height that gets there.
+    // Bits go to the picture first: keep the size while there are at least COMPRESS_BPP bits per pixel per frame (measured with x264 and SSIM:
+    // below about 0.02 a smaller picture scores as well or better, above 0.035 the full size is clearly better), otherwise take the biggest standard height that gets there.
     function compressVideoPlan(meta, limit, width, height) {
         const seconds = meta && meta.durationMs > 0 ? meta.durationMs / 1000 : 0;
         if (!(seconds > 0.5) || !(width > 0) || !(height > 0) || !(limit > 0)) return null;
