@@ -125,11 +125,24 @@ async function compactLazyChunks(code) {
         const chunk = lazyGroups(JSON.parse(code.slice(start, end)), 400, 60000);
         const result = await context.Terser.minify(chunk, {compress:false, mangle:{toplevel:false},
             format:{comments:false, ascii_only:true, quote_style:1}});
-        if (/[^.\w$](eval|Function)\s*\(|\bwith\s*\(/.test(chunk)) throw new Error('lazy chunk uses eval/with: renaming is unsafe');
+        if (usesDynamicScope(chunk)) throw new Error('lazy chunk uses eval/with: renaming is unsafe');
         const literal = JSON.stringify(result.code).replace(/[\u007f-\uffff]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
         code = code.slice(0, start) + literal + code.slice(end);
     }
     return code;
+}
+// A real eval(...)/Function(...) call or with (...) statement, read from JavaScript tokens. A text search also matched
+// words inside strings: the Silent edit hint "...edited the normal way, with (edited)." stopped every build.
+function usesDynamicScope(chunk) {
+    const acorn = require(process.argv[3]);
+    let prev = null, prev2 = null;
+    for (const token of acorn.tokenizer(chunk, {ecmaVersion: 'latest'})) {
+        if (token.type.label === '(' && prev && (prev.type.label === 'with' ||
+            prev.type.label === 'name' && (prev.value === 'eval' || prev.value === 'Function') && !(prev2 && prev2.type.label === '.')))
+            return true;
+        prev2 = prev; prev = token;
+    }
+    return false;
 }
 // Hermes compiles a function body on its first call, and the first call of $core (when the first hooked Discord module
 // loads) builds a closure for every one of its ~570 top-level functions. Most of them are only ever reached from one
