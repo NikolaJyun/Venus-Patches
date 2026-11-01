@@ -316,6 +316,10 @@ function AdditionRow({ source, message, first }) {
   </RN.View>;
 }
 function ChatAdditions({ defined }) {
+  // Discord's native rows are drawn again when Venus's language file has loaded (languageChanged redraws them); the
+  // stand-in does the same by generating its rows again for a moment after it opens.
+  const [, redraw] = React.useState(0);
+  React.useEffect(() => { let n = 0; const t = setInterval(() => { redraw(v => v + 1); if (++n >= 10) clearInterval(t); }, 200); return () => clearInterval(t); }, []);
   const Generator = defined[8013].exports.default, gen = new Generator();
   const rows = ADDITIONS.map(m => ({ source: m, message: gen.generate({ rowType: 1, message: m }).message }));
   return <RN.View style={{ width: D.W, minHeight: "100vh", backgroundColor: D.tok("BACKGROUND_BASE_LOWER") }}>
