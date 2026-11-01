@@ -75,7 +75,7 @@
     const deferred = new Map();
     // Every feature starts off: nothing changes in Discord until you turn it on. Options inside a feature keep
     // their own defaults, so turning a feature on does what it says straight away.
-    const settings = { debugLog: false, crashScreen: true, picker: false, voice: false, copyBios: false, favouriteAnything: false, freeNitro: false, emojis: true, stickers: true, hyperlinks: true,
+    const settings = { debugLog: true, crashScreen: true, picker: false, voice: false, copyBios: false, favouriteAnything: false, freeNitro: false, emojis: true, stickers: true, hyperlinks: true,
         noTyping: false, quickDelete: false, noDelete: false, noDeleteSave: false, noDeleteLimit: 0, noDeleteEdits: true, noDeleteColor: "default", noDeleteBrightness: 50, noDeleteLogDeleted: true, noDeleteLogEdits: true, noDeleteLogOwn: false, noDeleteLogBots: false,
         jumpToTop: false, hiddenChannels: false, hiddenChannelsMenu: true, pastelize:false, pastelAll:false, pastelContent:false, platformIndicators:false, piDmHeader:true, piUserList:true, piProfile:true, piHideMobile:true, reviewDB:false, reviewWarning:true, readAll:false, readAllMode:"guilds",
         quests:false, questsVideo:true, questsPlay:true, questsActivity:true, questsEnroll:true,
@@ -92,7 +92,7 @@
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
         return DEFAULT_SETTINGS || (DEFAULT_SETTINGS = Object.freeze({
-            debugLog: false, crashScreen: true, picker: false, voice: false, copyBios: false, favouriteAnything: false, freeNitro: false, emojis: true, stickers: true, hyperlinks: true,
+            debugLog: true, crashScreen: true, picker: false, voice: false, copyBios: false, favouriteAnything: false, freeNitro: false, emojis: true, stickers: true, hyperlinks: true,
             noTyping: false, quickDelete: false, noDelete: false, noDeleteSave: false, noDeleteLimit: 0, noDeleteEdits: true, noDeleteColor: "default", noDeleteBrightness: 50, noDeleteLogDeleted: true, noDeleteLogEdits: true, noDeleteLogOwn: false, noDeleteLogBots: false,
             jumpToTop: false, hiddenChannels: false, hiddenChannelsMenu: true, pastelize: false, pastelAll: false, pastelContent: false, platformIndicators: false, piDmHeader: true, piUserList: true, piProfile: true, piHideMobile: true, reviewDB: false, reviewWarning: true, readAll: false, readAllMode: "guilds",
             quests: false, questsVideo: true, questsPlay: true, questsActivity: true, questsEnroll: true,
@@ -350,6 +350,7 @@
         else if (features.badges && badges.legacyGrant) extra.badgesGrant = badges.legacyGrant;
         if (backup.last) extra.lastBackup = backup.last;
         if (starter.done) extra.setupDone = true;
+        extra.debugLogDefaultOn = true;
         if (features.hideAnything && settings.hideAnythingSpots) { const labels = hideRowLabels(); if (labels) extra.hideAnythingLabels = labels; }
         if (features.materialYou && materialYou.system) extra.materialYouSystem = materialYou.system;
         if (features.serverEdit && serverEdits.size) extra.serverEdits = serverEditData(false);
@@ -385,6 +386,9 @@
     // 1.20.0 folded Spaces in channel names into Clean channel names: someone who only had spaces on keeps exactly that
     // (cleaning on, with only its Spaces option), and someone who had both keeps both.
     function migrateSettings(raw) {
+        // Debug logging became on by default: a settings file from before turns it on once. Turning it off saves
+        // debugLogDefaultOn with the file, so it stays off after that.
+        if (raw && typeof raw === "object" && raw.debugLogDefaultOn !== true) raw.debugLog = true;
         // 1.20.0 folded Hide the gift button, Hide the call button, Hide extra buttons and Hide the Quests banner into Remove
         // anything: whatever they hid stays removed, as Remove anything spots.
         if (raw && typeof raw === "object" && (raw.hideGift === true || raw.hideCall === true || raw.hideButtons === true || raw.hideQuestDock === true)) {
@@ -1784,14 +1788,16 @@
         if (storage === "waiting" || storage === "loading") return "idle";
         return "dnd";
     }
-    // Troubleshooting (About): the crash screen and Debug logging. Neither is a feature: Debug logging is off until someone
-    // turns it on to track a problem down, and records only on this phone. The crash catcher and the screen itself are
+    // Troubleshooting (About): the crash screen and Debug logging. Neither is a feature: Debug logging is on by default, so a
+    // problem someone reports already has a log behind it, and records only on this phone. The crash catcher and the screen itself are
     // native (extensions/diag, Diagnostics.kt), reached through FileModule.clearFolder with a private prefix.
     const DIAG_PREFIX = "venus-diag-v1:", DEBUG_LOG_FILE = "venus-log.txt", DEBUG_LOG_MAX = 4000, DEBUG_LOG_EARLY = 400;
     // early: lines from Discord's start, kept in memory only until the settings are read, then kept or thrown away.
     const debugLog = {lines:[], early:[], dropped:0, dirty:false, timer:undefined, timerMs:0, installed:false, started:0,
         console:null, consoleHooks:null, fetch:null, fetchHook:null, xhr:null, xhrHooks:null, errors:null, errorHook:null, flux:false, appState:null, dimensions:null};
     const diag = {last:null, busy:"", sentStrings:""};
+    // Sent every second during calls and voice previews: 146 of a reporter's 550 lines, pushing out everything that mattered.
+    const DLOG_QUIET_ACTIONS = new Set(["MEDIA_ENGINE_CONNECTION_STATS"]);
     const DLOG_HIDDEN = /token|authori[sz]ation|password|secret|cookie|session|fingerprint|email|phone|ticket|nonce|captcha|mfa|^content$|^message$/i;
     function dlogReplacer(key, value) {
         if (key && DLOG_HIDDEN.test(key)) return "[hidden]";
@@ -1944,7 +1950,7 @@
         if (!debugLog.flux) {
             const dispatcher = inspectedExport(584, "default");
             if (dispatcher && typeof dispatcher.addInterceptor === "function") try {
-                dispatcher.addInterceptor(action => { if (settings.debugLog && action && action.type) dlog("D", "flux", dlogAction(action)); return false; });
+                dispatcher.addInterceptor(action => { if (settings.debugLog && action && action.type && !DLOG_QUIET_ACTIONS.has(action.type)) dlog("D", "flux", dlogAction(action)); return false; });
                 debugLog.flux = true;
             } catch (error) { dlog("W", "flux", "couldn't watch Discord's actions: " + dlogText(error)); }
         }
@@ -1976,6 +1982,37 @@
         debugLog.appState = null; debugLog.dimensions = null;
         debugLog.lines.push(dlogStamp(Date.now()) + " I [venus] Debug logging off");
         debugLog.dirty = true; debugLogFlush();
+    }
+    // Read all on a phone where the pill's room is there but nothing is drawn in it (Poco F3, Display size larger at 461 dpi,
+    // Discord running 32-bit). The label lays out fine (39.91 x 14.92 dp), so the log follows the whole pill: when it mounts
+    // and unmounts, the row and pill sizes and where they are on screen, the colors they resolved to, and then what Android
+    // really has there (Diagnostics.views: exists, visible, alpha, bounds, clipping parents).
+    const readAllTrace = {mounts:0, layouts:0, rendered:false, viewsTimer:undefined};
+    function readAllColor(value) {
+        let text = dlogText(value);
+        try { const n = RN.processColor ? RN.processColor(value) : null; if (typeof n === "number") text += " = #" + (n >>> 0).toString(16); } catch (_) {}
+        return text;
+    }
+    function readAllTraceLayout(what) {
+        return event => {
+            if (!settings.debugLog || readAllTrace.layouts >= 40) return;
+            readAllTrace.layouts++;
+            try {
+                const box = event && event.nativeEvent && event.nativeEvent.layout, target = event && (event.currentTarget || event.target);
+                dlog("I", "readAll", what + " laid out " + (box ? box.width.toFixed(2) + " x " + box.height.toFixed(2) + " dp at " + box.x.toFixed(2) + "," + box.y.toFixed(2) : "?"));
+                if (target && typeof target.measureInWindow === "function")
+                    target.measureInWindow((x, y, width, height) => dlog("I", "readAll", what + " in the window at " + [x, y, width, height].map(n => Number(n).toFixed(1)).join(", ") + " dp (x, y, width, height)"));
+            } catch (error) { dlog("W", "readAll", what + " layout: " + dlogText(error)); }
+            if (what === "pill") readAllViewsSoon();
+        };
+    }
+    const readAllRowLayout = readAllTraceLayout("row"), readAllPillLayout = readAllTraceLayout("pill");
+    function readAllViewsSoon() {
+        if (readAllTrace.viewsTimer !== undefined) return;
+        readAllTrace.viewsTimer = later(() => {
+            readAllTrace.viewsTimer = undefined;
+            diagCall("views", tr("Read all")).then(text => dlog("I", "readAll", "on Android: " + text), error => dlog("W", "readAll", "couldn't look at Android's views: " + dlogText(error)));
+        }, 1500, false);
     }
     // The Read all pill's label as laid out, and the numbers that decide it (a blank pill at density 2.75).
     function readAllLayoutLog(event) {
@@ -4343,9 +4380,20 @@
         // Discord's semantic tokens, so the pill follows light, dark and custom themes.
         const styles=useThemed("readAllPill", c => ({pill:{backgroundColor:c.BACKGROUND_MOD_NORMAL},pressed:{backgroundColor:c.BACKGROUND_MOD_STRONG},
             text:{color:c.TEXT_DEFAULT}}), READ_ALL_FALLBACK_STYLES);
-        return el(RN.View,{style:READ_ALL_OUTER_STYLE},
+        React.useEffect(() => {
+            if (!settings.debugLog || readAllTrace.mounts >= 30) return undefined;
+            const n = ++readAllTrace.mounts;
+            dlog("I", "readAll", "pill mounted (#" + n + ") with " + (styles === READ_ALL_FALLBACK_STYLES ? "fallback" : "theme") + " colors: pill " +
+                readAllColor(styles.pill && styles.pill.backgroundColor) + ", text " + readAllColor(styles.text && styles.text.color));
+            return () => { if (settings.debugLog) dlog("I", "readAll", "pill unmounted (#" + n + ")"); };
+        }, []);
+        const trace = settings.debugLog;
+        // collapsable:false: Fabric may flatten a plain View into its parent and bring it back later. In the recycled server bar
+        // list that left a reporter's phone with the row's room laid out but no native view to draw it ("Unable to find
+        // viewState for tag ... for updateLayout" the moment the pill appeared), so these Views always stay real.
+        return el(RN.View,{style:READ_ALL_OUTER_STYLE,collapsable:false,onLayout:trace ? readAllRowLayout : undefined},
             el(RN.Pressable,{accessibilityRole:"button",accessibilityLabel:tr("Read all"),accessibilityHint:tr("Hold to choose"),
-                hitSlop:6,onPress:readAllPress,onLongPress:readAllChooser,delayLongPress:350,
+                hitSlop:6,onPress:readAllPress,onLongPress:readAllChooser,delayLongPress:350,collapsable:false,onLayout:trace ? readAllPillLayout : undefined,
                 style:({pressed}) => [READ_ALL_PILL_BASE,styles.pill,
                     pressed ? styles.pressed : null,pressed ? READ_ALL_PRESSED_SCALE : null]},
                 done ? popIn("done",el(venusIcon(7101,"CheckmarkSmallIcon"),{size:"xs",color:styles.text && styles.text.color})) :
@@ -4368,7 +4416,13 @@
                 itemSize:function (section) { const size=itemSize.apply(this,arguments); return section===separator && enabled("readAll") ? size+READ_ALL_HEIGHT : size; },
                 renderItem:function (section) {
                     const node=renderItem.apply(this,arguments);
-                    return section===separator && enabled("readAll") ? el(RN.View,{key:"venus-read-all",style:READ_ALL_WRAP_STYLE},el(ReadAllButton,null),node) : node;
+                    if (section!==separator || !enabled("readAll")) return node;
+                    if (settings.debugLog && !readAllTrace.rendered) {
+                        readAllTrace.rendered=true;
+                        let size="?"; try { size=String(itemSize.apply(this,arguments)); } catch (_) {}
+                        dlog("I","readAll","separator row drawn: Discord's row " + size + " dp + " + READ_ALL_HEIGHT + " dp for the pill, Discord's part is " + (node ? (node.type && (node.type.displayName || node.type.name)) || typeof node.type : "empty"));
+                    }
+                    return el(RN.View,{key:"venus-read-all",style:READ_ALL_WRAP_STYLE,collapsable:false},el(ReadAllButton,null),node);
                 }});
             readAllData.set(data, listDataProps);
             if (settings.debugLog) dlog("I", "readAll", "added to the server bar's separator row (section " + separator + ", " + (enums ? "Discord's" : "fallback") + " section enum)");
