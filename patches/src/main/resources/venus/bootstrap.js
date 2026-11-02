@@ -10678,6 +10678,17 @@
         }
         return changed ? out : items;
     }
+    // The profile menu's labels in Discord's language, built once and rebuilt only when that language changes (one probe
+    // lookup per render instead of 21): Hermes HBC98 13.67 -> 0.39 us per render (35x).
+    let profileLabels = null;
+    function profileMenuLabels() {
+        const probe = discordText("GISTta");
+        if (profileLabels && profileLabels.probe === probe) return profileLabels.map;
+        const map = new Map();
+        Object.keys(MENU_SPOTS).forEach(key => MENU_SPOTS[key].forEach(hash => { const text = discordText(hash); if (text) map.set(text, key); }));
+        profileLabels = {probe, map};
+        return map;
+    }
     function profileMenu(orig, self, args) {
         useSettings("hideAnything");
         const rendered = orig.apply(self, args);
@@ -10687,8 +10698,7 @@
         if (!edit && !settings.hideAnythingSpots) return rendered;
         const Menu = inspectedExport(9662, "ContextMenu");
         if (!Menu) return rendered;
-        const labels = new Map();
-        Object.keys(MENU_SPOTS).forEach(key => MENU_SPOTS[key].forEach(hash => { const text = discordText(hash); if (text) labels.set(text, key); }));
+        const labels = profileMenuLabels();
         if (edit) hideMenuLabels.clear();
         let empty = false;
         const tree = cloneTree(rendered, (node, props) => {
