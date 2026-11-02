@@ -10730,13 +10730,17 @@
     // A component that is one spot: gone when removed, marked in removal mode. Discord's render always runs, so its hooks
     // never change between renders.
     function hideWhole(key) {
-        return function (orig, self, args) {
-            useSettings("hideAnything");
-            const rendered = orig.apply(self, args);
+        const finish = rendered => {
             if (!rendered || !enabled("hideAnything")) return rendered;
             if (spotHidden(key)) return null;
             return hideEditing() ? hideMarked(rendered, key) : rendered;
         };
+        // React calls a component as (props) or (props, ref): those calls skip the arguments object and apply
+        // (Hermes HBC98: 84.0 -> 63.5 us per 100 renders, 1.32x).
+        const operation = function (orig, self, args) { useSettings("hideAnything"); return finish(orig.apply(self, args)); };
+        operation.call1 = (orig, self, a) => { useSettings("hideAnything"); return finish(orig.call(self, a)); };
+        operation.call2 = (orig, self, a, b) => { useSettings("hideAnything"); return finish(orig.call(self, a, b)); };
+        return operation;
     }
     // A component holding several spots: classify(node) names the spot an element is. Removed ones are left out, and a
     // wrapper that only held removed buttons goes too, so nothing keeps empty space.
@@ -10768,14 +10772,20 @@
     }
     // prepare() runs on every render (it may use hooks) and can return its own "is this spot gone" check.
     function hideTree(classify, prepare) {
-        return function (orig, self, args) {
-            useSettings("hideAnything");
-            const gone = prepare ? prepare() : null;
-            const rendered = orig.apply(self, args);
+        const finish = (rendered, gone) => {
             if (!React || !enabled("hideAnything")) return rendered;
             const edit = hideEditing();
             return edit || settings.hideAnythingSpots ? hideWalk(rendered, 0, classify, edit, gone) : rendered;
         };
+        // Same (props) / (props, ref) fast paths as hideWhole (Hermes HBC98: 56.6 -> 36.1 us per 100 renders, 1.57x).
+        const operation = function (orig, self, args) {
+            useSettings("hideAnything");
+            const gone = prepare ? prepare() : null;
+            return finish(orig.apply(self, args), gone);
+        };
+        operation.call1 = (orig, self, a) => { useSettings("hideAnything"); const gone = prepare ? prepare() : null; return finish(orig.call(self, a), gone); };
+        operation.call2 = (orig, self, a, b) => { useSettings("hideAnything"); const gone = prepare ? prepare() : null; return finish(orig.call(self, a, b), gone); };
+        return operation;
     }
     // A message's hold menu (LongPressMessageActionSheet 9978): each row is an ActionSheetRow with Discord's own label, matched
     // by message key in any language, and the rows Venus adds by their keys. A group whose rows are all gone goes too. The
