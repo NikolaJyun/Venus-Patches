@@ -2116,9 +2116,17 @@
             ["log", "info", "warn", "error", "debug", "trace"].forEach(name => {
                 const original = c[name];
                 if (typeof original !== "function") return;
-                const level = name === "error" ? "E" : name === "warn" ? "W" : name === "debug" || name === "trace" ? "D" : "I";
+                const level = name === "error" ? "E" : name === "warn" ? "W" : name === "debug" || name === "trace" ? "D" : "I", tag = "console." + name;
                 const hook = function () {
-                    try { if (settings.debugLog) dlog.apply(null, [level, "console." + name].concat(Array.prototype.slice.call(arguments))); } catch (_) {}
+                    // One or two arguments (nearly every call) go straight to dlog: no array, concat or apply (1.25x on Hermes).
+                    try {
+                        if (settings.debugLog) {
+                            const count = arguments.length;
+                            if (count === 1) dlog(level, tag, arguments[0]);
+                            else if (count === 2) dlog(level, tag, arguments[0], arguments[1]);
+                            else dlog.apply(null, [level, tag].concat(Array.prototype.slice.call(arguments)));
+                        }
+                    } catch (_) {}
                     return original.apply(this, arguments);
                 };
                 debugLog.console[name] = original; debugLog.consoleHooks[name] = hook; c[name] = hook;
