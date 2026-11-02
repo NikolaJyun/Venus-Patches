@@ -691,7 +691,7 @@
         if (features.hideBlocked && featureFor(key) === "hideBlocked") hideBlockedChanged();
         if (features.staffTag && featureFor(key) === "staffTag") later(staffTagChanged, 0);
         if (features.bulkDelete && key === "bulkDelete" && !value) bulkDeleteCancel();
-        if (features.bulkDelete && (key === "bulkDeleteIncludeCached" || key === "noDelete") && bulkDelete.active) { bulkDeletePruneKept(); bulkDeleteRedrawChannel(bulkDelete.channelId); }
+        if (features.bulkDelete && (key === "bulkDeleteIncludeCached" || key === "noDelete") && bulkDelete.active) { bulkDeletePruneKept(); bulkDeleteRedrawAll(); }
         if (features.experiments && key === "experiments") { if (value) experimentsEnable(); else if (experiments.unlocked && !backup.restoring) later(experimentsAskReopen, 0); }
         if (features.quests || features.badges || features.userNotif || features.removedAlerts) backgroundSync();
         return true;
@@ -8479,7 +8479,7 @@
                 next = Object.assign({},next,{backgroundHighlight:Object.assign({},existing,{gutterColor:highlightEncodeGutter(existing.gutterColor, mult)})});
             }
         }
-        if (bulkOn && String(channelId) === String(bulkDelete.channelId) && RN && typeof RN.processColor === "function" &&
+        if (bulkOn && RN && typeof RN.processColor === "function" &&
             bulkDeleteCanSelect(source, channelId, isDeletedRow, bulkDeleteManageCached(channelId))) {
             const isSelected = bulkDelete.selected.has(String(id));
             const existing = next.backgroundHighlight;
@@ -20763,10 +20763,16 @@
     // Every deletable message in the chat (your own messages, other people's messages in servers where you have Manage
     // Messages, and cached deleted messages from Keep deleted messages) gets a native circle on its right side; tapping
     // a message fills the circle in Blurple with a white checkmark and updates the floating bottom bar.
+    // The selection follows you: switch chats, servers or DMs and the picks stay, so you can sweep a spammer's messages
+    // out of every place at once. `selected` holds the message ids (snowflakes are unique everywhere) and `where` says
+    // which chat each one is in; `touched` is every chat shown while selecting, so they can all be redrawn at the end.
     const bulkDelete = {
         active:false,
+        // The chat on screen now (it follows CHANNEL_SELECT).
         channelId:null,
         selected:new Set(),
+        where:new Map(),
+        touched:new Set(),
         deleting:false,
         progress:0,
         total:0,
@@ -20792,7 +20798,13 @@
         try {
             flux.subscribe("CHANNEL_SELECT", event => {
                 const nextId = event && (event.channelId || event.id);
-                if (bulkDelete.active && nextId && String(nextId) !== String(bulkDelete.channelId)) bulkDeleteCancel();
+                if (!bulkDelete.active || !nextId) return;
+                // The new chat draws its own circles as its rows are drawn; only remember it for the redraw at the end.
+                bulkDelete.channelId = String(nextId);
+                bulkDelete.touched.add(bulkDelete.channelId);
+                bulkDelete.manageFor = null;
+                // Rows already in the list when the chat opens are drawn once the chat is on screen.
+                if (!bulkDelete.deleting) later(() => { if (bulkDelete.active && bulkDelete.channelId === String(nextId)) bulkDeleteRedrawChannel(String(nextId)); }, 450, false);
             });
             flux.subscribe("LOGOUT", () => { if (bulkDelete.active) bulkDeleteCancel(); });
             // Switching accounts goes straight to a new CONNECTION_OPEN with no LOGOUT: the rest of a run would have been
@@ -20804,13 +20816,13 @@
             // A selected message someone else (or another of your devices) deleted can't be deleted again: drop it, so the
             // count stays right and Delete doesn't send a request that can only fail.
             flux.subscribe("MESSAGE_DELETE", event => {
-                if (bulkDelete.active && !bulkDelete.deleting && event && String(event.channelId) === bulkDelete.channelId &&
-                    bulkDelete.selected.delete(String(event.id))) notify("bulkDelete");
+                if (bulkDelete.active && !bulkDelete.deleting && event && bulkDelete.where.get(String(event.id)) === String(event.channelId) &&
+                    bulkDeleteDrop(event.id)) notify("bulkDelete");
             });
             flux.subscribe("MESSAGE_DELETE_BULK", event => {
-                if (!bulkDelete.active || bulkDelete.deleting || !event || String(event.channelId) !== bulkDelete.channelId || !Array.isArray(event.ids)) return;
+                if (!bulkDelete.active || bulkDelete.deleting || !event || !Array.isArray(event.ids)) return;
                 let changed = false;
-                for (let i = 0; i < event.ids.length; i++) if (bulkDelete.selected.delete(String(event.ids[i]))) changed = true;
+                for (let i = 0; i < event.ids.length; i++) if (bulkDelete.where.get(String(event.ids[i])) === String(event.channelId) && bulkDeleteDrop(event.ids[i])) changed = true;
                 if (changed) notify("bulkDelete");
             });
         } catch (_) {}
@@ -20833,6 +20845,54 @@
         const chId = String(channelId);
         if (bulkDelete.manageFor !== chId) { bulkDelete.manageFor = chId; bulkDelete.manage = bulkDeleteCanManage(chId); }
         return bulkDelete.manage;
+    }
+    function bulkDeleteAdd(channelId, id) {
+        id = String(id); channelId = String(channelId);
+        bulkDelete.selected.add(id);
+        bulkDelete.where.set(id, channelId);
+        bulkDelete.touched.add(channelId);
+    }
+    function bulkDeleteDrop(id) {
+        id = String(id);
+        bulkDelete.where.delete(id);
+        return bulkDelete.selected.delete(id);
+    }
+    function bulkDeleteClear() { bulkDelete.selected.clear(); bulkDelete.where.clear(); }
+    // Selected message ids by chat, in the order the chats were first picked from.
+    function bulkDeleteByChat() {
+        const out = new Map();
+        bulkDelete.selected.forEach(id => {
+            const ch = bulkDelete.where.get(id) || bulkDelete.channelId;
+            let list = out.get(ch);
+            if (!list) out.set(ch, list = []);
+            list.push(id);
+        });
+        return out;
+    }
+    // Where a chat is, for the review list: server and channel, or the person or group of a DM.
+    function bulkDeletePlace(channelId) {
+        let channel = null;
+        try { channel = receivedChannel(channelId); } catch (_) {}
+        const gId = channel && (channel.guild_id || channel.guildId);
+        let guildName = "";
+        if (gId) {
+            const guilds = inspectedExport(2090, "default");
+            try { const guild = guilds && typeof guilds.getGuild === "function" ? guilds.getGuild(gId) : null; if (guild && typeof guild.name === "string") guildName = guild.name; } catch (_) {}
+        }
+        let name = "";
+        if (channel) {
+            if (gId) {
+                name = typeof channel.name === "string" ? channel.name.trim() : "";
+                if (name && features.cleanChannels) name = channelNameFormat(channel, name);
+            } else if (channel.type === 3) name = mutualGroupName(channel);
+            else if (channel.type === 1) {
+                let user = null;
+                try { user = userStore && channel.recipients && channel.recipients.length ? userStore.getUser(channel.recipients[0]) : null; } catch (_) {}
+                name = user ? String(user.globalName || user.username || "") : "";
+            }
+        }
+        return {id:String(channelId), guildId:gId ? String(gId) : "", guildName, dm:!gId, group:!!channel && channel.type === 3,
+            name:name || tr("Unknown chat")};
     }
     function bulkDeleteCanSelect(message, channelId, isCachedDeleted, manage) {
         if (!message || typeof message !== "object") return false;
@@ -20914,12 +20974,13 @@
     function bulkDeletePruneKept() {
         if (!bulkDelete.active || bulkDelete.deleting || !bulkDelete.selected.size) return false;
         if (features.noDelete && enabled("noDelete") && settings.bulkDeleteIncludeCached) return false;
-        const chId = bulkDelete.channelId, bucket = chId && deletedByChannel.get(chId);
-        if (!bucket) return false;
         const dropped = [];
-        bulkDelete.selected.forEach(id => { if (bucket.has(deletedKey(chId, id))) dropped.push(id); });
+        bulkDelete.selected.forEach(id => {
+            const chId = bulkDelete.where.get(id), bucket = chId && deletedByChannel.get(chId);
+            if (bucket && bucket.has(deletedKey(chId, id))) dropped.push(id);
+        });
         if (!dropped.length) return false;
-        dropped.forEach(id => bulkDelete.selected.delete(id));
+        dropped.forEach(bulkDeleteDrop);
         notify("bulkDelete");
         return true;
     }
@@ -20961,18 +21022,27 @@
         const ids = bulkDeleteChannelSelectableIds(channelId).slice();
         const seen = new Set(ids);
         const add = id => { if (!seen.has(id)) { seen.add(id); ids.push(id); } };
-        bulkDelete.selected.forEach(add);
+        bulkDelete.selected.forEach(id => { if (bulkDelete.where.get(id) === String(channelId)) add(id); });
         if (extra) extra.forEach(add);
         bulkDeleteRedrawIds(channelId, ids);
+    }
+    // Every chat the selection has been in or looked at, once each.
+    function bulkDeleteRedrawAll(extra) {
+        const chats = new Set(bulkDelete.touched);
+        if (bulkDelete.channelId) chats.add(bulkDelete.channelId);
+        bulkDelete.where.forEach(ch => chats.add(ch));
+        if (extra) extra.forEach(ch => chats.add(ch));
+        chats.forEach(ch => bulkDeleteRedrawChannel(ch));
     }
     function bulkDeleteStart(channelId, message) {
         if (!enabled("bulkDelete") || !channelId) return;
         const chId = String(channelId);
-        if (bulkDelete.active && bulkDelete.channelId && bulkDelete.channelId !== chId) {
-            const prev = bulkDelete.channelId;
-            bulkDelete.active = false;
-            bulkDelete.selected.clear();
-            bulkDeleteRedrawChannel(prev);
+        if (bulkDelete.active) {
+            // Already selecting (the long press menu of another chat): this message just joins the selection.
+            bulkDelete.channelId = chId;
+            bulkDelete.manageFor = null;
+            if (message && message.id && bulkDeleteCanSelect(message, chId, undefined)) { bulkDeleteAdd(chId, message.id); notify("bulkDelete"); bulkDeleteRedrawIds(chId, [String(message.id)]); }
+            return;
         }
         haptic("IMPACT_MEDIUM");
         // The bar takes the composer's place, so an open keyboard would only hide the messages you're picking.
@@ -20987,16 +21057,18 @@
         bulkDelete.selectable = null;
         const me = currentUser();
         bulkDelete.userId = me && me.id ? String(me.id) : null;
-        bulkDelete.selected.clear();
-        if (message && message.id && bulkDeleteCanSelect(message, chId, undefined)) {
-            bulkDelete.selected.add(String(message.id));
-        }
+        bulkDeleteClear();
+        bulkDelete.touched.clear();
+        bulkDelete.touched.add(chId);
+        if (message && message.id && bulkDeleteCanSelect(message, chId, undefined)) bulkDeleteAdd(chId, message.id);
         notify("bulkDelete");
         bulkDeleteRedrawChannel(chId);
     }
     function bulkDeleteCancel() {
         if (!bulkDelete.active) return;
-        const prevChannel = bulkDelete.channelId;
+        const prevChats = new Set(bulkDelete.touched);
+        if (bulkDelete.channelId) prevChats.add(bulkDelete.channelId);
+        bulkDelete.where.forEach(ch => prevChats.add(ch));
         // A run stopped halfway still says what it removed, instead of looking like nothing happened.
         const stoppedAfter = bulkDelete.deleting ? bulkDelete.progress : 0;
         bulkDelete.run++;
@@ -21008,10 +21080,15 @@
         bulkDelete.progress = 0;
         bulkDelete.total = 0;
         bulkDelete.channelId = null;
-        const prevSelected = Array.from(bulkDelete.selected);
-        bulkDelete.selected.clear();
+        const prevSelected = new Map(bulkDelete.where);
+        bulkDeleteClear();
+        bulkDelete.touched.clear();
         notify("bulkDelete");
-        if (prevChannel) bulkDeleteRedrawChannel(prevChannel, prevSelected);
+        prevChats.forEach(ch => {
+            const picked = [];
+            prevSelected.forEach((where, id) => { if (where === ch) picked.push(id); });
+            bulkDeleteRedrawChannel(ch, picked);
+        });
         bulkDelete.manageFor = null;
         bulkDelete.selectable = null;
         if (stoppedAfter > 0) reviewToast(reviewUI(), pl(stoppedAfter, "Deleted {n} message", "Deleted {n} messages"), venusIcon(5148, "TrashIcon"));
@@ -21019,7 +21096,7 @@
     function bulkDeleteToggleMessage(channelId, messageId) {
         if (!bulkDelete.active || bulkDelete.deleting) return false;
         const chId = String(channelId || bulkDelete.channelId || "");
-        if (!chId || chId !== String(bulkDelete.channelId)) return false;
+        if (!chId) return false;
         const id = String(messageId || "");
         if (!id) return false;
         const store = msgStore || (msgStore = inspectedExport(5532, "default"));
@@ -21027,8 +21104,8 @@
         try { if (store && typeof store.getMessage === "function") msg = store.getMessage(chId, id); } catch (_) {}
         if (!bulkDeleteCanSelect(msg, chId, undefined, bulkDeleteManageCached(chId))) return true;
         haptic("SELECTION");
-        if (bulkDelete.selected.has(id)) bulkDelete.selected.delete(id);
-        else bulkDelete.selected.add(id);
+        if (bulkDelete.selected.has(id)) bulkDeleteDrop(id);
+        else bulkDeleteAdd(chId, id);
         notify("bulkDelete");
         bulkDeleteRedrawIds(chId, [id]);
         return true;
@@ -21043,12 +21120,12 @@
         const changed = [];
         if (allSelected) {
             selectable.forEach(id => {
-                if (bulkDelete.selected.delete(id)) changed.push(id);
+                if (bulkDeleteDrop(id)) changed.push(id);
             });
         } else {
             selectable.forEach(id => {
                 if (!bulkDelete.selected.has(id)) {
-                    bulkDelete.selected.add(id);
+                    bulkDeleteAdd(chId, id);
                     changed.push(id);
                 }
             });
@@ -21065,21 +21142,25 @@
         return bulkDeleteToggleMessage(chId, id);
     }
     function bulkDeleteConfirmAndRun() {
-        if (!bulkDelete.active || bulkDelete.deleting || !bulkDelete.selected.size || !bulkDelete.channelId) return;
+        if (!bulkDelete.active || bulkDelete.deleting || !bulkDelete.selected.size) return;
         bulkDeletePruneKept();
         if (!bulkDelete.selected.size) return;
-        const count = bulkDelete.selected.size;
+        const count = bulkDelete.selected.size, chats = bulkDeleteByChat().size;
         if (!settings.bulkDeleteConfirm) {
             bulkDeleteExecute();
             return;
         }
-        confirmAction(
-            pl(count, "Delete {n} message?", "Delete {n} messages?"),
+        // Across several chats the dialog says so: the messages aren't all in front of you.
+        const body = chats > 1 ?
+            pl(count, "Are you sure you want to delete {n} selected message in {chats} chats? This can't be undone.",
+                "Are you sure you want to delete {n} selected messages in {chats} chats? This can't be undone.", {chats}) :
             pl(count, "Are you sure you want to delete {n} selected message? This can't be undone.",
-                "Are you sure you want to delete {n} selected messages? This can't be undone."),
-            "Delete",
-            bulkDeleteExecute
-        );
+                "Are you sure you want to delete {n} selected messages? This can't be undone.");
+        const ui = reviewUI();
+        if (ui.alerts && typeof ui.alerts.show === "function") {
+            try { ui.alerts.show({title:pl(count, "Delete {n} message?", "Delete {n} messages?"), body, confirmText:tr("Delete"), cancelText:tr("Cancel"), onConfirm:bulkDeleteExecute}); return; } catch (_) {}
+        }
+        if (RN && RN.Alert) RN.Alert.alert(pl(count, "Delete {n} message?", "Delete {n} messages?"), body, [{text:tr("Cancel"), style:"cancel"}, {text:tr("Delete"), style:"destructive", onPress:bulkDeleteExecute}]);
     }
     // Discord's DELETE /messages/:id. Its route bucket allows about 5 deletes per 5 seconds: one every 1.1 s rarely meets a
     // 429, and when one comes the wait it asks for (retryAfter, in seconds) is honoured before trying that message again.
@@ -21094,29 +21175,27 @@
         return {status:Number(status) || 0, retryMs:Number.isFinite(retry) && retry > 0 ? Math.min(60000, Math.ceil(retry * 1000)) : 0};
     }
     function bulkDeleteExecute() {
-        if (!bulkDelete.active || bulkDelete.deleting || !bulkDelete.selected.size || !bulkDelete.channelId) return;
-        const chId = bulkDelete.channelId;
-        const ids = Array.from(bulkDelete.selected);
-        // Oldest first (snowflakes compare by length, then text), the order they were written.
-        ids.sort((a, b) => a.length - b.length || (a < b ? -1 : a > b ? 1 : 0));
-        const cachedEntries = [], liveIds = [];
-        const bucket = deletedByChannel.get(chId);
-        ids.forEach(id => {
-            const entry = bucket && bucket.get(deletedKey(chId, id));
-            if (entry) cachedEntries.push(entry);
-            else liveIds.push(id);
+        if (!bulkDelete.active || bulkDelete.deleting || !bulkDelete.selected.size) return;
+        // Oldest first within each chat (snowflakes compare by length, then text), the order they were written; chats in
+        // the order they were first picked from.
+        const byChat = bulkDeleteByChat();
+        const cachedEntries = [], liveItems = [];
+        const keepCached = settings.bulkDeleteIncludeCached && features.noDelete && enabled("noDelete");
+        byChat.forEach((list, chId) => {
+            list.sort((a, b) => a.length - b.length || (a < b ? -1 : a > b ? 1 : 0));
+            const bucket = deletedByChannel.get(chId);
+            list.forEach(id => {
+                const entry = bucket && bucket.get(deletedKey(chId, id));
+                if (entry) {
+                    // Can't be selected now (see bulkDeletePruneKept): leave them kept.
+                    if (keepCached) cachedEntries.push(entry); else bulkDeleteDrop(id);
+                } else liveItems.push({chId, id});
+            });
         });
-        if (!settings.bulkDeleteIncludeCached || !(features.noDelete && enabled("noDelete"))) {
-            // Can't be selected now (see bulkDeletePruneKept): leave them kept.
-            for (let i = cachedEntries.length - 1; i >= 0; i--) bulkDelete.selected.delete(String(cachedEntries[i].id));
-            cachedEntries.length = 0;
-            ids.length = 0;
-            Array.prototype.push.apply(ids, liveIds);
-            if (!ids.length) { notify("bulkDelete"); return; }
-        }
+        if (!cachedEntries.length && !liveItems.length) { notify("bulkDelete"); return; }
         const run = ++bulkDelete.run;
         bulkDelete.deleting = true;
-        bulkDelete.total = ids.length;
+        bulkDelete.total = cachedEntries.length + liveItems.length;
         bulkDelete.progress = 0;
         bulkDelete.attempted = 0;
         bulkDelete.removing.clear();
@@ -21128,16 +21207,16 @@
             invalidateDeleted();
             persistDeleted();
             dispatchRemovals(cachedEntries);
-            cachedEntries.forEach(entry => bulkDelete.selected.delete(String(entry.id)));
+            cachedEntries.forEach(entry => bulkDeleteDrop(entry.id));
             bulkDelete.progress += cachedEntries.length;
             bulkDelete.attempted += cachedEntries.length;
             bulkDelete.deletedSession += cachedEntries.length;
         }
         notify("bulkDelete");
-        if (!liveIds.length) { bulkDeleteFinish(bulkDelete.progress, []); return; }
+        if (!liveItems.length) { bulkDeleteFinish(bulkDelete.progress, []); return; }
 
         const actions = msgActions || (msgActions = inspectedExport(7445, "default"));
-        if (!actions || typeof actions.deleteMessage !== "function") { bulkDeleteFinish(bulkDelete.progress, liveIds); return; }
+        if (!actions || typeof actions.deleteMessage !== "function") { bulkDeleteFinish(bulkDelete.progress, liveItems.map(item => item.id)); return; }
         const failed = [];
         let idx = 0, tries = 0;
         function step() {
@@ -21145,8 +21224,8 @@
             // Signed in as someone else now: stop before another request goes out with their token.
             const me = currentUser();
             if (bulkDelete.userId && !(me && String(me.id) === bulkDelete.userId)) { bulkDeleteCancel(); return; }
-            if (idx >= liveIds.length) { bulkDeleteFinish(bulkDelete.progress, failed); return; }
-            const id = liveIds[idx], key = deletedKey(chId, id);
+            if (idx >= liveItems.length) { bulkDeleteFinish(bulkDelete.progress, failed); return; }
+            const {chId, id} = liveItems[idx], key = deletedKey(chId, id);
             let p;
             bulkDelete.removing.add(key);
             try { p = actions.deleteMessage(chId, id, false); } catch (error) { p = Promise.reject(error); }
@@ -21167,12 +21246,12 @@
                     // Keep deleted messages keeps your own deletions too; a bulk delete is meant to clear them for real.
                     const kept = deleted.size && dropDeleted(deletedKey(chId, id));
                     if (kept) { invalidateDeleted(); persistDeleted(); dispatchRemovals([kept]); }
-                    bulkDelete.selected.delete(id);
+                    bulkDeleteDrop(id);
                     bulkDelete.progress++;
                     bulkDelete.deletedSession++;
                 } else failed.push(id);
                 notify("bulkDelete");
-                if (idx >= liveIds.length) bulkDeleteFinish(bulkDelete.progress, failed);
+                if (idx >= liveItems.length) bulkDeleteFinish(bulkDelete.progress, failed);
                 else later(step, BULK_DELETE_GAP_MS, false);
             });
         }
@@ -21180,8 +21259,7 @@
     }
     // Messages that couldn't be deleted stay selected, so you can see which ones are left and try again.
     function bulkDeleteFinish(count, failed) {
-        const prevChannel = bulkDelete.channelId;
-        const left = failed && failed.length ? failed.slice() : [];
+        const left = failed && failed.length ? failed.map(id => [id, bulkDelete.where.get(String(id)) || bulkDelete.channelId]) : [];
         bulkDelete.run++;
         bulkDelete.removing.clear();
         bulkDelete.attempted = 0;
@@ -21189,8 +21267,8 @@
         bulkDelete.progress = 0;
         bulkDelete.total = 0;
         if (left.length && bulkDelete.active) {
-            bulkDelete.selected.clear();
-            left.forEach(id => bulkDelete.selected.add(id));
+            bulkDeleteClear();
+            left.forEach(([id, ch]) => bulkDeleteAdd(ch, id));
             notify("bulkDelete");
             haptic("IMPACT_MEDIUM");
             const body = pl(left.length, "{n} message couldn't be deleted. It's still selected, so you can try again.",
@@ -21201,10 +21279,13 @@
         }
         animateLayout();
         bulkDelete.active = false;
+        const chats = new Set(bulkDelete.touched);
+        if (bulkDelete.channelId) chats.add(bulkDelete.channelId);
         bulkDelete.channelId = null;
-        bulkDelete.selected.clear();
+        bulkDeleteClear();
+        bulkDelete.touched.clear();
         notify("bulkDelete");
-        if (prevChannel) bulkDeleteRedrawChannel(prevChannel);
+        chats.forEach(ch => bulkDeleteRedrawChannel(ch));
         bulkDelete.manageFor = null;
         bulkDelete.selectable = null;
         if (count > 0) {
@@ -21334,8 +21415,7 @@
             else if (heightMod && typeof heightMod.useChatInputContainerHeight === "function")
                 inputHeight = heightMod.useChatInputContainerHeight(0);
         } catch (_) {}
-        const shown = enabled("bulkDelete") && bulkDelete.active && !!React && !!RN &&
-            !(props && props.channelId && String(props.channelId) !== String(bulkDelete.channelId));
+        const shown = enabled("bulkDelete") && bulkDelete.active && !!React && !!RN;
         // Android's Back leaves selection first, like every other selection mode, instead of leaving the chat.
         React.useEffect(() => {
             const back = shown && RN.BackHandler;
@@ -21354,9 +21434,10 @@
         const selectable = deleting ? [] : bulkDeleteChannelSelectableIds(bulkDelete.channelId);
         const allSelected = selectable.length > 0 && bulkDelete.selected.size >= selectable.length && selectable.every(id => bulkDelete.selected.has(id));
         const Trash = venusIcon(5148, "TrashIcon"), Close = venusIcon(6573, "CircleXIcon");
+        const chats = deleting ? 1 : bulkDeleteByChat().size;
         const statusText = deleting ?
             tr("Deleting {done} of {total}…", {done:Math.min(bulkDelete.attempted + 1, bulkDelete.total), total:bulkDelete.total}) :
-            tr("{n} selected", {n:count});
+            chats > 1 ? tr("{n} selected in {chats} chats", {n:count, chats}) : tr("{n} selected", {n:count});
         const height = Math.max(56, Number.isFinite(inputHeight) && inputHeight > 0 ? inputHeight : 0);
         // A plain view placed with layout, never a native-driven transform or popIn wrapper: on Android those draw the bar
         // where it belongs but leave its touch area behind (#82). The slot takes every touch, so the hidden composer
@@ -21367,13 +21448,19 @@
                     el(RN.Text, {style:s.badgeText}, String(count))),
                 el(RN.View, {style:{flex:1, gap:1}},
                     el(RN.Text, {style:s.title, numberOfLines:1}, statusText),
-                    !deleting && selectable.length > 0 ? el(Press, {
-                        onPress:bulkDeleteSelectAll,
-                        accessibilityRole:"button",
-                        accessibilityLabel:tr(allSelected ? "Deselect all" : "Select all"),
-                        hitSlop:{top:8, bottom:8, left:8, right:8},
-                        style:{alignSelf:"flex-start"}
-                    }, el(RN.Text, {style:s.link, numberOfLines:1}, tr(allSelected ? "Deselect all" : "Select all"))) : null),
+                    !deleting && (selectable.length > 0 || count > 0) ? el(RN.View, {style:{flexDirection:"row", alignItems:"center", gap:14}},
+                        selectable.length > 0 ? el(Press, {
+                            onPress:bulkDeleteSelectAll,
+                            accessibilityRole:"button",
+                            accessibilityLabel:tr(allSelected ? "Deselect all" : "Select all"),
+                            hitSlop:{top:8, bottom:8, left:8, right:8}
+                        }, el(RN.Text, {style:s.link, numberOfLines:1}, tr(allSelected ? "Deselect all" : "Select all"))) : null,
+                        count > 0 ? el(Press, {
+                            onPress:bulkDeleteReview,
+                            accessibilityRole:"button",
+                            accessibilityLabel:tr("Review"),
+                            hitSlop:{top:8, bottom:8, left:8, right:8}
+                        }, el(RN.Text, {style:s.link, numberOfLines:1}, tr("Review"))) : null) : null),
                 !deleting ? el(Press, {
                     onPress:count > 0 ? bulkDeleteConfirmAndRun : undefined,
                     disabled:count === 0,
@@ -21392,6 +21479,67 @@
                     hitSlop:{top:8, bottom:8, left:6, right:8},
                     style:s.close
                 }, el(Close, {size:"sm", color:s.pillText.color}))));
+    }
+    // Review: everything picked so far, by server and chat. Tap a chat to jump to it, or take its messages off the selection.
+    const BULK_REVIEW_SHEET = "VenusBulkDeleteReview";
+    function bulkDeleteReview() {
+        const ui = reviewUI();
+        if (!ui.ActionSheet || typeof ui.showSheet !== "function" || !bulkDelete.selected.size) return;
+        haptic("SELECTION");
+        try { ui.showSheet({key:BULK_REVIEW_SHEET, content:el(BulkDeleteReviewSheet, {}), stackingBehavior:"stack"}); } catch (_) {}
+    }
+    function bulkDeleteUnselectChat(channelId) {
+        if (!bulkDelete.active || bulkDelete.deleting) return;
+        const ids = [];
+        bulkDelete.where.forEach((ch, id) => { if (ch === channelId) ids.push(id); });
+        if (!ids.length) return;
+        haptic("SELECTION");
+        animateLayout();
+        ids.forEach(bulkDeleteDrop);
+        notify("bulkDelete");
+        bulkDeleteRedrawIds(channelId, ids);
+        if (!bulkDelete.selected.size) hideReviewSheet(reviewUI(), BULK_REVIEW_SHEET);
+    }
+    function bulkDeleteGoTo(place) {
+        const ui = reviewUI();
+        hideReviewSheet(ui, BULK_REVIEW_SHEET);
+        if (place.id === bulkDelete.channelId) return;
+        const go = inspectedExport(1114, "transitionTo");
+        if (typeof go === "function") later(() => { try { go("/channels/" + (place.guildId || "@me") + "/" + place.id); } catch (_) {} }, 250);
+    }
+    function BulkDeleteReviewSheet() {
+        useSettings("bulkDelete");
+        useLanguage();
+        const ui = reviewUI(), Group = ui.TableRowGroup || RN.View, Row = ui.TableRow, Press = inspectedExport(6462, "PressableOpacity") || RN.TouchableOpacity || RN.Pressable;
+        const s = useBulkBarStyles();
+        const close = () => hideReviewSheet(ui, BULK_REVIEW_SHEET);
+        const byChat = bulkDeleteByChat(), places = [];
+        byChat.forEach((ids, channelId) => places.push(Object.assign(bulkDeletePlace(channelId), {count:ids.length})));
+        // Servers first, in the order picked, then direct messages.
+        const sections = [];
+        places.forEach(place => {
+            const key = place.dm ? "@me" : place.guildId;
+            let section = sections.find(item => item.key === key);
+            if (!section) sections.push(section = {key, title:place.dm ? tr("Direct messages") : place.guildName || tr("Unknown server"), dm:place.dm, places:[]});
+            section.places.push(place);
+        });
+        sections.sort((a, b) => (a.dm ? 1 : 0) - (b.dm ? 1 : 0));
+        const total = bulkDelete.selected.size;
+        const header = ui.Header ? el(ui.Header, {title:tr("Selection"), trailing:ui.Close ? el(ui.Close, {onPress:close}) : undefined}) : null;
+        const iconFor = place => place.group ? rowIcon(8489, "GroupIcon") : place.dm ? rowIcon(8490, "AtIcon") : rowIcon(8471, "ChatIcon");
+        const Clear = venusIcon(6573, "CircleXIcon");
+        const groups = sections.map(section => el(Group, {key:section.key, title:section.title},
+            Row ? section.places.map(place => el(Row, {key:place.id, label:place.name, icon:iconFor(place),
+                subLabel:place.id === bulkDelete.channelId ? tr("Open now") : undefined,
+                onPress:() => bulkDeleteGoTo(place),
+                trailing:el(RN.View, {style:{flexDirection:"row", alignItems:"center", gap:10}},
+                    el(RN.View, {style:place.count > 0 ? s.badge : s.badgeMuted}, el(RN.Text, {style:s.badgeText}, String(place.count))),
+                    Press && !bulkDelete.deleting ? el(Press, {onPress:() => bulkDeleteUnselectChat(place.id), accessibilityRole:"button",
+                        accessibilityLabel:tr("Remove"), hitSlop:{top:10, bottom:10, left:10, right:10}}, el(Clear, {size:"sm", color:s.pillText.color})) : null)})) : null));
+        const content = el(RN.View, {style:{paddingHorizontal:12, paddingBottom:24, gap:16}},
+            groups,
+            footnote("note", "Your selection stays when you switch chats, servers and DMs. Tap a chat to open it."));
+        return serverEditScroll(ui, header, content);
     }
     // Same call1/call2 fast paths as translateBarHeader (Hermes HBC98: 179.7 -> 123.1 us per 100 renders, 1.46x).
     function bulkDeleteBarProps(props) {
