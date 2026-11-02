@@ -95,7 +95,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
         hypeSquad:false, customIdle:false, customIdleMinutes:10, pauseInvites:false, fastDeleteChannels:false, fastDeleteChannelsConfirm:true, fastDeleteChannelsMenu:true, mutualGroupDMs:false, platformSpoof:false, platformSpoofDevice:"desktop" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
@@ -113,7 +113,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
             hypeSquad: false, customIdle: false, customIdleMinutes: 10, pauseInvites: false, fastDeleteChannels: false, fastDeleteChannelsConfirm: true, fastDeleteChannelsMenu: true, mutualGroupDMs: false, platformSpoof: false, platformSpoofDevice: "desktop"
         }));
     }
@@ -304,6 +304,7 @@
     function languageChanged() {
         i18n.version++; i18n.shownIn = uiLanguage();
         diagSendStrings();
+        if (features.backgroundMedia) backgroundMediaLabels();
         notify("*");
         // Only the "Translated from ..." line under a translation is in Venus's language: redraw just those rows,
         // not every message on screen, and nothing while the feature is off or that line isn't shown.
@@ -459,6 +460,7 @@
         if (key === "guildLurkIds") return guildLurkText(value);
         if (key === "customIdleMinutes") return customIdleValue(value);
         if (key === "platformSpoofDevice") return SPOOF_DEVICES.includes(value) ? value : undefined;
+        if (key === "backgroundMediaSkip") return [5, 10, 15, 30].includes(value) ? value : undefined;
         if (key === "hiddenFeatures") return hiddenFeaturesText(value);
         if (key === "hideAnythingSpots") return hideSpotsText(value);
         if (key === "materialYouColor") return myIsColor(value) ? value.toLowerCase() : undefined;
@@ -768,6 +770,7 @@
             }
             status.storage = "ready";
             debugLogReady();
+            if (features.backgroundMedia) backgroundMediaStart();
             if (features.nitroThemes && settings.nitroThemes) nitroThemeRecheck();
             if ((features.nitroThemes || features.accountSwitcher) && nitroThemeHasAny()) later(nitroThemeReapply, 0);
             if (!starter.done && Object.keys(FEATURE_ICONS).some(key => features[key] && settings[key])) starter.done = true;
@@ -1160,7 +1163,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1195,7 +1198,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
+        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], backgroundMedia:[8674, "PlayIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
         hypeSquad:[18747, "HomeIcon"], customIdle:[14205, "UserClockIcon"], pauseInvites:[8676, "PauseIcon"], fastDeleteChannels:[18679, "ChannelListIcon"], mutualGroupDMs:[8489, "GroupIcon"], platformSpoof:[5133, "UserPlatformIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
@@ -1253,6 +1256,7 @@
         pauseInvites:["Pause invites", "Invites", "Lock invites", "Raid", "Security"],
         fastDeleteChannels:["Delete channel", "Fast delete", "Remove channel", "Skip confirmation"],
         mutualGroupDMs:["Mutual group DMs", "Shared groups", "Mutual groups", "Group chats"],
+        backgroundMedia:["Background", "Picture in picture", "PiP", "Voice messages", "Audio", "Videos", "Lock screen", "Notification", "Screen off", "Skip buttons", "Bluetooth"],
         platformSpoof:["Platform spoof", "Device", "Mobile", "Desktop", "Web", "Console", "Fake platform"],
         guildLurk:["GuildLurk", "Guild lurk", "Lurk", "Lurker", "Preview", "Invite link", "Server ID"],
         timeoutDuration:["Timeout", "Timed out", "Muted", "Mute", "Communication disabled", "Moderation", "ShowTimeoutDuration"],
@@ -1736,6 +1740,7 @@
         withOptions("sending", "compressUploads", "VENUS_COMPRESSUPLOADS", "Compress big files", "Photos, videos and audio over Discord's file size limit are made smaller to fit as you send them, instead of being refused.", "Compress big files", CompressUploadsSettings);
         withOptions("sending", "quietReplies", "VENUS_QUIETREPLIES", "Reply without pinging", "Replies start with the ping off, so nobody gets pinged unless you turn it on.", "Reply without pinging", QuietRepliesSettings);
         toggle("messages", "voiceDownload", "Download voice messages", "A Download button under each voice message saves it to your phone.");
+        withOptions("messages", "backgroundMedia", "VENUS_BACKGROUNDMEDIA", "Keep media playing", "Voice messages and audio keep playing when you leave Discord or turn off the screen, and videos pop out into a small window.", "Keep media playing", BackgroundMediaSettings);
         toggle("messages", "dndBanners", "Banners in Do Not Disturb", "New messages still pop up at the top while you're on Do Not Disturb, without a sound.");
         toggle("sending", "clickableMentions", "Tap mentions to open profiles", "Tap an @mention in the message bar to see who it is.");
         // People
@@ -20190,6 +20195,148 @@
         const title = tr("Show your new device"), body = tr("Discord shows it the next time it signs in. Reopen Discord to do that now.");
         if (ui.alerts && typeof ui.alerts.show === "function") try { ui.alerts.show({title, body, confirmText:tr("Reopen now"), cancelText:tr("Later"), onConfirm:reopen}); return; } catch (_) {}
         if (RN.Alert) RN.Alert.alert(title, body, [{text:tr("Later"), style:"cancel"}, {text:tr("Reopen now"), onPress:reopen}]);
+    }
+    // Keep media playing (#134). Discord plays voice messages, audio files and chat videos in its own native player and pauses
+    // them when it leaves the screen; the native side (extensions/media, BackgroundMedia.kt) keeps the sound going with a media
+    // notification and pops a playing video out into Android's picture-in-picture window. It reads the switches from the
+    // settings file itself, so the JS side only sends the notification's texts in the user's language, and, when Discord
+    // goes to the background, who sent what is playing and where (FileModule.moveFile with a private prefix).
+    const MEDIA_PREFIX = "venus-media-v1:", backgroundMedia = {listening:false, sent:""};
+    function mediaBridge(request) {
+        if (!files || typeof files.moveFile !== "function") return Promise.resolve(null);
+        return Promise.resolve().then(() => files.moveFile(MEDIA_PREFIX + JSON.stringify(request), "", "")).catch(() => null);
+    }
+    function backgroundMediaLabels() {
+        if (!features.backgroundMedia) return;
+        const labels = {voice:tr("Voice message"), audio:tr("Audio"), play:tr("Play"), pause:tr("Pause"), back:tr("Skip back"), forward:tr("Skip forward"), channel:tr("Media playback")};
+        const text = JSON.stringify(labels);
+        if (text === backgroundMedia.sent) return;
+        backgroundMedia.sent = text;
+        mediaBridge({action:"labels", labels});
+    }
+    function backgroundMediaStart() {
+        if (backgroundMedia.listening) return;
+        backgroundMedia.listening = true;
+        backgroundMediaLabels();
+        try {
+            if (RN && RN.AppState && typeof RN.AppState.addEventListener === "function")
+                RN.AppState.addEventListener("change", state => { if (state !== "active" && enabled("backgroundMedia")) later(backgroundMediaDescribe, 150); });
+        } catch (_) {}
+    }
+    function backgroundMediaDescribe() {
+        mediaBridge({action:"now"}).then(text => {
+            const now = typeof text === "string" ? JSON.parse(text) : null;
+            if (!now || !/^\d{17,20}$/.test(String(now.messageId || ""))) return;
+            const meta = backgroundMediaMeta(now);
+            if (meta) mediaBridge(Object.assign({action:"meta"}, meta));
+        }).catch(() => {});
+    }
+    // The notification's title (Voice message, or the audio file's name), the sender, the chat, the sender's picture and a link back.
+    function backgroundMediaMeta(now) {
+        const messages = inspectedExport(5532, "default"), channels = inspectedExport(2068, "default"), guilds = inspectedExport(2090, "default");
+        const channelId = String(now.channelId || ""), messageId = String(now.messageId);
+        let message = null, channel = null, guild = null;
+        try { message = messages && typeof messages.getMessage === "function" ? messages.getMessage(channelId, messageId) : null; } catch (_) {}
+        try { channel = channels && typeof channels.getChannel === "function" ? channels.getChannel(channelId) : null; } catch (_) {}
+        try { guild = channel && channel.guild_id && guilds ? guilds.getGuild(channel.guild_id) : null; } catch (_) {}
+        const author = message && message.author, base = url => String(url || "").split("?")[0];
+        const list = message && Array.isArray(message.attachments) ? message.attachments : [];
+        const attachment = list.find(a => a && (base(a.url) === base(now.url) || base(a.proxy_url) === base(now.url))) || list[0] || null;
+        const voice = !!(message && (message.flags & 8192)) || !!(attachment && (attachment.waveform || attachment.duration_secs));
+        const title = voice || !attachment ? tr("Voice message") : String(attachment.filename || tr("Audio"));
+        const artist = author ? String(author.globalName || author.global_name || author.username || "") : "";
+        let where = "";
+        if (channel) where = guild ? "#" + (channel.name || "") + " \u00b7 " + (guild.name || "") : channel.name ? String(channel.name) : tr("Direct message");
+        let art = "";
+        try { art = author && typeof author.getAvatarURL === "function" ? String(author.getAvatarURL(channel && channel.guild_id, 128) || "") : ""; } catch (_) {}
+        if (!/^https:\/\//.test(art)) art = "";
+        return {messageId, title, artist, where, art, link:"https://discord.com/channels/" + (channel && channel.guild_id || "@me") + "/" + channelId + "/" + messageId};
+    }
+    // The preview: a phone's media notification you can play with (play/pause and both skip buttons work, at the length picked
+    // below), and the picture-in-picture window floating over a home screen. Each half fades back when its switch is off.
+    const MEDIA_PREVIEW_MS = 47000;
+    function BackgroundMediaPreview(props) {
+        useSettings("backgroundMedia");
+        const s = useChatPreviewStyles(), k = usePreviewChrome(), Press = RN.Pressable || RN.View;
+        const audio = !!props.on && !!settings.backgroundMediaAudio, video = !!props.on && !!settings.backgroundMediaVideo;
+        const skip = [5, 10, 15, 30].includes(settings.backgroundMediaSkip) ? settings.backgroundMediaSkip : 10;
+        const [state, setState] = React.useState({at:12000, playing:true});
+        const playing = (audio || video) && state.playing;
+        React.useEffect(() => {
+            if (!playing || reduceMotion || typeof global.setInterval !== "function") return undefined;
+            const timer = global.setInterval(() => setState(st => st.playing ? {at:st.at + 500 >= MEDIA_PREVIEW_MS ? 0 : st.at + 500, playing:true} : st), 500);
+            return () => global.clearInterval(timer);
+        }, [playing]);
+        const seek = delta => { haptic("SELECTION"); setState(st => ({at:Math.max(0, Math.min(MEDIA_PREVIEW_MS - 500, st.at + delta)), playing:st.playing})); };
+        const toggle = () => { haptic("SELECTION"); setState(st => ({at:st.at, playing:!st.playing})); };
+        const Play = venusIcon(8674, "PlayIcon"), Pause = venusIcon(8676, "PauseIcon"), Skip = venusIcon(11632, "RetryIcon"), Phones = venusIcon(13214, "HeadphonesIcon");
+        const width = (Math.max(0, Math.min(1, state.at / MEDIA_PREVIEW_MS)) * 100).toFixed(1) + "%";
+        const caption = text => el(RN.Text, {style:[s.muted, {fontSize:12, fontWeight:"700", letterSpacing:0.3}]}, tr(text));
+        const skipButton = (key, forward, big, color, live) => el(Press, {key, disabled:!live, onPress:() => seek((forward ? 1 : -1) * skip * 1000),
+            accessibilityRole:"button", accessibilityLabel:tr(forward ? "Skip forward" : "Skip back"), hitSlop:{top:8, bottom:8, left:8, right:8},
+            style:{width:big ? 40 : 24, height:big ? 40 : 24, alignItems:"center", justifyContent:"center"}},
+            el(RN.View, {style:forward ? {transform:[{scaleX:-1}]} : null}, el(Skip, {size:big ? "md" : "xs", color})),
+            big ? el(RN.Text, {style:{position:"absolute", color, fontSize:8, fontWeight:"800"}}, String(skip)) : null);
+        const playButton = (key, big, live) => el(Press, {key, onPress:toggle, disabled:!live, accessibilityRole:"button", accessibilityLabel:tr(playing ? "Pause" : "Play"),
+            hitSlop:{top:8, bottom:8, left:8, right:8}, style:big ? [k.brand, {width:52, height:52, borderRadius:26, alignItems:"center", justifyContent:"center"}] : null},
+            el(playing ? Pause : Play, {size:big ? "md" : "sm", color:"#ffffff"}));
+        const notification = el(RN.View, {key:"notification", style:{gap:8, opacity:audio ? 1 : 0.45}},
+            caption("In your notifications"),
+            el(RN.View, {style:[k.secondary, {borderRadius:20, padding:14, gap:12}]},
+                el(RN.View, {style:{flexDirection:"row", alignItems:"center", gap:12}},
+                    el(RN.View, {style:{width:48, height:48, borderRadius:12, backgroundColor:"#eb459e", alignItems:"center", justifyContent:"center"}},
+                        el(RN.Text, {style:{color:"#ffffff", fontSize:20, fontWeight:"700"}}, "S")),
+                    el(RN.View, {style:{flex:1}},
+                        el(RN.Text, {style:s.name, numberOfLines:1}, tr("Voice message")),
+                        el(RN.Text, {style:[s.muted, {fontSize:13}], numberOfLines:1}, "Sam \u00b7 #general")),
+                    el(RN.View, {style:[k.brand, {width:24, height:24, borderRadius:12, alignItems:"center", justifyContent:"center"}]},
+                        el(Phones, {size:"xxs", color:"#ffffff"}))),
+                el(RN.View, {style:{gap:4}},
+                    el(RN.View, {style:{height:4, borderRadius:2, backgroundColor:"#80848e55", overflow:"hidden"}},
+                        el(RN.View, {style:[k.brand, {height:4, width}]})),
+                    el(RN.View, {style:{flexDirection:"row", justifyContent:"space-between"}},
+                        el(RN.Text, {style:[s.muted, {fontSize:11}]}, clockText(state.at)),
+                        el(RN.Text, {style:[s.muted, {fontSize:11}]}, clockText(MEDIA_PREVIEW_MS)))),
+                el(RN.View, {style:{flexDirection:"row", alignItems:"center", justifyContent:"center", gap:28}},
+                    skipButton("back", false, true, k.icon.color, audio), playButton("play", true, audio), skipButton("forward", true, true, k.icon.color, audio))));
+        const APP_COLORS = ["#57f287", "#fee75c", "#5865f2", "#eb459e", "#ed4245", "#00a8fc", "#f0b232", "#9b84ee"];
+        const tiles = APP_COLORS.map((color, i) => el(RN.View, {key:"app" + i, style:{width:"25%", alignItems:"center", paddingVertical:7}},
+            el(RN.View, {style:{width:34, height:34, borderRadius:10, backgroundColor:color, opacity:0.3}})));
+        const pip = el(RN.View, {key:"pip", style:{position:"absolute", right:12, bottom:12, width:168, height:95, borderRadius:14, overflow:"hidden",
+                backgroundColor:"#000000", shadowColor:"#000000", shadowOpacity:0.35, shadowRadius:10, shadowOffset:{width:0, height:4}, elevation:6}},
+            el(RN.View, {style:{flex:3, backgroundColor:"#3b4ba8"}},
+                el(RN.View, {style:{position:"absolute", right:28, top:12, width:22, height:22, borderRadius:11, backgroundColor:"#fee75c"}})),
+            el(RN.View, {style:{flex:2, backgroundColor:"#1f2a63"}}),
+            el(RN.View, {style:{position:"absolute", left:0, right:0, top:0, bottom:0, backgroundColor:"#00000047", flexDirection:"row",
+                alignItems:"center", justifyContent:"center", gap:18}},
+                skipButton("pipBack", false, false, "#ffffff", video), playButton("pipPlay", false, video), skipButton("pipForward", true, false, "#ffffff", video)),
+            el(RN.View, {style:{position:"absolute", left:0, bottom:0, height:3, width, backgroundColor:"#5865f2"}}));
+        const floating = el(RN.View, {key:"floating", style:{gap:8, opacity:video ? 1 : 0.45}},
+            caption("Over other apps"),
+            el(RN.View, {style:[k.secondary, {borderRadius:20, height:200, padding:10, overflow:"hidden"}]},
+                el(RN.View, {style:{flexDirection:"row", flexWrap:"wrap"}}, tiles), pip));
+        return el(RN.View, {key:"preview", accessible:false, accessibilityLabel:tr("Keep media playing preview"), style:[s.chat, {padding:12, gap:16}]},
+            notification, floating);
+    }
+    function BackgroundMediaSettings() {
+        useSettings("backgroundMedia");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("backgroundMedia"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const Icon = venusIcon(8674, "PlayIcon");
+        const any = !!(settings.backgroundMediaAudio || settings.backgroundMediaVideo);
+        const groups = [
+            !on ? offCard("status", Icon, "backgroundMedia") : !any ? statusCard("status", "Turn on at least one option below.", {title:tr("Nothing keeps playing"), IconComponent:Icon}) : null,
+            el(BackgroundMediaPreview, {key:"preview", on}),
+            el(Group, {key:"what", title:tr("When you leave Discord")},
+                switchRow(Switch, "backgroundMediaAudio", "Voice messages and audio", "Keep playing in the background, with controls in your notifications and on the lock screen.", rowIcon(13214, "HeadphonesIcon")),
+                switchRow(Switch, "backgroundMediaVideo", "Videos", "Pop out into a small window over other apps, with play and skip buttons.", rowIcon(11187, "VideoIcon"))),
+            any ? el(RN.View, {key:"skip", style:{gap:10}},
+                groupTitle("skipTitle", "Skip buttons"),
+                venusSegmented({key:"skipSeg", value:settings.backgroundMediaSkip, disabled:!on, onChange:value => setSetting("backgroundMediaSkip", value),
+                    items:[5, 10, 15, 30].map(n => ({value:n, label:tr("{n} s", {n})}))})) : null,
+            footnote("note", "Closing the small window pauses the video. Swipe the notification away to stop the sound.")];
+        return settingsBody(ui, groups);
     }
     function PlatformSpoofSettings() {
         useSettings("platformSpoof");

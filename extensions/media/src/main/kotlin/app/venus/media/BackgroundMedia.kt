@@ -390,10 +390,10 @@ object BackgroundMedia {
     private fun pipParams(context: Context, playing: Boolean): PictureInPictureParams.Builder {
         val skip = (skipMs() / 1000).toString()
         val actions = ArrayList<RemoteAction>()
-        actions.add(remote(context, android.R.drawable.ic_media_rew, skipLabel("back", "Back {n} seconds"), ACTION_BACK, 11))
+        actions.add(remote(context, android.R.drawable.ic_media_rew, skipLabel("back", "Skip back"), ACTION_BACK, 11))
         actions.add(if (playing) remote(context, android.R.drawable.ic_media_pause, label("pause", "Pause"), ACTION_TOGGLE, 12)
             else remote(context, android.R.drawable.ic_media_play, label("play", "Play"), ACTION_TOGGLE, 12))
-        actions.add(remote(context, android.R.drawable.ic_media_ff, skipLabel("forward", "Forward {n} seconds"), ACTION_FORWARD, 13))
+        actions.add(remote(context, android.R.drawable.ic_media_ff, skipLabel("forward", "Skip forward"), ACTION_FORWARD, 13))
         val builder = PictureInPictureParams.Builder().setAspectRatio(pipAspect).setActions(actions)
         if (Build.VERSION.SDK_INT >= 31) builder.setSeamlessResizeEnabled(true)
         return builder
@@ -541,8 +541,8 @@ object BackgroundMedia {
             .setActions(PlaybackState.ACTION_PLAY or PlaybackState.ACTION_PAUSE or PlaybackState.ACTION_PLAY_PAUSE or PlaybackState.ACTION_STOP or
                 PlaybackState.ACTION_SEEK_TO or PlaybackState.ACTION_REWIND or PlaybackState.ACTION_FAST_FORWARD)
             .setState(if (audioPlaying) PlaybackState.STATE_PLAYING else PlaybackState.STATE_PAUSED, position(player), if (audioPlaying) 1f else 0f)
-            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_BACK, skipLabel("back", "Back {n} seconds"), android.R.drawable.ic_media_rew).build())
-            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_FORWARD, skipLabel("forward", "Forward {n} seconds"), android.R.drawable.ic_media_ff).build())
+            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_BACK, skipLabel("back", "Skip back"), android.R.drawable.ic_media_rew).build())
+            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_FORWARD, skipLabel("forward", "Skip forward"), android.R.drawable.ic_media_ff).build())
             .build()
         media.setPlaybackState(state)
 
@@ -557,10 +557,10 @@ object BackgroundMedia {
             .setCategory(Notification.CATEGORY_TRANSPORT)
             .setContentIntent(openIntent(context, meta?.optString("link", "") ?: ""))
             .setDeleteIntent(broadcast(context, ACTION_STOP, 4))
-            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_rew), skipLabel("back", "Back {n} seconds"), broadcast(context, ACTION_BACK, 1)).build())
+            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_rew), skipLabel("back", "Skip back"), broadcast(context, ACTION_BACK, 1)).build())
             .addAction(if (audioPlaying) Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_pause), label("pause", "Pause"), broadcast(context, ACTION_TOGGLE, 2)).build()
                 else Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_play), label("play", "Play"), broadcast(context, ACTION_TOGGLE, 2)).build())
-            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_ff), skipLabel("forward", "Forward {n} seconds"), broadcast(context, ACTION_FORWARD, 3)).build())
+            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_ff), skipLabel("forward", "Skip forward"), broadcast(context, ACTION_FORWARD, 3)).build())
             .setStyle(Notification.MediaStyle().setMediaSession(media.sessionToken).setShowActionsInCompactView(0, 1, 2))
         val picture = art
         if (picture != null) builder.setLargeIcon(picture)
