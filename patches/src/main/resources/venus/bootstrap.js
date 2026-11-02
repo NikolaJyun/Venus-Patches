@@ -11127,10 +11127,13 @@
         return swapJoinDates(rendered, 0);
     }
     // Roles (UserProfileRolesCard 7158) on a profile; the card a new member sees after onboarding isn't a profile and stays.
-    function rolesCard(orig, self, args) {
-        const props = args[0];
-        return props && ("user" in props || "userId" in props || "guildMember" in props) ? hideWhole("profile.roles")(orig, self, args) : orig.apply(self, args);
-    }
+    // Built once, not on every render of the card, and (props) / (props, ref) calls skip the arguments object and apply
+    // (Hermes HBC98: 128.9 -> 75.2 us per 100 renders, 1.71x).
+    const rolesWhole = hideWhole("profile.roles");
+    const isRolesProps = props => !!props && ("user" in props || "userId" in props || "guildMember" in props);
+    function rolesCard(orig, self, args) { return isRolesProps(args[0]) ? rolesWhole(orig, self, args) : orig.apply(self, args); }
+    rolesCard.call1 = (orig, self, props) => isRolesProps(props) ? rolesWhole.call1(orig, self, props) : orig.call(self, props);
+    rolesCard.call2 = (orig, self, props, ref) => isRolesProps(props) ? rolesWhole.call2(orig, self, props, ref) : orig.call(self, props, ref);
     // The note (UserProfileNote 14101). With User and server reviews on, Venus draws Reviews right after it: only the note goes.
     function noteSpot(orig, self, args) {
         useSettings("hideAnything");
@@ -11318,6 +11321,8 @@
     // until you set one. Other people's statuses stay.
     const statusWhole = hideWhole("you.status");
     function statusBubble(orig, self, args) { const props = args[0]; return props && props.editEnabled ? statusWhole(orig, self, args) : orig.apply(self, args); }
+    statusBubble.call1 = (orig, self, props) => props && props.editEnabled ? statusWhole.call1(orig, self, props) : orig.call(self, props);
+    statusBubble.call2 = (orig, self, props, ref) => props && props.editEnabled ? statusWhole.call2(orig, self, props, ref) : orig.call(self, props, ref);
     // Under a server's name in the channel list (ChannelListStickyHeader 17265): the member count, a dot, then "Community".
     // The dot goes with either of them.
     function stickySubheader(node, depth, Text, community, edit) {
