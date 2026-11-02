@@ -15218,21 +15218,28 @@
     // message in it is in another language. Tap it to translate the chat, and every message you see in it; the bar
     // stays, so one more tap shows it as written. The chat stays translated when you leave and come back, until
     // Discord restarts. Single messages still have Translate and Show original in their menu. The cog opens these settings.
-    function translateBarHeader(orig, self, args) {
-        const props = args[0];
+    // ChatViewWrapper renders on every chat update as (props) or (props, ref): those calls skip the arguments object, apply and
+    // the argument copy (Hermes HBC98: 183.6 -> 125.0 us per 100 renders, 1.47x).
+    function translateBarProps(props) {
         // The bar is always in the tree and draws nothing unless it's wanted, so switching options never remounts the chat.
         // Appended after ChatViewWrapper's children (like JumpToPresentButton) so it sits above DCDChatList's native
         // GestureDetector on Android and receives touches directly.
-        if (!props || !props.channelId || !React || !RN) return orig.apply(self, args);
         const bar = el(TranslateBar, {key:"venus-translate-bar", channelId:props.channelId});
         const children = Array.isArray(props.children) ? props.children.concat([bar]) : [props.children, bar];
         // Discord's own sticky header (the blue "25+ new messages" bar, thread and safety banners) is measured, so the
         // pill always sits just under whatever Discord shows there instead of on top of it (#82).
         // Only a header Discord already passes is wrapped: StickyWrapper (10380) fills the chat with its header box on Android,
         // so adding one where there was none could take touches from the messages.
-        const next = Object.assign({}, props, props.stickyHeader ? {children, stickyHeader:el(TranslateHeaderMeasure, {channelId:props.channelId}, props.stickyHeader)} : {children});
+        return Object.assign({}, props, props.stickyHeader ? {children, stickyHeader:el(TranslateHeaderMeasure, {channelId:props.channelId}, props.stickyHeader)} : {children});
+    }
+    function translateBarHeader(orig, self, args) {
+        const props = args[0];
+        if (!props || !props.channelId || !React || !RN) return orig.apply(self, args);
+        const next = translateBarProps(props);
         return args.length === 1 ? orig.call(self, next) : orig.apply(self, [next].concat(Array.prototype.slice.call(args, 1)));
     }
+    translateBarHeader.call1 = (orig, self, props) => !props || !props.channelId || !React || !RN ? orig.call(self, props) : orig.call(self, translateBarProps(props));
+    translateBarHeader.call2 = (orig, self, props, ref) => !props || !props.channelId || !React || !RN ? orig.call(self, props, ref) : orig.call(self, translateBarProps(props), ref);
     // How tall Discord's sticky header is right now, per channel. Only the bar listens, so a change never redraws the chat.
     const translateHeader = {heights:new Map(), listeners:new Set()};
     function TranslateHeaderMeasure(props) {
@@ -16564,9 +16571,12 @@
         }
         return source;
     }
-    function chatViewWrapperThemeBackground(orig, self, args) {
-        useSettings("customThemes");
-        const tree = orig.apply(self, args);
+    // Same call1/call2 fast paths as the other ChatViewWrapper hooks (Hermes HBC98: 48.8 -> 31.3 us per 100 renders, 1.56x,
+    // background off).
+    function chatViewWrapperThemeBackground(orig, self, args) { useSettings("customThemes"); return chatThemeBackground(orig.apply(self, args)); }
+    chatViewWrapperThemeBackground.call1 = (orig, self, props) => { useSettings("customThemes"); return chatThemeBackground(orig.call(self, props)); };
+    chatViewWrapperThemeBackground.call2 = (orig, self, props, ref) => { useSettings("customThemes"); return chatThemeBackground(orig.call(self, props, ref)); };
+    function chatThemeBackground(tree) {
         if (!enabled("customThemes") || !settings.customThemesBackground || !React || !RN || !RN.Image || !tree) return tree;
         const active = customThemesActiveEntry();
         const bg = active && active.background;
@@ -21360,16 +21370,22 @@
                     style:s.close
                 }, el(Close, {size:"sm", color:s.pillText.color}))));
     }
-    function bulkDeleteChatFooter(orig, self, args) {
-        const props = args[0];
+    // Same call1/call2 fast paths as translateBarHeader (Hermes HBC98: 179.7 -> 123.1 us per 100 renders, 1.46x).
+    function bulkDeleteBarProps(props) {
         // Appended after ChatViewWrapper's children (like TranslateBar and JumpToPresentButton) so it sits above
         // DCDChatList's native GestureDetector on Android and receives touches directly instead of passing through to chat.
-        if (!features.bulkDelete || !props || !props.channelId || !React || !RN) return orig.apply(self, args);
         const bar = el(BulkDeleteBar, {key:"venus-bulk-bar", channelId:props.channelId});
         const children = Array.isArray(props.children) ? props.children.concat([bar]) : [props.children, bar];
-        const next = Object.assign({}, props, {children});
+        return Object.assign({}, props, {children});
+    }
+    function bulkDeleteChatFooter(orig, self, args) {
+        const props = args[0];
+        if (!features.bulkDelete || !props || !props.channelId || !React || !RN) return orig.apply(self, args);
+        const next = bulkDeleteBarProps(props);
         return args.length === 1 ? orig.call(self, next) : orig.apply(self, [next].concat(Array.prototype.slice.call(args, 1)));
     }
+    bulkDeleteChatFooter.call1 = (orig, self, props) => !features.bulkDelete || !props || !props.channelId || !React || !RN ? orig.call(self, props) : orig.call(self, bulkDeleteBarProps(props));
+    bulkDeleteChatFooter.call2 = (orig, self, props, ref) => !features.bulkDelete || !props || !props.channelId || !React || !RN ? orig.call(self, props, ref) : orig.call(self, bulkDeleteBarProps(props), ref);
     function BulkDeletePreview(props) {
         useSettings("bulkDelete");
         const s = useChatPreviewStyles(), k = usePreviewChrome(), on = !!props.on;
