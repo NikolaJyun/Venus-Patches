@@ -13611,17 +13611,25 @@
     // from lexical environment slots [2, 4] and [2, 5] captured once when 9255's factory ran, so lengthConstants
     // always returns SPLIT_UNLIMITED when features.splitMessages is built in, and maxLengthModule restores the real
     // limit when the toggle is off.
+    // getMaxMessageLength() and useMessageMaxLength() take no argument and run on every chat input render: the
+    // no-argument call skips the arguments object and apply (Hermes HBC98: 80.1 -> 43.0 us per 100 calls of both, 1.86x).
+    function maxLengthResult(value) {
+        if (enabled("splitMessages")) return SPLIT_UNLIMITED;
+        return value === SPLIT_UNLIMITED ? messageLimit() : value;
+    }
     function maxLengthModule(exports) {
-        const big = (orig, self, args) => {
-            const value = orig.apply(self, args);
-            if (enabled("splitMessages")) return SPLIT_UNLIMITED;
-            return value === SPLIT_UNLIMITED ? messageLimit() : value;
-        };
+        const big = (orig, self, args) => maxLengthResult(orig.apply(self, args));
+        big.call0 = (orig, self) => maxLengthResult(orig.call(self));
         exports = hookExport(exports, "getMaxMessageLength", big);
-        return hookExport(exports, "default", (orig, self, args) => {
+        const useBig = (orig, self, args) => {
             if (React) useSettings("splitMessages");
-            return big(orig, self, args);
-        });
+            return maxLengthResult(orig.apply(self, args));
+        };
+        useBig.call0 = (orig, self) => {
+            if (React) useSettings("splitMessages");
+            return maxLengthResult(orig.call(self));
+        };
+        return hookExport(exports, "default", useBig);
     }
     // Constants (1087): DraftStore (7239) and useMessageMaxLength (9561) both read MAX_MESSAGE_LENGTH and
     // MAX_MESSAGE_LENGTH_PREMIUM once at module evaluation time during startup (before venus-patches.json finishes
