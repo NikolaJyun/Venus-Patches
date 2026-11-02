@@ -476,6 +476,7 @@ BOOTSTRAP_MODULES = [
     (12338, 'modules/chat_input/native/useChatInputMaxHeight.tsx', ['getChatInputMaxHeightWorklet', 'getChatInputHeightAnimationTimingWorklet', 'getChatInputMaxHeight'], 'useChatInputMaxHeight (Expand the message bar: the height cap)'),
     (12887, 'modules/chat_input/native/useChatInputHeightWorklet.native.tsx', ['default', 'getIsChatInputHeightWorkletEnabled'], 'useChatInputHeightWorklet (Expand the message bar: the live height)'),
     (1658, None, ['makeMutable', 'withTiming', 'Easing'], 'react-native-reanimated (Expand the message bar: the shared height reserve)'),
+    (10696, 'modules/safe_area/useSafeAreaInsetsSharedValue.native.tsx', ['getSafeAreaInsetsWorklet'], 'useSafeAreaInsetsSharedValue (Expand the message bar: room for the navigation bar)'),
     (7846, None, ['Svg', 'Path'], 'react-native-svg (Expand the message bar: the collapse arrows)'),
     (9990, 'modules/replies/PendingReplyActionCreators.tsx', ['createPendingReply', 'createShallowPendingReply'], 'PendingReplyActionCreators (Reply without pinging)'),
     (13511, 'modules/notifications/NotificationTextUtils.tsx', ['shouldNotify'], 'NotificationTextUtils (Banners in Do Not Disturb)'),

@@ -295,6 +295,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 10650 | `design/components/Icon/native/redesign/generated/ChatMarkUnreadIcon.tsx` | ChatMarkUnreadIcon | ChatMarkUnreadIcon (Remove anything: Mark Unread) |
 | 10654 | `design/components/Icon/native/redesign/generated/BellSlashIcon.tsx` | BellSlashIcon | BellSlashIcon |
 | 10692 | `modules/chat/native/ChatViewWrapper.tsx` | default | ChatViewWrapper |
+| 10696 | `modules/safe_area/useSafeAreaInsetsSharedValue.native.tsx` | getSafeAreaInsetsWorklet | useSafeAreaInsetsSharedValue (Expand the message bar: room for the navigation bar) |
 | 10733 | `design/components/Icon/native/redesign/generated/ShieldIcon.tsx` | ShieldIcon | ShieldIcon |
 | 10780 | `modules/action_sheet/native/components/LongPressForumPostActionSheet.tsx` | default | LongPressForumPostActionSheet (View raw data menu row) |
 | 10796 | `design/components/Icon/native/redesign/generated/ArrowLargeUpIcon.tsx` | ArrowLargeUpIcon | ArrowLargeUpIcon |

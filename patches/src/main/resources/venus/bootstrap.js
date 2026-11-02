@@ -21023,7 +21023,8 @@
     // right away instead of at the next keystroke. Nothing else about the bar is touched: sending, drafts and the native
     // text field work as before, and if a worklet isn't where Venus expects, the bar is simply left alone.
     const expandBar = {expanded:false, multiline:false, pill:false, content:0, shared:null, worklets:null, live:null, subscribed:false};
-    const EXPAND_BAR_RESERVE = 120;
+    // Room kept free above the open bar (the status bar and the channel header), plus a little air under the header.
+    const EXPAND_BAR_RESERVE = 128;
     const expandBarHandlers = new WeakMap();
     const EXPAND_BAR_DARK = {button:{position:"absolute", top:4, right:6, width:32, height:32, borderRadius:16, alignItems:"center", justifyContent:"center"},
         pressed:{backgroundColor:"#4e50584d"}, icon:{color:"#b5bac1"}};
@@ -21058,21 +21059,27 @@
                 return exports;
             }
             const shared = expandBar.shared || (expandBar.shared = makeMutable(0));
+            // With the keyboard closed the bar sits above the navigation bar, which the keyboard's height otherwise covers, so
+            // that inset is kept free too (without it the open bar ran under the channel header and lost its top corners).
+            const insetsOf = inspectedExport(10696, "getSafeAreaInsetsWorklet");
+            const insets = typeof insetsOf === "function" && insetsOf.__workletHash ? insetsOf : null;
             const max = function () {
                 const reserve = shared.get();
                 if (!(reserve > 0)) return origMax();
                 const keys = mc.getKeyboardStateWorklet();
                 const keyboard = keys.keyboardType !== mc.KeyboardTypes.SYSTEM ? keys.customKeyboardHeight : keys.keyboardHeight;
                 const win = mc.getWindowDimensionsWorklet({ignoreKeyboard:true});
-                return Math.max(mc.MIN_HEIGHT * 2, win.height - keyboard - reserve);
+                const bottom = keyboard > 0 ? 0 : insets ? insets().bottom || 0 : 16;
+                return Math.max(mc.MIN_HEIGHT * 2, win.height - keyboard - bottom - reserve);
             };
             max.__closure = {origMax, shared, getKeyboardStateWorklet:mc.getKeyboardStateWorklet, KeyboardTypes:mc.KeyboardTypes,
-                getWindowDimensionsWorklet:mc.getWindowDimensionsWorklet, MIN_HEIGHT:mc.MIN_HEIGHT};
-            max.__workletHash = 7391842650011;
-            max.__initData = {code:"function venusExpandMax(){const{origMax,shared,getKeyboardStateWorklet,KeyboardTypes,getWindowDimensionsWorklet,MIN_HEIGHT}=this.__closure;" +
+                getWindowDimensionsWorklet:mc.getWindowDimensionsWorklet, MIN_HEIGHT:mc.MIN_HEIGHT, insets};
+            max.__workletHash = 7391842650013;
+            max.__initData = {code:"function venusExpandMax(){const{origMax,shared,getKeyboardStateWorklet,KeyboardTypes,getWindowDimensionsWorklet,MIN_HEIGHT,insets}=this.__closure;" +
                 "const reserve=shared.get();if(!(reserve>0)){return origMax();}" +
                 "const keys=getKeyboardStateWorklet();const keyboard=keys.keyboardType!==KeyboardTypes.SYSTEM?keys.customKeyboardHeight:keys.keyboardHeight;" +
-                "const win=getWindowDimensionsWorklet({ignoreKeyboard:true});return Math.max(MIN_HEIGHT*2,win.height-keyboard-reserve);}"};
+                "const win=getWindowDimensionsWorklet({ignoreKeyboard:true});const bottom=keyboard>0?0:insets?insets().bottom||0:16;" +
+                "return Math.max(MIN_HEIGHT*2,win.height-keyboard-bottom-reserve);}"};
             const timing = function (contentSize, minHeight) {
                 const cap = max();
                 const value = shared.get() > 0 ? cap : Math.min(Math.max(contentSize, minHeight), cap);
@@ -21090,7 +21097,8 @@
                 const keys = mc.getKeyboardStateWorklet();
                 const keyboard = keys.keyboardType !== mc.KeyboardTypes.SYSTEM ? keys.customKeyboardHeight : keys.keyboardHeight;
                 const win = mc.getWindowDimensionsWorklet({ignoreKeyboard:true});
-                return Math.max(mc.MIN_HEIGHT * 2, win.height - keyboard - reserve);
+                const bottom = keyboard > 0 ? 0 : insets ? insets().bottom || 0 : 16;
+                return Math.max(mc.MIN_HEIGHT * 2, win.height - keyboard - bottom - reserve);
             };
             expandBar.worklets = {max, timing, cap, withTiming:tc.withTiming, duration:tc.timingFastDuration, easing:tc.Easing.linear};
             return replaceValue(replaceValue(exports, "getChatInputMaxHeightWorklet", max), "getChatInputHeightAnimationTimingWorklet", timing);
@@ -21153,7 +21161,9 @@
     function expandBarStyle(style, open) {
         const flat = RN && RN.StyleSheet && typeof RN.StyleSheet.flatten === "function" ? RN.StyleSheet.flatten(style) : style;
         const base = Object.assign({}, flat && typeof flat === "object" ? flat : null);
-        if (open || expandBar.multiline) base.marginRight = (typeof base.marginRight === "number" ? base.marginRight : 0) + EXPAND_BAR_GUTTER;
+        // On the bar's corner the button sits above the send button, outside the text's column, so the text keeps its full
+        // width; only the fallback (the button beside the text view) needs the gutter.
+        if (!expandBar.pill && (open || expandBar.multiline)) base.marginRight = (typeof base.marginRight === "number" ? base.marginRight : 0) + EXPAND_BAR_GUTTER;
         if (open) {
             const live = expandBar.live, min = live && live.textFieldMinHeight && typeof live.textFieldMinHeight.get === "function" ? live.textFieldMinHeight.get() : 0;
             delete base.flex;
@@ -21239,6 +21249,8 @@
             flux.subscribe("CHANNEL_SELECT", () => { if (expandBar.expanded && settings.expandBarChats) expandBarSet(false); });
             // Only a message you send from this phone (Discord adds it to the chat before the server confirms it).
             flux.subscribe("MESSAGE_CREATE", event => { if (expandBar.expanded && settings.expandBarSending && event && event.optimistic === true) expandBarSet(false); });
+            // Saving (or leaving) an edit puts your draft back in the bar, so it closes then too.
+            flux.subscribe("MESSAGE_END_EDIT", () => { if (expandBar.expanded && settings.expandBarSending) expandBarSet(false); });
             flux.subscribe("LOGOUT", () => expandBarSet(false));
         } catch (_) {}
     }
