@@ -11,6 +11,7 @@
 * **Discord:** Add `Fast delete channels` patch: delete a channel without the confirmation or from its hold menu, with no undo ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
 * **Discord:** Add `Pause invites` patch: hold a server's icon to pause or resume its invites for 1, 6 or 24 hours ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
 * **Discord:** Add `Platform spoof` patch: show as desktop, web or console instead of mobile, with a warning that Discord doesn't allow it ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
+* **Discord:** Add `Keep media playing` patch: voice messages and audio keep playing in the background with lock screen controls, and videos pop out into a small window ([#134](https://github.com/VenusIsJaded/Venus-Patches/issues/134))
 * **Discord - Edit messages on this phone:** Your local edits are saved in Venus backups and come back when you restore one
 
 ## [1.20.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.19.0...v1.20.0) (2026-10-30)
