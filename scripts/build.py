@@ -765,6 +765,27 @@ def build():
     run("java", "-Xmx384m", "-cp", TOOLS / "r8.jar", "com.android.tools.r8.D8",
         "--release", "--min-api", "26", "--lib", TOOLS / "android.jar",
         "--classpath", stubs, "--output", audio_dex, audio_classes)
+    # Keep media playing: Java-only rules again (it reaches Discord's player through reflection, so no host stubs).
+    media_classes = BUILD / "media-classes.jar"
+    run(compiler, "-no-stdlib", "-no-reflect", "-language-version", "2.1", "-api-version", "2.1", "-Xsuppress-version-warnings",
+        "-jvm-target", "11", "-Xlambdas=class", "-cp", f"{TOOLS / 'android.jar'}:{TOOLS / 'morphe.jar'}:{stubs}",
+        *sorted((ROOT / "extensions/media/src/main/kotlin").rglob("*.kt")), "-d", media_classes)
+    with zipfile.ZipFile(media_classes) as native:
+        for name in native.namelist():
+            if not name.endswith(".class"):
+                continue
+            content = native.read(name)
+            for unsafe in (b"kotlin/text/", b"kotlin/collections/", b"kotlin/Result", b"kotlin/Unit", b"kotlin/io/", b"kotlin/ranges/",
+                           b"kotlin/jvm/functions/"):
+                if unsafe in content:
+                    raise SystemExit(f"Unsafe host Kotlin helper in {name}: {unsafe.decode()}; use Java APIs")
+    media_dex = BUILD / "media-dex"
+    media_dex.mkdir(exist_ok=True)
+    for stale in media_dex.glob("classes*.dex"):
+        stale.unlink()
+    run("java", "-Xmx384m", "-cp", TOOLS / "r8.jar", "com.android.tools.r8.D8",
+        "--release", "--min-api", "26", "--lib", TOOLS / "android.jar",
+        "--classpath", stubs, "--output", media_dex, media_classes)
     # Crash screen and troubleshooting logs (part of Venus settings): Java-only rules again.
     diag_classes = BUILD / "diag-classes.jar"
     run(compiler, "-no-stdlib", "-no-reflect", "-language-version", "2.1", "-api-version", "2.1", "-Xsuppress-version-warnings",
@@ -862,6 +883,7 @@ def build():
         add("extensions/monet.mpe", (monet_dex / "classes.dex").read_bytes())
         add("extensions/chat.mpe", (chat_dex / "classes.dex").read_bytes())
         add("extensions/audio.mpe", (audio_dex / "classes.dex").read_bytes())
+        add("extensions/media.mpe", (media_dex / "classes.dex").read_bytes())
         add("extensions/diag.mpe", (diag_dex / "classes.dex").read_bytes())
         add("extensions/compress.mpe", (compress_dex / "classes.dex").read_bytes())
         for path in sorted(dex.glob("classes*.dex")):
