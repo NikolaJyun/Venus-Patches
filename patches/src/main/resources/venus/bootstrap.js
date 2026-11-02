@@ -53,6 +53,7 @@
     if (features.noConfirmPin) selectModules([5400, 1128]);
     if (features.listenAlong) targetModules[14082] = 1;
     if (features.clickableMentions) selectModules([1392, 2068, 2119, 12337]);
+    if (features.expandBar) selectModules([584, 1392, 12337, 12338, 12887]);
     if (features.silentLeave) selectModules([2068, 7290]);
     if (features.silentEdit || features.silentDelete) selectModules([584, 1392, 5532, 7445]);
     if (features.localEdit) selectModules([584, 1392, 5532, 8013, 9978]);
@@ -96,7 +97,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, viewRaw:false, viewRawMessages:true, viewRawChannels:true, viewRawServers:true, viewRawPeople:true, viewRawRoles:true, viewRawHideContact:true, viewRawWrap:true, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, expandBar:false, expandBarSending:true, expandBarChats:true, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, viewRaw:false, viewRawMessages:true, viewRawChannels:true, viewRawServers:true, viewRawPeople:true, viewRawRoles:true, viewRawHideContact:true, viewRawWrap:true, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
         hypeSquad:false, customIdle:false, customIdleMinutes:10, pauseInvites:false, fastDeleteChannels:false, fastDeleteChannelsConfirm:true, fastDeleteChannelsMenu:true, mutualGroupDMs:false, platformSpoof:false, platformSpoofDevice:"desktop" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
@@ -114,7 +115,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, viewRaw: false, viewRawMessages: true, viewRawChannels: true, viewRawServers: true, viewRawPeople: true, viewRawRoles: true, viewRawHideContact: true, viewRawWrap: true, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, expandBar: false, expandBarSending: true, expandBarChats: true, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, viewRaw: false, viewRawMessages: true, viewRawChannels: true, viewRawServers: true, viewRawPeople: true, viewRawRoles: true, viewRawHideContact: true, viewRawWrap: true, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
             hypeSquad: false, customIdle: false, customIdleMinutes: 10, pauseInvites: false, fastDeleteChannels: false, fastDeleteChannelsConfirm: true, fastDeleteChannelsMenu: true, mutualGroupDMs: false, platformSpoof: false, platformSpoofDevice: "desktop"
         }));
     }
@@ -1171,7 +1172,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^viewRaw[A-Z]/.test(key) ? "viewRaw" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : /^expandBar[A-Z]/.test(key) ? "expandBar" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^viewRaw[A-Z]/.test(key) ? "viewRaw" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1206,7 +1207,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], viewRaw:[12003, "FileIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], backgroundMedia:[8674, "PlayIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
+        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], expandBar:[16089, "FullscreenEnterIcon"], quietReplies:[10654, "BellSlashIcon"], viewRaw:[12003, "FileIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], backgroundMedia:[8674, "PlayIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
         hypeSquad:[18747, "HomeIcon"], customIdle:[14205, "UserClockIcon"], pauseInvites:[8676, "PauseIcon"], fastDeleteChannels:[18679, "ChannelListIcon"], mutualGroupDMs:[8489, "GroupIcon"], platformSpoof:[5133, "UserPlatformIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
@@ -1255,6 +1256,7 @@
         noConfirmPin:["NoConfirmPin", "Pin", "Unpin", "Pinned messages"],
         listenAlong:["Listen along", "Spotify", "Music", "Friends", "Profile", "Sync"],
         clickableMentions:["ClickableMentions", "Mentions", "Profile", "Message bar"],
+        expandBar:["Expand", "Collapse", "Message bar", "Composer", "Text box", "Text field", "Tall", "Bigger", "Resize", "Long message", "Arrows"],
         silentLeave:["SilentLeave", "Silent leave", "Group DM", "Leave group"],
         silentEdit:["Silent edit", "Edited", "(edited)", "Edit message", "No edit mark"],
         silentDelete:["Silent delete", "Anti log", "Message logger", "Delete without logs"],
@@ -1752,6 +1754,7 @@
         withOptions("messages", "backgroundMedia", "VENUS_BACKGROUNDMEDIA", "Keep media playing", "Voice messages and audio keep playing when you leave Discord or turn off the screen, and videos pop out into a small window.", "Keep media playing", BackgroundMediaSettings);
         toggle("messages", "dndBanners", "Banners in Do Not Disturb", "New messages still pop up at the top while you're on Do Not Disturb, without a sound.");
         toggle("sending", "clickableMentions", "Tap mentions to open profiles", "Tap an @mention in the message bar to see who it is.");
+        withOptions("sending", "expandBar", "VENUS_EXPANDBAR", "Expand the message bar", "A button in the corner of the message bar opens it up tall, so you can see more of what you type.", "Expand message bar", ExpandBarSettings);
         // People
         withOptions("people", "pastelize", "VENUS_PASTELIZE", "Pastel name colors", "Names without a role color get a soft pastel one.", "Pastel names",
             () => ({page:PastelSettings, sections:[section("Colors", [option("pastelAll", "Replace role colors", "Every name uses its pastel color, even with a role color.", "VENUS_PASTELIZE"),
@@ -20967,6 +20970,210 @@
         try { if (RN && RN.Keyboard && typeof RN.Keyboard.dismiss === "function") RN.Keyboard.dismiss(); } catch (_) {}
         later(() => { try { show({userId:user.id, channelId, guildId:channel && channel.guild_id || undefined}); } catch (_) {} }, 60);
     }
+    // Expand the message bar. Discord caps the message bar at about 200 dp: its height is driven on the UI thread by two
+    // Reanimated worklets in useChatInputMaxHeight (12338), getChatInputMaxHeightWorklet and
+    // getChatInputHeightAnimationTimingWorklet, which useChatInputHeightWorklet (12887) copies into its own worklets when
+    // a message bar mounts. Venus swaps in twin worklets (same closure plus one shared value) before that happens, so the
+    // cap becomes "the room above the keyboard" while the bar is expanded and is Discord's own number otherwise. A button
+    // at the top-right of the text area flips the shared value, then re-runs the animation once from JS so the bar moves
+    // right away instead of at the next keystroke. Nothing else about the bar is touched: sending, drafts and the native
+    // text field work as before, and if a worklet isn't where Venus expects, the bar is simply left alone.
+    const expandBar = {expanded:false, multiline:false, shared:null, worklets:null, live:null, subscribed:false};
+    const EXPAND_BAR_RESERVE = 120;
+    const expandBarHandlers = new WeakMap();
+    const EXPAND_BAR_DARK = {button:{position:"absolute", top:4, right:6, width:32, height:32, borderRadius:16, alignItems:"center", justifyContent:"center"},
+        pressed:{backgroundColor:"#4e50584d"}, icon:{color:"#b5bac1"}};
+    function useExpandBarStyles() {
+        return useThemed("expandBar", c => ({button:EXPAND_BAR_DARK.button,
+            pressed:{backgroundColor:c.BACKGROUND_MOD_NORMAL || c.BACKGROUND_MOD_SUBTLE},
+            icon:{color:c.CHAT_INPUT_ICON_DEFAULT_TINT || c.INTERACTIVE_ICON_DEFAULT || c.ICON_MUTED}}), EXPAND_BAR_DARK);
+    }
+    // Two diagonal arrows: pointing out when the bar can grow, pointing in when it can shrink (drawn here because Discord
+    // ships only the first of them); Discord's own fullscreen icon stands in if react-native-svg isn't there.
+    function expandBarGlyph(open, color, size) {
+        const Svg = inspectedExport(7846, "Svg"), Path = inspectedExport(7846, "Path");
+        if (Svg && Path) {
+            const lines = open ? ["M4 14h6v6", "M20 10h-6V4", "M14 10l7-7", "M3 21l7-7"] : ["M15 3h6v6", "M21 3l-7 7", "M9 21H3v-6", "M3 21l7-7"];
+            return el(Svg, {width:size, height:size, viewBox:"0 0 24 24", fill:"none"}, lines.map(d =>
+                el(Path, {key:d, d, stroke:color, strokeWidth:2, strokeLinecap:"round", strokeLinejoin:"round", fill:"none"})));
+        }
+        return el(venusIcon(16089, "FullscreenEnterIcon"), {size:"sm", color});
+    }
+    // Worklets are plain functions that carry __closure, __workletHash and __initData; on the UI thread Reanimated rebuilds
+    // them from __initData.code (release builds carry only the code) and binds this to the closure. The JS body does the
+    // same thing for calls from the JS thread, so both runtimes give one answer.
+    function expandBarHeights(exports) {
+        try {
+            const origMax = exports && exports.getChatInputMaxHeightWorklet, origTiming = exports && exports.getChatInputHeightAnimationTimingWorklet;
+            const makeMutable = inspectedExport(1658, "makeMutable");
+            const mc = origMax && origMax.__closure, tc = origTiming && origTiming.__closure;
+            if (typeof origMax !== "function" || typeof origTiming !== "function" || typeof makeMutable !== "function" || !mc || !tc ||
+                typeof mc.getKeyboardStateWorklet !== "function" || typeof mc.getWindowDimensionsWorklet !== "function" || !mc.KeyboardTypes ||
+                typeof mc.MIN_HEIGHT !== "number" || typeof tc.withTiming !== "function" || !tc.Easing || typeof tc.timingFastDuration !== "number") {
+                if (settings.debugLog) dlog("W", "hooks", "expand message bar: the height worklets have changed, so the bar is left as it is");
+                return exports;
+            }
+            const shared = expandBar.shared || (expandBar.shared = makeMutable(0));
+            const max = function () {
+                const reserve = shared.get();
+                if (!(reserve > 0)) return origMax();
+                const keys = mc.getKeyboardStateWorklet();
+                const keyboard = keys.keyboardType !== mc.KeyboardTypes.SYSTEM ? keys.customKeyboardHeight : keys.keyboardHeight;
+                const win = mc.getWindowDimensionsWorklet({ignoreKeyboard:true});
+                return Math.max(mc.MIN_HEIGHT * 2, win.height - keyboard - reserve);
+            };
+            max.__closure = {origMax, shared, getKeyboardStateWorklet:mc.getKeyboardStateWorklet, KeyboardTypes:mc.KeyboardTypes,
+                getWindowDimensionsWorklet:mc.getWindowDimensionsWorklet, MIN_HEIGHT:mc.MIN_HEIGHT};
+            max.__workletHash = 7391842650011;
+            max.__initData = {code:"function venusExpandMax(){const{origMax,shared,getKeyboardStateWorklet,KeyboardTypes,getWindowDimensionsWorklet,MIN_HEIGHT}=this.__closure;" +
+                "const reserve=shared.get();if(!(reserve>0)){return origMax();}" +
+                "const keys=getKeyboardStateWorklet();const keyboard=keys.keyboardType!==KeyboardTypes.SYSTEM?keys.customKeyboardHeight:keys.keyboardHeight;" +
+                "const win=getWindowDimensionsWorklet({ignoreKeyboard:true});return Math.max(MIN_HEIGHT*2,win.height-keyboard-reserve);}"};
+            const timing = function (contentSize, minHeight) {
+                const cap = max();
+                const value = shared.get() > 0 ? cap : Math.min(Math.max(contentSize, minHeight), cap);
+                return tc.withTiming(value, {duration:tc.timingFastDuration, easing:tc.Easing.linear});
+            };
+            timing.__closure = {max, shared, withTiming:tc.withTiming, timingFastDuration:tc.timingFastDuration, Easing:tc.Easing};
+            timing.__workletHash = 7391842650027;
+            timing.__initData = {code:"function venusExpandTiming(contentSize,minHeight){const{max,shared,withTiming,timingFastDuration,Easing}=this.__closure;" +
+                "const cap=max();const value=shared.get()>0?cap:Math.min(Math.max(contentSize,minHeight),cap);" +
+                "return withTiming(value,{duration:timingFastDuration,easing:Easing.linear});}"};
+            expandBar.worklets = {max, timing};
+            return replaceValue(replaceValue(exports, "getChatInputMaxHeightWorklet", max), "getChatInputHeightAnimationTimingWorklet", timing);
+        } catch (error) {
+            if (settings.debugLog) try { dlog("W", "hooks", "expand message bar: " + dlogText(error)); } catch (_) {}
+            return exports;
+        }
+    }
+    // The hook that owns a message bar's height: remember its shared values, so a tap can move the bar at once.
+    function expandBarHeightHook(orig, self, args) {
+        const out = orig.apply(self, args), input = args && args[0];
+        const pick = key => out && out[key] != null ? out[key] : input && input[key];
+        expandBar.live = {textFieldHeight:pick("textFieldHeight"), contentSize:pick("contentSize"), textFieldMinHeight:pick("textFieldMinHeight")};
+        return out;
+    }
+    function expandBarApply() {
+        const live = expandBar.live, w = expandBar.worklets;
+        if (!live || !w || !live.textFieldHeight || !live.contentSize || !live.textFieldMinHeight) return;
+        try { live.textFieldHeight.set(w.timing(live.contentSize.get(), live.textFieldMinHeight.get())); } catch (_) {}
+    }
+    function expandBarSet(next) {
+        next = !!next;
+        if (expandBar.expanded === next) return;
+        expandBar.expanded = next;
+        if (expandBar.shared) try { expandBar.shared.set(next ? EXPAND_BAR_RESERVE : 0); } catch (_) {}
+        expandBarApply();
+        notify("expandBar");
+    }
+    // The button shows once the text has grown past one line (like the bar does), and while it is expanded.
+    function expandBarContent(event) {
+        const height = event && event.nativeEvent && event.nativeEvent.height;
+        if (typeof height !== "number") return;
+        const live = expandBar.live, min = live && live.textFieldMinHeight && typeof live.textFieldMinHeight.get === "function" ? live.textFieldMinHeight.get() : 0;
+        const multiline = height > (min > 0 ? min + 6 : 56);
+        if (multiline !== expandBar.multiline) { expandBar.multiline = multiline; notify("expandBar"); }
+    }
+    function expandBarProps(props, open) {
+        if (!props) return props;
+        const orig = props.onChangeContentSize;
+        let handler = orig;
+        if (typeof orig === "function") {
+            handler = expandBarHandlers.get(orig);
+            if (!handler) {
+                handler = function (event) {
+                    try { expandBarContent(event); } catch (_) {}
+                    return orig.apply(this, arguments);
+                };
+                expandBarHandlers.set(orig, handler);
+            }
+        }
+        if (handler === orig && !open) return props;
+        return Object.assign({}, props, open ? {maxHeight:4000, onChangeContentSize:handler} : {onChangeContentSize:handler});
+    }
+    function ExpandBarButton() {
+        useSettings("expandBar");
+        useLanguage();
+        const s = useExpandBarStyles();
+        const open = expandBar.expanded;
+        if (!enabled("expandBar") || !(open || expandBar.multiline) || !RN) return null;
+        const Press = RN.Pressable;
+        if (!Press) return null;
+        return el(Press, {onPress:() => { haptic("IMPACT_LIGHT"); expandBarSet(!expandBar.expanded); }, accessibilityRole:"button",
+            accessibilityLabel:tr(open ? "Collapse message bar" : "Expand message bar"), hitSlop:{top:8, bottom:8, left:8, right:8},
+            style:state => [s.button, state && state.pressed ? s.pressed : null]}, expandBarGlyph(open, s.icon.color, 20));
+    }
+    // The message bar's native text view, with the button beside it and the height cap lifted while expanded.
+    function expandBarWrap(component) {
+        const wrapped = function (props) {
+            useSettings("expandBar");
+            const on = enabled("expandBar");
+            React.useEffect(() => { if (expandBar.expanded && !enabled("expandBar")) expandBarSet(false); });
+            const next = on ? expandBarProps(props, expandBar.expanded) : props;
+            const out = arguments.length > 1 ? component.call(this, next, arguments[1]) : component.call(this, next);
+            return on && React ? el(React.Fragment, null, out, el(ExpandBarButton, {key:"venus-expand-button"})) : out;
+        };
+        if (component.displayName) wrapped.displayName = component.displayName;
+        return copyStatics(wrapped, component);
+    }
+    function expandBarInit(flux) {
+        if (expandBar.subscribed || !flux || typeof flux.subscribe !== "function") return;
+        expandBar.subscribed = true;
+        try {
+            flux.subscribe("CHANNEL_SELECT", () => { if (expandBar.expanded && settings.expandBarChats) expandBarSet(false); });
+            // Only a message you send from this phone (Discord adds it to the chat before the server confirms it).
+            flux.subscribe("MESSAGE_CREATE", event => { if (expandBar.expanded && settings.expandBarSending && event && event.optimistic === true) expandBarSet(false); });
+            flux.subscribe("LOGOUT", () => expandBarSet(false));
+        } catch (_) {}
+    }
+    const EXPAND_BAR_SAMPLE = ["Quick recap for tonight:", "We start at 8 and the lobby opens early.", "Bring snacks, and tell Sam to bring the extra controller."];
+    // The settings page's picture of it: a message grows to three lines, the arrows appear, one tap opens the bar tall.
+    function ExpandBarPreview(props) {
+        useSettings("expandBar");
+        const s = useChatPreviewStyles(), k = usePreviewChrome(), on = !!props.on;
+        const blank = {lines:0, open:false, pulse:null};
+        const [state, setState] = React.useState(blank);
+        const update = change => setState(st => Object.assign({}, st, change));
+        const story = useStory(on, () => [
+            [0, () => setState(blank), tr("Type a long message")],
+            [900, () => update({lines:1})], [750, () => update({lines:2})], [750, () => { animateLayout(); update({lines:3}); }],
+            [1000, () => update({pulse:{who:"btn", id:"expand"}}), tr("Tap the arrows in the corner of the message bar")],
+            [450, () => { animateLayout(); haptic("IMPACT_LIGHT"); update({open:true, pulse:null}); }, tr("It opens up tall, so you can read all of it")],
+            [2000, () => update({pulse:{who:"btn", id:"collapse"}}), tr("Tap them again to shrink it back")],
+            [450, () => { animateLayout(); haptic("IMPACT_LIGHT"); update({open:false, pulse:null}); }],
+            [1400, () => {}]
+        ], []);
+        const lines = on ? state.lines : 3, open = on ? state.open : false;
+        const Press = RN.View, Plus = venusIcon(10621, "PlusLargeIcon"), Send = venusIcon(5139, "SendMessageIcon");
+        const pill = el(RN.View, {key:"pill", style:[k.pill, {alignItems:"flex-start", alignSelf:"stretch", minHeight:open ? 190 : 40, paddingVertical:9, paddingRight:44, flexDirection:"column", gap:2}]},
+            lines === 0 ? el(RN.Text, {style:[s.muted, {fontSize:15}]}, tr("Message {channel}", {channel:"#general"})) :
+                EXPAND_BAR_SAMPLE.slice(0, lines).map(line => el(RN.Text, {key:line, style:[s.text, {fontSize:15, lineHeight:20}]}, tr(line))),
+            lines >= 2 || open ? popIn("btn:" + (open ? "1" : "0"), el(Press, {style:[EXPAND_BAR_DARK.button, {top:5, right:6}], accessible:false},
+                expandBarGlyph(open, k.icon.color, 20), tapRipple(state.pulse, "btn"))) : null);
+        return el(RN.View, {key:"preview"}, previewScreen(s, "preview", "Message bar preview", [
+            el(RN.View, {key:"stage", style:{height:268, justifyContent:"flex-end"}},
+                el(RN.View, {key:"chat", style:{flex:1, overflow:"hidden", justifyContent:"flex-end"}},
+                    previewMessage(s, "sam", "Sam", "#eb459e", tr("Today at 4:01 PM"), el(RN.Text, {style:s.text}, tr("Anyone up for a game later?")))),
+                el(RN.View, {key:"row", style:[k.inputRow, {alignItems:"flex-end"}]},
+                    el(RN.View, {style:k.round}, el(Plus, {size:"sm", color:k.icon.color})),
+                    pill,
+                    lines > 0 ? popIn("send", el(RN.View, {style:k.send}, el(Send, {size:"sm", color:k.brandText.color}))) : null))
+        ], {footer:on ? storyStrip(k, s, story) : null}));
+    }
+    function ExpandBarSettings() {
+        useSettings("expandBar");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("expandBar"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const groups = [
+            !on ? offCard("status", venusIcon(16089, "FullscreenEnterIcon"), "expandBar") : null,
+            el(ExpandBarPreview, {key:"preview", on}),
+            el(Group, {key:"options", title:tr("Collapse")},
+                switchRow(Switch, "expandBarSending", "Collapse after sending", "The message bar closes again when you send your message.", rowIcon(5139, "SendMessageIcon")),
+                switchRow(Switch, "expandBarChats", "Collapse when you switch chats", "Every chat starts with a normal message bar.", rowIcon(8471, "ChatIcon"))),
+            footnote("note", "The arrows appear once your message is longer than one line. Tap them again to shrink the bar.")];
+        return settingsBody(ui, groups);
+    }
     function FullImagesSettings() {
         useSettings("fullImages");
         const ui = reviewUI();
@@ -22186,7 +22393,12 @@
             case 10006: return features.compressUploads ? hookExport(exports, "getPreCompressionFileSize", compressPreSize) : exports;
             case 13422: return features.guildLurk ? hookComponent(exports, invitePreviewDetails) : exports;
             case 7290: return features.silentLeave && exports && exports.default ? replaceValue(exports, "default", hookExport(exports.default, "closePrivateChannel", silentLeaveClose)) : exports;
-            case 12337: return features.clickableMentions && exports && exports.default ? replaceValue(exports, "default", propsComponent(exports.default, clickableMentionsProps)) : exports;
+            case 12337: {
+                if (features.clickableMentions && exports && exports.default) exports = replaceValue(exports, "default", propsComponent(exports.default, clickableMentionsProps));
+                return features.expandBar && exports && typeof exports.default === "function" ? replaceValue(exports, "default", expandBarWrap(exports.default)) : exports;
+            }
+            case 12338: return features.expandBar ? expandBarHeights(exports) : exports;
+            case 12887: return features.expandBar ? hookExport(exports, "default", expandBarHeightHook) : exports;
             case 7293: return features.removedAlerts ? hookRemovedMine(exports, ["removeFriend", "removeRelationship"]) : exports;
             case 6377: return features.removedAlerts ? hookRemovedMine(exports, ["deleteGuild"]) : exports;
             case 8910: return features.removedAlerts ? hookRemovedMine(exports, ["leaveGuild", "deleteGuild"]) : exports;
@@ -22200,6 +22412,7 @@
                 if (features.badges && exports && exports.default) badgesInit(exports.default);
                 if ((features.nitroThemes || features.accountSwitcher) && exports && exports.default) nitroThemeAttach(exports.default);
                 if (features.bulkDelete && exports && exports.default) bulkDeleteInit(exports.default);
+                if (features.expandBar && exports && exports.default) expandBarInit(exports.default);
                 if (features.experiments && exports && exports.default) experimentsInit(exports.default);
                 if (features.voiceOptions && exports && exports.default) voiceOptionsInit(exports.default);
                 if ((features.messageHighlight || features.bulkDelete || features.localEdit) && exports && exports.default && !dispatcher)
