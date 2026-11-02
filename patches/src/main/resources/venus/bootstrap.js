@@ -8557,12 +8557,19 @@
                 el(PlatformPng,{platform:key,color:colors[clients[key]]})));
         return icons.length ? el(RN.View,{key:"venus-platforms",style:{flexDirection:"row",gap:2,alignItems:"center"}},icons) : null;
     }
-    function platformName(orig, self, args) {
-        if (React) useSettings("platformIndicators");
-        const tree = orig.apply(self,args), user = args[0] && args[0].user;
+    // DisplayName renders for every name on screen as (props) or (props, ref): those calls skip the arguments object and
+    // apply (Hermes HBC98: 82.0 -> 62.5 us per 100 renders, 1.31x). wrapProfileTree still calls it with arguments.
+    function platformNameFinish(tree, props) {
+        const user = props && props.user;
         if (!enabled("platformIndicators") || !settings.piProfile || !React || !RN || !tree || !user) return tree;
         return el(RN.View,{style:{flexDirection:"row",flexWrap:"wrap",gap:6,alignItems:"center"}},tree,el(PlatformBadges,{userId:user.id}));
     }
+    function platformName(orig, self, args) {
+        if (React) useSettings("platformIndicators");
+        return platformNameFinish(orig.apply(self,args), args[0]);
+    }
+    platformName.call1 = (orig, self, a) => { if (React) useSettings("platformIndicators"); return platformNameFinish(orig.call(self, a), a); };
+    platformName.call2 = (orig, self, a, b) => { if (React) useSettings("platformIndicators"); return platformNameFinish(orig.call(self, a, b), a); };
     // DM header (HBC fn58674 PrivateChannelHeader) renders its name inside a separate
     // ChannelTitle component (fn58681, props title/accessibleTitle/userId), so the badge
     // goes inside ChannelTitle's own output: right after the name, before the arrow.
