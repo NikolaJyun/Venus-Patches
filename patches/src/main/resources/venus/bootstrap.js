@@ -19525,7 +19525,10 @@
         try { return orig.apply(self, args); }
         finally { if (swapped) try { if (own === undefined) delete store.getStatus; else store.getStatus = own; } catch (_) {} }
     }
+    // playInAppMessageSound(message) takes one argument (Discord 351.11) and runs for every in-app message sound: the
+    // one-argument call skips the arguments object and apply (Hermes HBC98: 44.9 -> 24.4 us per 100 calls, 1.84x).
     function dndBannerSound(orig, self, args) { return enabled("dndBanners") && dndIsOn() ? undefined : orig.apply(self, args); }
+    dndBannerSound.call1 = (orig, self, message) => enabled("dndBanners") && dndIsOn() ? undefined : orig.call(self, message);
     // Full-screen chat in landscape (#125): Discord puts chat beside the server and channel lists whenever the window is
     // 600dp wide or more (useChatLayout 5075, from useWindowSizeClassifier), so turning a phone sideways squeezes the chat
     // into what's left. On a phone held sideways (its shorter side under 600dp) Venus reports the phone layout instead:
