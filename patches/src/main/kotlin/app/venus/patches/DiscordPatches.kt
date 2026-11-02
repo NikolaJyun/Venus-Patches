@@ -47,6 +47,8 @@ private var freeNitroSelected = false
 private var questAgentGuarded = false
 private var messageGutterGuarded = false
 private val additionalSelections = mutableSetOf<String>()
+/** Turns on a runtime feature from a patch kept in another file. */
+internal fun selectRuntimeFeature(key: String) { additionalSelections += key }
 internal val discordBundleGuard = rawResourcePatch {
     execute { HbcPrivacy.verifyOriginal(get("assets/index.android.bundle")) }
 }
