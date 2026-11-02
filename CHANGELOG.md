@@ -14,6 +14,10 @@
 * **Discord:** Add `Keep media playing` patch: voice messages and audio keep playing in the background with lock screen controls, and videos pop out into a small window ([#134](https://github.com/VenusIsJaded/Venus-Patches/issues/134))
 * **Discord - Edit messages on this phone:** Your local edits are saved in Venus backups and come back when you restore one
 
+### 🐛 Bug Fixes
+
+* **Discord - Translate messages:** Fixed translating a message stripping the color, title, fields and images from forwarded embeds, even after restarting ([#142](https://github.com/VenusIsJaded/Venus-Patches/issues/142))
+
 ## [1.20.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.19.0...v1.20.0) (2026-10-30)
 
 ### ✨ New Features

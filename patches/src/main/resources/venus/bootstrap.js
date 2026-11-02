@@ -14708,26 +14708,20 @@
             (!key || existing.key === key) && (!quoteKey || existing.quoteKey === quoteKey) && existing.quotes === nextQuotes) return;
         let raw = source.content;
         const hasRaw = typeof raw === "string" && raw.length > 0;
-        let snapshot = null;
+        // A forward has no text of its own: what's translated is the forwarded message inside it.
+        let forward = false;
         if (!hasRaw) {
             raw = "";
             const contentSource = translateContentSource(source);
-            if (contentSource && contentSource !== source && typeof contentSource.content === "string" && contentSource.content) {
-                const list = source.messageSnapshots || source.message_snapshots;
-                const first = Array.isArray(list) && list[0];
-                if (first && first.message) snapshot = {message:Object.assign({}, typeof first.message.toJS === "function" ? first.message.toJS() : first.message),
-                    moderator_report:first.moderatorReport !== undefined ? first.moderatorReport : first.moderator_report || null,
-                    rest:Array.isArray(list) && list.length > 1 ? list.slice(1).map(item => ({message:item && item.message && typeof item.message.toJS === "function" ? item.message.toJS() : item && item.message,
-                        moderator_report:item && (item.moderatorReport !== undefined ? item.moderatorReport : item.moderator_report || null)})) : []};
-            }
-            if (!snapshot) return;
+            forward = !!(contentSource && contentSource !== source && typeof contentSource.content === "string" && contentSource.content);
+            if (!forward) return;
         }
         let entry = existing;
         if (entry) translate.shown.delete(id);
         else if (translate.shown.size >= 300) translate.shown.delete(translate.shown.keys().next().value);
-        if (!entry) entry = {channelId, id, source, raw, snapshot, key:key || null, quoteKey:quoteKey || null, quotes:nextQuotes};
+        if (!entry) entry = {channelId, id, source, raw, forward, key:key || null, quoteKey:quoteKey || null, quotes:nextQuotes};
         else {
-            entry.source = source; entry.raw = raw; entry.snapshot = snapshot;
+            entry.source = source; entry.raw = raw; entry.forward = forward;
             if (key) entry.key = key;
             if (quoteKey) entry.quoteKey = quoteKey;
             entry.quotes = nextQuotes;
@@ -14892,21 +14886,21 @@
     }
     // Discord keeps a row until its message record changes, so its text is changed for a moment (a zero-width
     // space) and then put back, like Fix unknown mentions does. The translation ignores that space.
+    // Only content is ever sent, forwards included: a forward's own (empty) text changes, which is enough for Discord to
+    // redraw the row and read the forwarded message again. Forwards used to be redrawn by sending back a copy of the
+    // forwarded message, but that copy was already in Discord's drawn shape, and MESSAGE_UPDATE treats message_snapshots as
+    // raw API data: their embeds came out without color, title, description, fields, images or thumbnails, and Discord
+    // saved them that way on the phone. Translating any message redraws every one shown, so every forward was hit (#142).
     function translateRedraw(ids) {
         if (!translate.dispatcher) return;
         const entries = [];
         ids.forEach(id => {
             const entry = translate.shown.get(id);
-            if (entry && (typeof entry.raw === "string" && entry.raw || entry.snapshot) && !translate.refreshing.has(id)) entries.push(entry);
+            if (entry && (typeof entry.raw === "string" && entry.raw || entry.forward) && !translate.refreshing.has(id)) entries.push(entry);
         });
         if (!entries.length) return;
         const dispatch = message => { try { translate.dispatcher.dispatch({type:"MESSAGE_UPDATE", message}); } catch (_) {} };
-        const update = (entry, suffix) => {
-            if (entry.raw) return {id:entry.id, channel_id:entry.channelId, content:entry.raw + suffix};
-            const snap = entry.snapshot;
-            return {id:entry.id, channel_id:entry.channelId, message_snapshots:[{message:Object.assign({}, snap.message, {content:snap.message.content + suffix}),
-                moderator_report:snap.moderator_report}].concat(snap.rest)};
-        };
+        const update = (entry, suffix) => ({id:entry.id, channel_id:entry.channelId, content:(entry.raw || "") + suffix});
         entries.forEach(entry => { translate.refreshing.add(entry.id); dispatch(update(entry, "\u200b")); });
         later(() => entries.forEach(entry => { dispatch(update(entry, "")); translate.refreshing.delete(entry.id); }), 120);
     }
