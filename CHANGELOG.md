@@ -1,17 +1,17 @@
-## [Unreleased]
+## [1.21.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.20.0...v1.21.0) (2026-11-02)
 
 ### ✨ New Features
 
-* **Discord:** Add `Edit without "(edited)"` patch: edit your message and nobody sees the (edited) tag. Only works while your message is the latest one in the chat; older messages are edited the normal way, and Venus says so ([#46](https://github.com/VenusIsJaded/Venus-Patches/issues/46))
-* **Discord:** Add `Delete without a trace` patch: your message is blanked a moment before it's deleted, so message loggers on other clients keep nothing ([#46](https://github.com/VenusIsJaded/Venus-Patches/issues/46))
-* **Discord:** Add `Edit messages on this phone` patch: hold any message, yours or someone else's, tap Edit locally and change how it reads; only you see it, and every change can be restored one by one or all at once ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
+* **Discord:** Add `Edit without "(edited)"` patch: edit your latest message with no tag; it only works while your message is the latest in the chat ([#46](https://github.com/VenusIsJaded/Venus-Patches/issues/46))
+* **Discord:** Add `Delete without a trace` patch: your message is blanked a moment before it's deleted, so message loggers keep nothing ([#46](https://github.com/VenusIsJaded/Venus-Patches/issues/46))
+* **Discord:** Add `Edit messages on this phone` patch: hold any message and change how it reads, seen only by you and restorable any time ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
 * **Discord:** Add `HypeSquad house` patch: join or leave Bravery, Brilliance or Balance from Venus settings ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
 * **Discord:** Add `Custom idle time` patch: pick how long Discord waits before setting you to Idle, or never ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
 * **Discord:** Add `Mutual group DMs` patch: a profile lists the group DMs you share with that person ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
-* **Discord:** Add `Fast delete channels` patch: delete a channel without the confirmation, or from the channel's long-press menu; there is no undo ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
+* **Discord:** Add `Fast delete channels` patch: delete a channel without the confirmation or from its hold menu, with no undo ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
 * **Discord:** Add `Pause invites` patch: hold a server's icon to pause or resume its invites for 1, 6 or 24 hours ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
-* **Discord:** Add `Platform spoof` patch: show as desktop, web or console instead of mobile in other people's device icons; Discord doesn't allow this, so it comes with a risk warning ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
-* **Discord - Edit messages on this phone:** Your local edits are included in Venus backups
+* **Discord:** Add `Platform spoof` patch: show as desktop, web or console instead of mobile, with a warning that Discord doesn't allow it ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))
+* **Discord - Edit messages on this phone:** Your local edits are saved in Venus backups and come back when you restore one
 
 ## [1.20.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.19.0...v1.20.0) (2026-10-30)
 

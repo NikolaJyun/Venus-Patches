@@ -74,7 +74,7 @@
     if (features.experiments) selectModules([584, 1392, 1403]);
     if (features.hideAnything) selectModules([14015, 15735, 15736, 9419, 10331, 16133, 16225, 12892, 12897, 12901, 12908, 12909, 13780, 14204, 15590, 17157, 15046, 8805, 9052, 10858, 12942, 14988, 14994, 14925, 14998, 11678, 11679, 14197, 10939, 7158, 14182, 14101, 17156, 17263, 13151, 12000, 10838, 17949, 16773, 17265, 17881, 17869, 11164, 9978, 13759, 12696, 10650, 13769, 8494, 9873]);
     if (features.voiceOptions) { targetModules[584] = 1; targetModules[11372] = 1; targetModules[6145] = 1; }
-    const revision = "1.20.0";
+    const revision = "1.21.0";
     // The Discord build these patches are pinned to (DiscordPatches.kt compatibleWith); shown on the About page.
     const DISCORD_VERSION = "351.11";
     // Module 120 owns setUpDefaltReactNativeEnvironment in this exact asset.
