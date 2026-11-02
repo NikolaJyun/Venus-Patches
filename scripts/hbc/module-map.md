@@ -231,6 +231,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 9060 | `../discord_common/js/packages/rtn-codegen/js/NativeAudioManagerModule.tsx` | AudioDeviceType, getInvalidAndroidDevice | NativeAudioManagerModule (Voice channel options) |
 | 9068 | `modules/voice_calls/native/AudioManagerActionCreator.tsx` | setAudioOutputDevice | AudioManagerActionCreator (Voice channel options) |
 | 9069 | `modules/voice_panel/native/shared/FormComponents.tsx` | VoicePanelFormSection, MemberRowItem | VoiceChannelMembers |
+| 9074 | `design/components/Icon/native/redesign/generated/HeadphonesSlashIcon.tsx` | HeadphonesSlashIcon | HeadphonesSlashIcon (Fake deafen) |
 | 9211 | `design/components/Icon/native/redesign/generated/TrophyIcon.tsx` | TrophyIcon | TrophyIcon (Badge Completer) |
 | 9252 | `design/components/Icon/native/redesign/generated/ReactionIcon.tsx` | ReactionIcon | ReactionIcon |
 | 9327 | `design/components/Icon/native/redesign/generated/NitroWheelIcon.tsx` | NitroWheelIcon | NitroWheelIcon |
@@ -409,6 +410,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 14600 | `design/components/Icon/native/redesign/generated/BoostTier3Icon.tsx` | BoostTier3Icon | BoostTier3Icon |
 | 14713 | `modules/gateway/GatewaySocketSingleton.tsx` | handleIdentify, socket, localPresenceState | GatewaySocketSingleton |
 | 14748 | `modules/gateway/PauseGatewaySocket.tsx` | getIsPaused, setIsPaused | PauseGatewaySocket |
+| 14755 | `modules/gateway/LocalVoiceStateManager.tsx` | default | LocalVoiceStateManager (Fake deafen) |
 | 14788 | `modules/guilds_bar/GuildMediaStateStore.tsx` | GuildMediaStateStore | GuildMediaStateStore (Hidden channels keeps its real VIEW_CHANNEL answers) |
 | 14830 | `stores/PrivateChannelReadStateStore.tsx` | default | PrivateChannelReadStateStore |
 | 14925 | `modules/guild_action_sheet/native/components/GuildActionSheetActions.tsx` | GuildUnreadAction, GuildActionSheetSecondaryActions | GuildActionSheetActions (Remove anything: server menu rows) |
@@ -481,6 +483,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 17881 | `modules/main_tabs_v2/native/sidebar/details/header_v2/ChannelDetailsNavigationBar.tsx` | default | ChannelDetailsNavigationBar (Remove anything: details search / mute / settings / more) |
 | 17949 | `modules/user_profile/native/UserProfileYourFriendsCard.tsx` | default | UserProfileYourFriendsCard (Remove anything: Friends) |
 | 18079 | `modules/app_icons/native/AppIconsCoachmark.tsx` | default | AppIconsCoachmark |
+| 18341 | `modules/voice_panel/native/controls/VoicePanelVoiceControlsButtons.tsx` | DeafenSwitch | VoicePanelVoiceControlsButtons (Fake deafen) |
 | 18444 | `modules/app_icons/native/AppIconPremiumManager.tsx` | default | AppIconPremiumManager |
 | 18678 | `modules/guild_settings/native/GuildSettingsModalLanding.tsx` | default | GuildSettingsModalLanding (Edit servers locally: imports the real GuildStore) |
 | 18679 | `design/components/Icon/native/redesign/generated/ChannelListIcon.tsx` | ChannelListIcon | ChannelListIcon (Fast delete channels) |

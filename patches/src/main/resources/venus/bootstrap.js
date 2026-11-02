@@ -18,6 +18,7 @@
     if (features.favouriteAnything) selectModules([13989, 10035, 10038]);
     if (features.freeNitro) selectModules([1392, 2068, 6243, 6286, 4864, 15066, 7323, 7445]);
     if (features.noTyping) targetModules[12849] = 1;
+    if (features.fakeDeafen) selectModules([14755, 18341]);
     if (features.quickDelete) selectModules([5400, 1128]);
     if (features.noDelete) selectModules([584, 5532, 5534, 1392, 2068, 7445, 8013, 9978, 11114]);
     if (features.jumpToTop) selectModules([12920, 12921, 12922, 9683, 7445, 5532]);
@@ -97,7 +98,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, expandBar:false, expandBarSending:true, expandBarChats:true, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, viewRaw:false, viewRawMessages:true, viewRawChannels:true, viewRawServers:true, viewRawPeople:true, viewRawRoles:true, viewRawHideContact:true, viewRawWrap:true, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, expandBar:false, expandBarSending:true, expandBarChats:true, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, viewRaw:false, viewRawMessages:true, viewRawChannels:true, viewRawServers:true, viewRawPeople:true, viewRawRoles:true, viewRawHideContact:true, viewRawWrap:true, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", fakeDeafen:false, fakeDeafenMuteMic:true, language:"auto", hiddenFeatures:"",
         hypeSquad:false, customIdle:false, customIdleMinutes:10, pauseInvites:false, fastDeleteChannels:false, fastDeleteChannelsConfirm:true, fastDeleteChannelsMenu:true, mutualGroupDMs:false, platformSpoof:false, platformSpoofDevice:"desktop" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
@@ -115,7 +116,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, expandBar: false, expandBarSending: true, expandBarChats: true, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, viewRaw: false, viewRawMessages: true, viewRawChannels: true, viewRawServers: true, viewRawPeople: true, viewRawRoles: true, viewRawHideContact: true, viewRawWrap: true, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, expandBar: false, expandBarSending: true, expandBarChats: true, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, viewRaw: false, viewRawMessages: true, viewRawChannels: true, viewRawServers: true, viewRawPeople: true, viewRawRoles: true, viewRawHideContact: true, viewRawWrap: true, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", fakeDeafen: false, fakeDeafenMuteMic: true, language: "auto", hiddenFeatures: "",
             hypeSquad: false, customIdle: false, customIdleMinutes: 10, pauseInvites: false, fastDeleteChannels: false, fastDeleteChannelsConfirm: true, fastDeleteChannelsMenu: true, mutualGroupDMs: false, platformSpoof: false, platformSpoofDevice: "desktop"
         }));
     }
@@ -1172,7 +1173,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : /^expandBar[A-Z]/.test(key) ? "expandBar" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^viewRaw[A-Z]/.test(key) ? "viewRaw" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : /^expandBar[A-Z]/.test(key) ? "expandBar" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^viewRaw[A-Z]/.test(key) ? "viewRaw" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : /^fakeDeafen[A-Z]/.test(key) ? "fakeDeafen" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1199,7 +1200,7 @@
     }
     // Discord's own icon for each feature row, from its design system. Resolved when a row first draws, never
     // while Discord builds its settings, and the Account icon stands in if one ever goes missing.
-    const FEATURE_ICONS = {noDelete:[5148, "TrashIcon"], translate:[9415, "LanguageIcon"], gestures:[9252, "ReactionIcon"],
+    const FEATURE_ICONS = {noDelete:[5148, "TrashIcon"], fakeDeafen:[9074, "HeadphonesSlashIcon"], translate:[9415, "LanguageIcon"], gestures:[9252, "ReactionIcon"],
         quickDelete:[6573, "CircleXIcon"], jumpToTop:[10796, "ArrowLargeUpIcon"], favouriteAnything:[9851, "StarIcon"],
         freeNitro:[9327, "NitroWheelIcon"], voice:[13531, "WaveformIcon"], splitMessages:[9641, "PaperIcon"], noTyping:[13747, "KeyboardIcon"],
         picker:[10327, "AttachmentIcon"], anonFiles:[6927, "EyeSlashIcon"], pastelize:[16320, "PaintPaletteIcon"], platformIndicators:[15994, "LaptopPhoneIcon"],
@@ -1283,6 +1284,7 @@
         experiments:["Dev Tools", "Experiments", "Experiment", "Developer", "Staff"],
         noHandsfree:["Bluetooth", "Headphones", "Hands-free", "Calls", "Voice channels", "Microphone"],
         voiceOptions:["Soundboard", "Goodbye sound", "Call volume", "Chime volume", "Mute everyone", "Speaker", "Earpiece", "Bluetooth", "Wired headset", "Headphones", "Output", "Join chime", "Leave chime", "Voice channels", "Notification", "Mute"],
+        fakeDeafen:["Deafen", "Fake deafen", "Headphones", "Calls", "Voice channels", "Microphone"],
         bulkDelete:["Select Messages", "Select all", "Delete", "Clear kept deleted messages", "Include kept deleted messages", "Ask before deleting"],
         badges:["Game time", "Unique games", "Switch games every", "Games at once", "Add hours now", "Advanced", "Hours Played", "Unique Games Played", "Years Active", "Personalization"]};
     function searchFold(text) {
@@ -1809,6 +1811,7 @@
         toggle("advanced", "experiments", "Unlock Discord experiments", "Adds Dev Tools to Settings, to try features Discord is still testing.");
         withOptions("advanced", "voiceOptions", "VENUS_VOICEOPTIONS", "Voice channel options", "Choose the volume, audio output and sounds for voice channels.", "Voice channel options", VoiceOptionsSettings);
         toggle("advanced", "noHandsfree", "Keep Bluetooth audio clear in calls", "Headphones stay in music quality in calls. Your phone's mic picks up your voice.");
+        withOptions("advanced", "fakeDeafen", "VENUS_FAKEDEAFEN", "Fake deafen", "Look deafened in a call while you can still hear. Choose whether your mic stays muted.", "Fake deafen", FakeDeafenSettings);
         withOptions("quests", "badges", "VENUS_BADGES", "Complete badges automatically", "Plays real PC games in the background for game time and unique games.", "Badges", BadgeSettings);
         const listed = [["Messages", groups.messages], ["Sending", groups.sending], ["People", groups.people],
             ["Servers", groups.servers], ["Appearance", groups.appearance], ["Quests", groups.quests], ["Advanced", groups.advanced]];
@@ -3303,6 +3306,133 @@
         return enabled("noTyping") ? undefined : orig.apply(self, args);
     }
     typing.call1 = (orig, self, channelId) => enabled("noTyping") ? undefined : orig.call(self, channelId);
+    // Fake deafen: look deafened to everyone else while you can still hear. The mic is really muted, and the voice state
+    // Discord sends (LocalVoiceStateManager 14755, didCommit) says muted and deafened. It lasts only while the mic stays
+    // muted, so nothing you do can leave you talking while you look deafened. It's switched from the voice controls
+    // (VoicePanelVoiceControlsButtons 18341): hold Deafen, or use the row added under it.
+    const fakeDeaf = {on:false, muted:true, wasMuted:false, grace:0, manager:null, real:null, listeners:new Set()};
+    function fakeDeafNotify() { fakeDeaf.listeners.forEach(fn => { try { fn(); } catch (_) {} }); }
+    // The voice state last sent, or the manager's own copy when none has passed through the hook yet (joined before it ran).
+    function fakeDeafState() {
+        if (fakeDeaf.real) return fakeDeaf.real;
+        const manager = fakeDeaf.manager;
+        try { if (manager && typeof manager.getState === "function") return manager.getState() || null; } catch (_) {}
+        return null;
+    }
+    function fakeDeafMuted() {
+        const media = inspectedExport(2014, "default");
+        return !!(media && typeof media.isSelfMute === "function" && media.isSelfMute());
+    }
+    // Discord's mute action toggles, so it only runs when the mic isn't already how we want it. True when it ran.
+    function fakeDeafMic(muted) {
+        try {
+            const actions = inspectedExport(5343, "default");
+            if (actions && typeof actions.toggleSelfMute === "function" && fakeDeafMuted() !== muted) {
+                actions.toggleSelfMute({playSoundEffect:false});
+                return true;
+            }
+        } catch (_) {}
+        return false;
+    }
+    function fakeDeafSet(on) {
+        const known = fakeDeafState();
+        if (on === fakeDeaf.on) return;
+        let toggled = false;
+        if (on) {
+            const media = inspectedExport(2014, "default");
+            // Needs a call to be in, and means nothing when you're really deafened already.
+            if (!known || known.channelId == null || (media && typeof media.isSelfDeaf === "function" && media.isSelfDeaf())) return;
+            if (!fakeDeaf.real) fakeDeaf.real = known;
+            fakeDeaf.wasMuted = fakeDeafMuted();
+            fakeDeaf.muted = settings.fakeDeafenMuteMic !== false;
+            // The mute below sends the new state itself; this stops a commit that lands first from ending it early.
+            fakeDeaf.grace = Date.now() + 400;
+            fakeDeaf.on = true;
+            toggled = fakeDeaf.muted && fakeDeafMic(true);
+        } else {
+            fakeDeaf.on = false;
+            toggled = fakeDeaf.muted && !fakeDeaf.wasMuted && fakeDeafMic(false);
+        }
+        // When the mic was already how we want it nothing changes, so nothing is sent: send the last state again.
+        if (!toggled) try { if (fakeDeaf.manager && fakeDeaf.real) fakeDeaf.manager.didCommit(fakeDeaf.real); } catch (_) {}
+        fakeDeafNotify();
+    }
+    function fakeDeafToggle() { if (enabled("fakeDeafen")) fakeDeafSet(!fakeDeaf.on); }
+    function fakeDeafRowChange(value) {
+        if (enabled("fakeDeafen")) fakeDeafSet(typeof value === "boolean" ? value : !fakeDeaf.on);
+    }
+    // Keeps Discord's own manager (always the one this hook belongs to) so the state can be read without waiting for a commit.
+    function fakeDeafAttach(exports) {
+        // Discord exports the manager class, not an instance, and the live one is made elsewhere. So the class prototype is
+        // hooked, which covers whichever instance Discord uses, and the instance is learned from its calls.
+        const target = exports.default;
+        const proto = typeof target === "function" ? target.prototype :
+            target && typeof target.didCommit === "function" ? target : target && typeof target === "object" ? Object.getPrototypeOf(target) : null;
+        if (!proto || typeof proto.didCommit !== "function") return exports;
+        for (const name of ["shouldCommit", "getNextState", "getInitialState"]) hookExport(proto, name, fakeDeafSeen);
+        hookExport(proto, "didCommit", fakeDeafCommit);
+        return exports;
+    }
+    function fakeDeafSeen(orig, self, args) {
+        if (self && fakeDeaf.manager !== self) fakeDeaf.manager = self;
+        return orig.apply(self, args);
+    }
+    function fakeDeafCommit(orig, self, args) {
+        const state = args[0];
+        if (!state || typeof state !== "object") return orig.apply(self, args);
+        fakeDeaf.manager = self; fakeDeaf.real = state;
+        if (!fakeDeaf.on) return orig.apply(self, args);
+        const left = state.channelId == null;
+        // Leaving the call, switching the feature off, or unmuting the mic by any route ends it.
+        if (!enabled("fakeDeafen") || left || (fakeDeaf.muted && !state.selfMute && Date.now() > fakeDeaf.grace)) {
+            fakeDeaf.on = false;
+            // You didn't start out muted, so don't stay muted after the call.
+            if (left && fakeDeaf.muted && !fakeDeaf.wasMuted) later(() => fakeDeafMic(false), 0);
+            fakeDeafNotify();
+            return orig.apply(self, args);
+        }
+        const sent = Array.prototype.slice.call(args);
+        sent[0] = Object.assign({}, state, fakeDeaf.muted ? {selfMute:true, selfDeaf:true} : {selfDeaf:true});
+        return orig.apply(self, sent);
+    }
+    // The row's own icon: a 72x72 PNG shipped inside Venus, drawn through Discord's icon image so it takes the theme's icon color.
+    const FAKE_DEAF_ICON = "data:image/png;base64,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";
+    function FakeDeafIcon(props) {
+        const Base = inspectedExport(4912, "BaseIconImage");
+        if (!Base) return null;
+        const tokens = inspectedExport(587, "default");
+        const color = (props && props.color) || (tokens && tokens.colors && tokens.colors.INTERACTIVE_ICON_DEFAULT);
+        return el(Base, Object.assign({}, props, {source:{uri:FAKE_DEAF_ICON, width:72, height:72}, color}));
+    }
+    // The Deafen row in the voice controls. A row of our own goes under it. The copy keeps the row's style and wiring.
+    function fakeDeafSwitch(orig, self, args) {
+        const [, redraw] = React.useState(0);
+        React.useEffect(() => {
+            const fn = () => redraw(n => n + 1);
+            fakeDeaf.listeners.add(fn);
+            return () => { fakeDeaf.listeners.delete(fn); };
+        }, []);
+        const row = orig.apply(self, args);
+        if (!enabled("fakeDeafen") || !row || typeof row !== "object" || !row.props || !row.type) return row;
+        const props = Object.assign({}, row.props, {value:fakeDeaf.on, key:"venus-fake-deafen"});
+        // The small line under the label, like Deafen's "Disables all sound".
+        const hint = tr("Others see you deafened. You can still hear.");
+        if ("description" in props) props.description = undefined;
+        props.subLabel = hint; props.accessibilityHint = hint;
+        // Whichever prop the row uses to toggle, it now reaches fakeDeafRowChange.
+        const handlers = [];
+        for (const name of Object.keys(props)) if (/^on[A-Z]/.test(name) && typeof props[name] === "function") { props[name] = fakeDeafRowChange; handlers.push(name); }
+        if (!handlers.length) props.onValueChange = fakeDeafRowChange;
+        const label = tr("Fake deafen");
+        props.label = label; props.accessibilityLabel = label;
+        // Our own icon in place of Discord's. If the row isn't shaped as expected it keeps the one it was copied with.
+        try {
+            const icon = props.icon;
+            const slot = icon && icon.props ? Object.keys(icon.props).find(name => typeof icon.props[name] === "function") : null;
+            if (slot) props.icon = React.cloneElement(icon, {[slot]:FakeDeafIcon});
+        } catch (_) {}
+        return el(React.Fragment, null, row, el(row.type, props));
+    }
     function quickConfirm(orig, self, args) {
         const popup = args[0];
         if (!popup || typeof popup.onConfirm !== "function" || !locale || !locale.intl || !locale.t)
@@ -8140,6 +8270,19 @@
                 Slider ? el(Slider, {value:offset, minimumValue:-10, maximumValue:10, step:1, tapToSeek:true, disabled:!on,
                     onValueChange:value => setSetting("listenAlongOffset", Math.round(value))}) : null),
             footnote("how", tr("If your song is behind your friend's, move the slider right. If it is ahead, move it left."))];
+        return settingsBody(ui, groups);
+    }
+    // Fake deafen's page: whether the mic stays muted while you look deafened.
+    function FakeDeafenSettings() {
+        useSettings("fakeDeafen");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("fakeDeafen"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const groups = [
+            on ? null : offCard("status", venusIcon(9074, "HeadphonesSlashIcon"), "fakeDeafen"),
+            el(Group, {key:"mic", title:tr("Microphone")},
+                switchRow(Switch, "fakeDeafenMuteMic", "Keep my microphone muted", "You can't talk while you look deafened, and unmuting ends it. Turn this off to keep your mic working.", rowIcon(11492, "MicrophoneIcon"))),
+            footnote("how", "In a call, open the voice controls and use the Fake deafen switch under Deafen.")];
         return settingsBody(ui, groups);
     }
     function TenorSettings() {
@@ -22501,6 +22644,8 @@
             case 9990: return features.quietReplies ? hookExport(hookExport(exports, "createPendingReply", quietReplyCreate), "createShallowPendingReply", quietReplyCreate) : exports;
             case 5400: return features.quickDelete || features.noConfirmPin || features.fastDeleteChannels ? replaceValue(exports, "default", hookExport(exports.default, "show", quickConfirm)) : exports;
             case 5534: if (features.noDelete) { messageRecords = exports; restoreDeleted(); } return exports;
+            case 14755: return features.fakeDeafen && exports && exports.default ? fakeDeafAttach(exports) : exports;
+            case 18341: return features.fakeDeafen ? hookComponent(exports, fakeDeafSwitch, "DeafenSwitch") : exports;
             case 1392:
                 if (exports && exports.default && (features.validUser || features.splitMessages || features.fixEmbeds || features.translate || features.userNotif || features.removedAlerts || features.accountSwitcher || features.appIcons || features.nitroThemes || features.messageHighlight || features.serverInfo || features.noDelete || features.reviewDB || features.platformIndicators || features.hiddenChannels || features.gestures || features.freeNitro || features.badges || features.bulkDelete || features.experiments || features.quietReplies || features.silentEdit || features.silentDelete || features.localEdit))
                     userStore = exports.default;
