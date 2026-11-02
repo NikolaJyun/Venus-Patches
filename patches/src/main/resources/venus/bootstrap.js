@@ -4498,11 +4498,19 @@
         }
         return next || content;
     }
+    // Discord sends a bot's application-command reply (and its follow-ups) through the interaction webhook, so those
+    // rows carry a webhookId even though the author is a server member with a role color (#144). Only a webhook
+    // that isn't a member of the server is a real one; its color comes from its name.
+    function pastelWebhook(message, source) {
+        if (!source || !source.webhookId) return false;
+        return !(message.guildId && guildMembers && guildMembers.getMember(message.guildId,message.authorId));
+    }
     function pastelMessage(message, source) {
         if (!message || !message.authorId) return message;
-        if (message.guildId && (!guildMembers || !guildMembers.getMember(message.guildId,message.authorId)) && !(source && source.webhookId)) return message;
+        const webhook = pastelWebhook(message,source);
+        if (message.guildId && (!guildMembers || !guildMembers.getMember(message.guildId,message.authorId)) && !webhook) return message;
         let seed;
-        if (source && source.webhookId) seed = message.username || source.webhookId;
+        if (webhook) seed = message.username || source.webhookId;
         else if (!(source && source.colorString != null ? source.colorString : message.roleColor) || settings.pastelAll) seed = message.authorId;
         const color = seed && pastelColor(seed,0.75,0.6);
         const content = pastelMentions(message.content,message.guildId);

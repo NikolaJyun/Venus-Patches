@@ -16,6 +16,7 @@
 
 ### 🐛 Bug Fixes
 
+* **Discord - Pastel name colors:** Fixed a bot's name losing its role color and getting a pastel one after someone used its application command, even with Replace role colors off ([#144](https://github.com/VenusIsJaded/Venus-Patches/issues/144))
 * **Discord - Translate messages:** Fixed translating a message stripping the color, title, fields and images from forwarded embeds, even after restarting ([#142](https://github.com/VenusIsJaded/Venus-Patches/issues/142))
 
 ## [1.20.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.19.0...v1.20.0) (2026-10-30)
