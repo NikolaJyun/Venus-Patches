@@ -20082,6 +20082,30 @@
         return httpCall("patch", {url, body:{content:"\u200b", embeds:[], attachments:[]}}).then(() => null, () => null).then(() =>
             new Promise(resolve => later(() => resolve(orig.apply(self, args)), 350)));
     }
+    // Channel, thread and post menus are a thin component (channelId, onClose) that renders the real sheet one level down, so
+    // the rows only exist in that inner component's output. rowsFor(tree, props) adds rows to a tree that has them; when the
+    // tree is just the inner element, it is swapped for a twin that renders the original and then adds the rows.
+    function sheetInnerHook(rowsFor) {
+        const types = new WeakMap();
+        return function sheetInner(orig, self, args) {
+            const tree = orig.apply(self, args);
+            if (!React || !tree || typeof tree !== "object") return tree;
+            const direct = rowsFor(tree, args[0]);
+            if (direct !== tree) return direct;
+            const type = tree.type, props = tree.props;
+            if (typeof type !== "function" || !props || !(props.channel || props.thread || props.channelId)) return tree;
+            let twin = types.get(type);
+            if (!twin) {
+                twin = function SheetInner(innerProps) {
+                    const out = type.apply(this, arguments);
+                    try { return rowsFor(out, innerProps); } catch (_) { return out; }
+                };
+                if (type.displayName || type.name) twin.displayName = type.displayName || type.name;
+                types.set(type, twin);
+            }
+            return React.createElement(twin, tree.key == null ? props : Object.assign({}, props, {key:tree.key}));
+        };
+    }
     // One new row in a message's hold menu (LongPressMessageActionSheet 9978), styled like Discord's own rows.
     function sheetAddRow(tree, props, key, label, IconComponent, onPress, sheetKey, variant) {
         let added = false;
@@ -20353,14 +20377,16 @@
         const P = inspectedExport(1087, "Permissions") || inspectedExport(1098, "Permissions"), perms = permissions || inspectedExport(4845, "default");
         try { return !!(P && P.MANAGE_CHANNELS != null && perms && perms.can(P.MANAGE_CHANNELS, channel)); } catch (_) { return false; }
     }
-    function fastDeleteSheet(orig, self, args) {
-        const tree = orig.apply(self, args), props = args[0];
-        if (!enabled("fastDeleteChannels") || !settings.fastDeleteChannelsMenu || !React || !tree || !props || !props.channelId) return tree;
-        const channel = channelStore && typeof channelStore.getChannel === "function" ? channelStore.getChannel(String(props.channelId)) : null;
+    const fastDeleteInner = sheetInnerHook(function (tree, props) {
+        if (!enabled("fastDeleteChannels") || !settings.fastDeleteChannelsMenu || !React || !tree || !props) return tree;
+        const channelId = props.channelId || props.channel && props.channel.id;
+        if (!channelId) return tree;
+        const channel = channelStore && typeof channelStore.getChannel === "function" ? channelStore.getChannel(String(channelId)) : null;
         if (!fastDeleteAllowed(channel)) return tree;
         return sheetAddRow(tree, props, "venus-delete-channel", tr("Delete channel"), venusIcon(5148, "TrashIcon"), () => fastDeleteChannel(channel),
-            "ChannelLongPress-" + props.channelId, "destructive");
-    }
+            "ChannelLongPress-" + channelId, "destructive");
+    });
+    function fastDeleteSheet(orig, self, args) { return fastDeleteInner(orig, self, args); }
     function fastDeleteChannel(channel) {
         if (!channel || !channel.id) return;
         httpCall("del", {url:"/channels/" + channel.id}).then(() => { haptic("IMPACT_LIGHT"); reviewToast(reviewUI(), "Channel deleted", venusIcon(5148, "TrashIcon")); },
@@ -20546,13 +20572,13 @@
     }
     // Channel, thread and forum post menus (the same shape; only the sheet's key differs).
     function viewRawChannelHook(sheetKey) {
-        return function viewRawChannelSheet(orig, self, args) {
-            const tree = orig.apply(self, args), props = args[0];
+        return sheetInnerHook(function (tree, props) {
             if (!enabled("viewRaw") || !settings.viewRawChannels || !React || !tree || !props) return tree;
-            const id = String(props.channelId || props.channel && props.channel.id || "");
+            const channel = props.channel || props.thread || props.post;
+            const id = String(props.channelId || channel && channel.id || "");
             if (!rawId(id)) return tree;
             return sheetAddRow(tree, props, "venus-view-raw", tr("View raw data"), venusIcon(12003, "FileIcon"), () => openViewRaw({kind:"channel", id}), sheetKey(id));
-        };
+        });
     }
     const viewRawChannelMenu = viewRawChannelHook(id => "ChannelLongPress-" + id);
     const viewRawThreadMenu = viewRawChannelHook(() => "ThreadLongPressActionSheet");
@@ -20610,9 +20636,16 @@
             if (!out || !role || typeof role !== "object") return out;
             let done = false;
             return cloneTree(out, (node, nodeProps) => {
-                if (done || typeof nodeProps.onLongPress !== "function") return nodeProps;
+                if (done || !("onLongPress" in nodeProps) || !("onPress" in nodeProps)) return nodeProps;
                 done = true;
                 const press = nodeProps.onLongPress;
+                // Discord only opens a role's menu (Copy ID) in Developer Mode. Without it the chip has no long press at all, so
+                // holding it does nothing; here it opens the raw data directly.
+                if (typeof press !== "function") return Object.assign({}, nodeProps, {onLongPress:function () {
+                    haptic("IMPACT_LIGHT");
+                    const id = String(role.id), guildId = props.guildId ? String(props.guildId) : "";
+                    openViewRaw({kind:"role", id, guildId:rawId(guildId) ? guildId : "", role});
+                }});
                 return Object.assign({}, nodeProps, {onLongPress:function () {
                     viewRawRole = {guildId:props.guildId, role};
                     try { return press.apply(this, arguments); } finally { viewRawRole = null; }
@@ -21074,6 +21107,12 @@
         const multiline = height > (min > 0 ? min + 6 : 56);
         if (multiline !== expandBar.multiline) { expandBar.multiline = multiline; notify("expandBar"); }
     }
+    const EXPAND_BAR_GUTTER = 40;
+    // The text view stops short of the button (a margin on its own style), so typing never runs underneath it.
+    function expandBarStyle(style) {
+        const flat = RN && RN.StyleSheet && typeof RN.StyleSheet.flatten === "function" ? RN.StyleSheet.flatten(style) : style;
+        return Object.assign({}, flat && typeof flat === "object" ? flat : null, {marginRight:(flat && typeof flat.marginRight === "number" ? flat.marginRight : 0) + EXPAND_BAR_GUTTER});
+    }
     function expandBarProps(props, open) {
         if (!props) return props;
         const orig = props.onChangeContentSize;
@@ -21088,8 +21127,11 @@
                 expandBarHandlers.set(orig, handler);
             }
         }
-        if (handler === orig && !open) return props;
-        return Object.assign({}, props, open ? {maxHeight:4000, onChangeContentSize:handler} : {onChangeContentSize:handler});
+        // The gutter follows the button: it's there while the button is (a second line or more, or open). The size the text is
+        // measured at is the narrower one, so a message that needs two lines keeps needing them and the button can't flicker.
+        const gutter = open || expandBar.multiline;
+        if (handler === orig && !open && !gutter) return props;
+        return Object.assign({}, props, open ? {maxHeight:4000, onChangeContentSize:handler} : {onChangeContentSize:handler}, gutter ? {style:expandBarStyle(props.style)} : null);
     }
     function ExpandBarButton() {
         useSettings("expandBar");
