@@ -12751,19 +12751,19 @@
             return enabled("accountSwitcher") ? true : orig.apply(self, args);
         };
         canUseMulti.call0 = function (orig, self) { return enabled("accountSwitcher") ? true : orig.call(self); };
-        let patched = hookExport(store, "getCanUseMultiAccountMobile", canUseMulti);
-        patched = hookExport(patched, "getUsers", function (orig, self, args) {
-            const res = orig.apply(self, args);
-            return enabled("accountSwitcher") ? accountSwitcherWithCurrent(res, false) : res;
-        });
-        patched = hookExport(patched, "getValidUsers", function (orig, self, args) {
-            const res = orig.apply(self, args);
+        // getUsers() and getValidUsers() are no-argument reads too (Hermes HBC98: 18.0 -> 9.5 us per 25 rounds of both, switcher off).
+        const usersAnswer = res => enabled("accountSwitcher") ? accountSwitcherWithCurrent(res, false) : res;
+        const usersHook = (orig, self, args) => usersAnswer(orig.apply(self, args));
+        usersHook.call0 = (orig, self) => usersAnswer(orig.call(self));
+        const validAnswer = res => {
             if (!enabled("accountSwitcher")) return res;
             const list = accountSwitcherWithCurrent(res, true);
             // A push sync with Notifications from every account off: only the signed-in account (see accountSwitcherPushSync).
             if (accountSwitcher.pushOnlyCurrent) { const me = currentUser(); return me ? list.filter(u => u && u.id === me.id) : list; }
             return list;
-        });
+        };
+        const validHook = (orig, self, args) => validAnswer(orig.apply(self, args));
+        validHook.call0 = (orig, self) => validAnswer(orig.call(self));
         const hasAccounts = function (orig, self, args) {
             const res = orig.apply(self, args);
             return enabled("accountSwitcher") ? (res || accountSwitcherUsers().length > 0) : res;
@@ -12772,6 +12772,9 @@
             const res = orig.call(self);
             return enabled("accountSwitcher") ? (res || accountSwitcherUsers().length > 0) : res;
         };
+        let patched = hookExport(store, "getCanUseMultiAccountMobile", canUseMulti);
+        patched = hookExport(patched, "getUsers", usersHook);
+        patched = hookExport(patched, "getValidUsers", validHook);
         patched = hookExport(patched, "getHasLoggedInAccounts", hasAccounts);
         const out = replaceValue(exports, "default", patched);
         if (enabled("accountSwitcher")) accountSwitcherSync();
