@@ -2000,8 +2000,15 @@
             if (bits.length) dlog("I", "device", bits.join(", "));
         } catch (_) {}
         try {
-            const perf = global.performance;
-            if (perf && typeof perf.now === "function") dlog("I", "venus", "logging started " + dlogDuration(perf.now()) + " after Discord's JavaScript started; " + dlogHeap());
+            // performance.now() counts from when the phone booted, not from when Discord started, so on its own it said
+            // "34 h after Discord's JavaScript started" in a report taken 13 s after opening Discord. Metro records the
+            // bundle's start on the same clock in __BUNDLE_START_TIME__; without it the line leaves the time out.
+            const perf = global.performance, start = global.__BUNDLE_START_TIME__;
+            if (perf && typeof perf.now === "function") {
+                const now = perf.now(), known = typeof start === "number" && start > 0 && start <= now;
+                dlog("I", "venus", "logging started " + (known ? dlogDuration(now - start) + " after Discord's JavaScript started; " :
+                    "(Discord's start time unknown); ") + dlogHeap());
+            }
         } catch (_) {}
         try { dlog("I", "device", "Remove animations " + (reduceMotion ? "on" : "off") + (reduceMotionAsked ? "" : " (not asked yet)")); } catch (_) {}
         try {

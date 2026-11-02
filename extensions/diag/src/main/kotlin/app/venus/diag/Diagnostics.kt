@@ -554,9 +554,12 @@ object Diagnostics {
             while (keys.hasNext()) {
                 val key = keys.next()
                 val lower = (key as java.lang.String).toLowerCase(Locale.ROOT) as java.lang.String
-                if (lower.indexOf("auth") >= 0 || lower.indexOf("token") >= 0 || lower.indexOf("account") >= 0 || lower.indexOf("ids") >= 0 ||
-                    lower.indexOf("grant") >= 0 || lower.indexOf("seen") >= 0 || lower.indexOf("users") >= 0) continue
                 val value = saved.opt(key)
+                // Account switcher's own switches are plain on/off settings, not accounts; the "account" filter hid them,
+                // so the report never said whether Account switcher was on. Saved accounts are never in this file.
+                val switcherSwitch = value is Boolean && lower.startsWith("accountswitcher")
+                if (!switcherSwitch && (lower.indexOf("auth") >= 0 || lower.indexOf("token") >= 0 || lower.indexOf("account") >= 0 ||
+                    lower.indexOf("ids") >= 0 || lower.indexOf("grant") >= 0 || lower.indexOf("seen") >= 0 || lower.indexOf("users") >= 0)) continue
                 if (value is Boolean) { if (value) { if (on.length > 0) on.append(", "); on.append(key) } }
                 else if (value is Number || (value is String && value.length <= 60)) {
                     if (options.length > 0) options.append(", ")
