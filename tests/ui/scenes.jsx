@@ -70,7 +70,7 @@ export const SCENE_SETTINGS = {
   serverMenu: { serverInfo: true }, serverInfo: { serverInfo: true }, serverEditMenu: { serverEdit: true, serverInfo: true }, serverEdit: { serverEdit: true }, readAll: { readAll: true }, readAllHold: { readAll: true },
   reviews: { reviewDB: true }, serverSheet: { reviewDB: true }, hiddenChannel: { hiddenChannels: true }, settings: {},
   youBar: { youBarSettings: true, accountSwitcher: true }, translateBar: { translate: true, translateMode: "manual" },
-  messageMenu: { translate: true }, bulkDelete: { bulkDelete: true }, longMessageFailed: { splitMessages: true }, longEdit: { splitMessages: true },
+  messageMenu: { translate: true }, bulkDelete: { bulkDelete: true }, expandBar: { expandBar: true }, longMessageFailed: { splitMessages: true }, longEdit: { splitMessages: true },
   removeMode: { hideAnything: true }, removeProfile: { hideAnything: true }, removeMenu: { hideAnything: true },
   chatAdditions: { timeoutDuration: true, voiceDownload: true }, cloneEmoji: { cloneExpressions: true },
   viewRawMenu: { viewRaw: true }, viewRaw: { viewRaw: true }, viewRawChannel: { viewRaw: true }, viewRawProfile: { viewRaw: true }, viewRawRole: { viewRaw: true },

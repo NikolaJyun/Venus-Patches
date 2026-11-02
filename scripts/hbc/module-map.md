@@ -39,6 +39,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 1447 | `../discord_common/js/packages/rtn-codegen/js/NativeMediaManagerModule.tsx` | default | NativeMediaManagerModule (Download voice messages) |
 | 1498 | `utils/native/ImageUtils.tsx` | default, getMobileOptimizedSrc, getSrcWithWidthAndHeight | ImageUtils (Load full-quality images) |
 | 1505 | `design/components/Navigator/native/useNavigation.native.tsx` | useNavigation, useNativeStackNavigation, useStackNavigation | useStackNavigation |
+| 1658 | - | makeMutable, withTiming, Easing | react-native-reanimated (Expand the message bar: the shared height reserve) |
 | 2001 | `stores/native/AppStateStore.tsx` | default | AppStateStore |
 | 2014 | `stores/MediaEngineStore.tsx` | default | MediaEngineStore (Badge Completer) |
 | 2040 | `stores/DetectableGameStore.tsx` | default | DetectableGameStore (Badge Completer) |
@@ -178,6 +179,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 7772 | `../discord_common/js/packages/rtn-codegen/js/NativePermissionManagerModule.tsx` | default | NativePermissionManagerModule |
 | 7838 | `design/components/Icon/native/redesign/generated/WarningIcon.tsx` | WarningIcon | WarningIcon (Risky chip) |
 | 7840 | `design/components/Button/native/IconButton.native.tsx` | IconButton | IconButton (Remove anything: Messages header search / new message) |
+| 7846 | - | Svg, Path | react-native-svg (Expand the message bar: the collapse arrows) |
 | 7972 | `design/components/Icon/native/redesign/generated/LinkExternalSmallIcon.tsx` | LinkExternalSmallIcon | LinkExternalSmallIcon |
 | 8013 | `modules/messages/native/renderer/RowGenerator.tsx` | default | RowGenerator |
 | 8023 | `lib/uploader/CloudUpload.tsx` | NOT_STARTED, STARTED, UPLOADING | CloudUpload |
@@ -342,12 +344,14 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 12274 | `design/components/Icon/native/redesign/generated/ArrowAngleLeftUpIcon.tsx` | ArrowAngleLeftUpIcon | ArrowAngleLeftUpIcon |
 | 12328 | `design/components/Icon/native/redesign/generated/ImagesIcon.tsx` | ImagesIcon | ImagesIcon (Bring back Tenor GIFs) |
 | 12331 | `design/components/Icon/native/redesign/generated/FiltersHorizontalIcon.tsx` | FiltersHorizontalIcon | FiltersHorizontalIcon (translate bar, #82) |
-| 12337 | `modules/chat_input/native/ChatInputNativeComponent.tsx` | displayName, default | ChatInputNativeComponent (Tap mentions to open profiles) |
+| 12337 | `modules/chat_input/native/ChatInputNativeComponent.tsx` | displayName, default | ChatInputNativeComponent (Tap mentions to open profiles; Expand the message bar) |
+| 12338 | `modules/chat_input/native/useChatInputMaxHeight.tsx` | getChatInputMaxHeightWorklet, getChatInputHeightAnimationTimingWorklet, getChatInputMaxHeight | useChatInputMaxHeight (Expand the message bar: the height cap) |
 | 12666 | `design/components/Icon/native/redesign/generated/PhoneIcon.tsx` | PhoneIcon | PhoneIcon (Voice channel options) |
 | 12668 | `design/components/Icon/native/redesign/generated/GiftIcon.tsx` | GiftIcon | GiftIcon |
 | 12696 | `design/components/Icon/native/redesign/generated/ArrowAngleRightUpIcon.tsx` | ArrowAngleRightUpIcon | ArrowAngleRightUpIcon (Remove anything: Forward) |
 | 12809 | `modules/messages/native/createChannelStream.tsx` | default | createChannelStream (Hide blocked or ignored messages) |
 | 12849 | `actions/TypingActionCreators.tsx` | default | TypingActionCreators |
+| 12887 | `modules/chat_input/native/useChatInputHeightWorklet.native.tsx` | default, getIsChatInputHeightWorkletEnabled | useChatInputHeightWorklet (Expand the message bar: the live height) |
 | 12892 | `modules/chat_input/native/action_buttons/ChatInputActions.tsx` | displayName, default | ChatInputSendAndGiftButton |
 | 12895 | `modules/media_keyboard/native/MediaKeyboardButtonIcon.tsx` | MediaKeyboardButtonIcon | MediaKeyboardButtonIcon (Remove anything: attach button) |
 | 12897 | `modules/chat_input/native/action_buttons/ChatInputActionButtonApps.tsx` | default | ChatInputActionButtonApps (Remove anything: Apps button) |

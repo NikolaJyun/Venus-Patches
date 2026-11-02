@@ -208,7 +208,7 @@
     },
     {
       "name": "Bulk delete messages",
-      "description": "Select multiple messages in chat and delete them all at once.",
+      "description": "Select multiple messages and delete them all at once, in one chat or across channels, servers and DMs.",
       "default": true,
       "category": "Features",
       "dependencies": [
@@ -2231,6 +2231,40 @@
     {
       "name": "Tap mentions to open profiles",
       "description": "Tap an @mention in the message bar to see who it is. Based on ClickableMentions by mwittrien.",
+      "default": true,
+      "category": "Features",
+      "dependencies": [
+        "BytecodePatch"
+      ],
+      "compatiblePackages": [
+        {
+          "packageName": "com.discord",
+          "name": "Discord",
+          "description": null,
+          "apkFileType": "APKM",
+          "appIconColor": "#5865F2",
+          "signatures": null,
+          "targets": [
+            {
+              "version": "351.11 - Stable",
+              "versionCodes": {
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
+              },
+              "isExperimental": false,
+              "minSdk": 26,
+              "description": null
+            }
+          ]
+        }
+      ],
+      "options": []
+    },
+    {
+      "name": "Expand the message bar",
+      "description": "Adds a button to the top right of the message bar that opens it up tall, so you can see much more of what you're typing.",
       "default": true,
       "category": "Features",
       "dependencies": [
