@@ -483,6 +483,14 @@ BOOTSTRAP_MODULES = [
     (10058, 'modules/stickers/StickersActionCreators.tsx', ['createGuildSticker'], 'StickersActionCreators (Clone emojis and stickers)'),
     (8294, 'utils/GuildBoostingUtils.tsx', ['getMaxEmojiSlots', 'getTotalStickerCountForTier'], 'GuildBoostingUtils (Clone emojis and stickers: free slots)'),
     (5075, 'modules/chat/native/useChatLayout.tsx', ['default', 'getChatLayout'], 'useChatLayout (Full-screen chat in landscape)'),
+    (5133, 'design/components/Icon/native/redesign/generated/UserPlatformIcon.tsx', ['UserPlatformIcon'], 'UserPlatformIcon (Platform spoof)'),
+    (6473, 'design/components/Icon/native/redesign/generated/CheckmarkLargeIcon.tsx', ['CheckmarkLargeIcon'], 'CheckmarkLargeIcon'),
+    (9386, 'design/components/Icon/native/redesign/generated/ScreenIcon.tsx', ['ScreenIcon'], 'ScreenIcon'),
+    (13745, 'design/components/Icon/native/redesign/generated/PencilSparkleIcon.tsx', ['PencilSparkleIcon'], 'PencilSparkleIcon (Local edit)'),
+    (14205, 'design/components/Icon/native/redesign/generated/UserClockIcon.tsx', ['UserClockIcon'], 'UserClockIcon (Custom idle)'),
+    (18679, 'design/components/Icon/native/redesign/generated/ChannelListIcon.tsx', ['ChannelListIcon'], 'ChannelListIcon (Fast delete channels)'),
+    (18747, 'design/components/Icon/native/redesign/generated/HomeIcon.tsx', ['HomeIcon'], 'HomeIcon (HypeSquad)'),
+    (10596, 'modules/channel/native/ChannelLongPressActionSheet.tsx', ['default'], 'ChannelLongPressActionSheet (Fast delete channels menu row)'),
 ]
 
 
