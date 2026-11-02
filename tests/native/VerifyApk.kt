@@ -138,7 +138,7 @@ fun main(args: Array<String>) {
         when (reference) {
             is MethodReference -> if (isHost(reference.definingClass)) {
                 val resolved = resolve(reference)
-                if (resolved == null && !inheritsPlatform(reference.definingClass)) abiErrors.add("Unresolved extension dependency: $reference")
+                if (resolved == null) { if (!inheritsPlatform(reference.definingClass)) abiErrors.add("Unresolved extension dependency: $reference") }
                 else if (!reference.definingClass.startsWith("Lapp/venus/") && resolved.accessFlags and 0x1 == 0)
                     abiErrors.add("Non-public host dependency: $reference")
             }
