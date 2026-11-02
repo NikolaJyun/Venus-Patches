@@ -2449,6 +2449,7 @@
             out.iconPacks = {active:iconPacks.active || "", custom:iconPacks.custom.slice(0, ICONPACKS_MAX_CUSTOM)};
         // Pictures from this phone stay on it: a backup keeps the names and the icons that are links.
         if (features.serverEdit && serverEdits.size) { const servers = serverEditData(true); if (Object.keys(servers).length) out.servers = servers; }
+        if (features.localEdit && localEdits.size) out.localEdits = localEditData();
         return JSON.stringify(out, null, 1);
     }
     // A backup, or a plain venus-patches.json settings file, read back. Throws a message you can show when it isn't one.
@@ -2491,7 +2492,15 @@
         }
         const created = wrapped && typeof data.created === "string" ? Date.parse(data.created) : NaN;
         const servers = wrapped && data.servers ? serverEditClean(data.servers, true) : null;
-        return {values, people, themes, iconPacks:packs, servers, version:wrapped && typeof data.version === "string" ? data.version.slice(0, 24) : "", created:Number.isFinite(created) ? created : 0};
+        let edited = null;
+        if (wrapped && data.localEdits && typeof data.localEdits === "object" && !Array.isArray(data.localEdits)) {
+            edited = new Map();
+            Object.keys(data.localEdits).slice(-LOCAL_EDIT_MAX).forEach(key => {
+                const text = data.localEdits[key];
+                if (/^\d{17,20}:\d{17,20}$/.test(key) && typeof text === "string" && text.length <= LOCAL_EDIT_TEXT) edited.set(key, text);
+            });
+        }
+        return {values, people, themes, iconPacks:packs, servers, localEdits:edited, version:wrapped && typeof data.version === "string" ? data.version.slice(0, 24) : "", created:Number.isFinite(created) ? created : 0};
     }
     // Puts a backup in place: every setting it has, the rest back to how Venus starts. Switches go through setSetting,
     // so everything they start or stop (Quests, themes, kept messages) happens as if you'd flipped them yourself.
@@ -2520,6 +2529,12 @@
                 serverEdits.forEach((edit, id) => { if (serverEditFile(edit.icon) && !parsed.servers.has(id)) next.set(id, edit); });
                 parsed.servers.forEach((edit, id) => { const old = serverEdits.get(id); next.set(id, old && serverEditFile(old.icon) && !edit.icon ? {name:edit.name, icon:old.icon} : edit); });
                 serverEditLoad(next); serverEdit.dirty = true; serverEditChanged();
+            }
+            if (features.localEdit && parsed.localEdits) {
+                const before = Array.from(localEdits.keys());
+                localEdits.clear(); parsed.localEdits.forEach((text, key) => localEdits.set(key, text));
+                save(); notify("localEdit");
+                before.concat(Array.from(localEdits.keys())).forEach(key => { const at = key.indexOf(":"); localEditRedraw(key.slice(0, at), key.slice(at + 1)); });
             }
             if (features.iconPacks && parsed.iconPacks) {
                 iconPacks.loaded = true; iconPacks.custom = parsed.iconPacks.custom; iconPacks.active = parsed.iconPacks.active; iconPacks.error = "";
