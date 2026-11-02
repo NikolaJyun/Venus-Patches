@@ -296,13 +296,16 @@ function lazyCoreRuntime(code) {
         nrStr = stage2Code.slice(nrLit.start - off, nrLit.end - off);
         stage2Code = stage2Code.slice(0, nrLit.start - off) + '$nrStr' + stage2Code.slice(nrLit.end - off);
     }
-    const stage2Fn = '(function(global,features,revision,DISCORD_VERSION,settings,status' + (nrStr ? ',$nrStr' : '') + '){' + stage2Code + '})';
+    // Every eager-header name the core reads has to be passed in: the core is eval'd as its own function, so a name it
+    // isn't given is a missing global. targetModules was left out, and the debug log's "what's loaded" summary threw
+    // "Property 'targetModules' doesn't exist" on every export.
+    const stage2Fn = '(function(global,features,revision,DISCORD_VERSION,settings,status,targetModules' + (nrStr ? ',$nrStr' : '') + '){' + stage2Code + '})';
     const stage2Str = JSON.stringify(stage2Fn).replace(/[\u007f-\uffff]/g, c => '\\u' + c.charCodeAt(0).toString(16).padStart(4, '0'));
 
     let eagerHeader = '';
     for (let i = 0; i <= setIdx; i++) eagerHeader += items[i].src;
     eagerHeader += items[stIdx].src;
-    eagerHeader += 'let pastelHash,$c;function $core(){return $c||($c=(0,eval)(' + stage2Str + ')(global,features,revision,DISCORD_VERSION,settings,status' + (nrStr ? ',' + nrStr : '') + '));}';
+    eagerHeader += 'let pastelHash,$c;function $core(){return $c||($c=(0,eval)(' + stage2Str + ')(global,features,revision,DISCORD_VERSION,settings,status,targetModules' + (nrStr ? ',' + nrStr : '') + '));}';
 
     const ddSrc = items[ddIdx].src
         .replace(/listImport\(/g, '$core().listImport(')
