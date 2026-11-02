@@ -20271,17 +20271,17 @@
         const toggle = () => { haptic("SELECTION"); setState(st => ({at:st.at, playing:!st.playing})); };
         const Play = venusIcon(8674, "PlayIcon"), Pause = venusIcon(8676, "PauseIcon"), Skip = venusIcon(11632, "RetryIcon"), Phones = venusIcon(13214, "HeadphonesIcon");
         const width = (Math.max(0, Math.min(1, state.at / MEDIA_PREVIEW_MS)) * 100).toFixed(1) + "%";
-        const caption = text => el(RN.Text, {style:[s.muted, {fontSize:12, fontWeight:"700", letterSpacing:0.3}]}, tr(text));
+        const caption = text => el(RN.Text, {style:[s.muted, {fontSize:12, fontWeight:"700", letterSpacing:0.3}]}, text);
         const skipButton = (key, forward, big, color, live) => el(Press, {key, disabled:!live, onPress:() => seek((forward ? 1 : -1) * skip * 1000),
             accessibilityRole:"button", accessibilityLabel:tr(forward ? "Skip forward" : "Skip back"), hitSlop:{top:8, bottom:8, left:8, right:8},
             style:{width:big ? 40 : 24, height:big ? 40 : 24, alignItems:"center", justifyContent:"center"}},
-            el(RN.View, {style:forward ? {transform:[{scaleX:-1}]} : null}, el(Skip, {size:big ? "md" : "xs", color})),
+            el(RN.View, {style:forward ? null : {transform:[{scaleX:-1}]}}, el(Skip, {size:big ? "md" : "xs", color})),
             big ? el(RN.Text, {style:{position:"absolute", color, fontSize:8, fontWeight:"800"}}, String(skip)) : null);
         const playButton = (key, big, live) => el(Press, {key, onPress:toggle, disabled:!live, accessibilityRole:"button", accessibilityLabel:tr(playing ? "Pause" : "Play"),
             hitSlop:{top:8, bottom:8, left:8, right:8}, style:big ? [k.brand, {width:52, height:52, borderRadius:26, alignItems:"center", justifyContent:"center"}] : null},
             el(playing ? Pause : Play, {size:big ? "md" : "sm", color:"#ffffff"}));
         const notification = el(RN.View, {key:"notification", style:{gap:8, opacity:audio ? 1 : 0.45}},
-            caption("In your notifications"),
+            caption(tr("In your notifications")),
             el(RN.View, {style:[k.secondary, {borderRadius:20, padding:14, gap:12}]},
                 el(RN.View, {style:{flexDirection:"row", alignItems:"center", gap:12}},
                     el(RN.View, {style:{width:48, height:48, borderRadius:12, backgroundColor:"#eb459e", alignItems:"center", justifyContent:"center"}},
@@ -20312,7 +20312,7 @@
                 skipButton("pipBack", false, false, "#ffffff", video), playButton("pipPlay", false, video), skipButton("pipForward", true, false, "#ffffff", video)),
             el(RN.View, {style:{position:"absolute", left:0, bottom:0, height:3, width, backgroundColor:"#5865f2"}}));
         const floating = el(RN.View, {key:"floating", style:{gap:8, opacity:video ? 1 : 0.45}},
-            caption("Over other apps"),
+            caption(tr("Over other apps")),
             el(RN.View, {style:[k.secondary, {borderRadius:20, height:200, padding:10, overflow:"hidden"}]},
                 el(RN.View, {style:{flexDirection:"row", flexWrap:"wrap"}}, tiles), pip));
         return el(RN.View, {key:"preview", accessible:false, accessibilityLabel:tr("Keep media playing preview"), style:[s.chat, {padding:12, gap:16}]},
