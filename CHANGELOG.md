@@ -2,6 +2,7 @@
 
 ### ✨ New Features
 
+* **Discord:** Add `View raw data` patch: hold a message, channel, thread, forum post, DM, server or role, or open a person's ⋯ menu, to read its raw data as JSON (messages also show the plain text) and copy it, with email and phone number left out ([#141](https://github.com/VenusIsJaded/Venus-Patches/issues/141))
 * **Discord:** Add `Edit without "(edited)"` patch: edit your latest message with no tag; it only works while your message is the latest in the chat ([#46](https://github.com/VenusIsJaded/Venus-Patches/issues/46))
 * **Discord:** Add `Delete without a trace` patch: your message is blanked a moment before it's deleted, so message loggers keep nothing ([#46](https://github.com/VenusIsJaded/Venus-Patches/issues/46))
 * **Discord:** Add `Edit messages on this phone` patch: hold any message and change how it reads, seen only by you and restorable any time ([#129](https://github.com/VenusIsJaded/Venus-Patches/issues/129))

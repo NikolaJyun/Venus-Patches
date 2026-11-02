@@ -491,6 +491,11 @@ BOOTSTRAP_MODULES = [
     (18679, 'design/components/Icon/native/redesign/generated/ChannelListIcon.tsx', ['ChannelListIcon'], 'ChannelListIcon (Fast delete channels)'),
     (18747, 'design/components/Icon/native/redesign/generated/HomeIcon.tsx', ['HomeIcon'], 'HomeIcon (HypeSquad)'),
     (10596, 'modules/channel/native/ChannelLongPressActionSheet.tsx', ['default'], 'ChannelLongPressActionSheet (Fast delete channels menu row)'),
+    (17245, 'modules/threads/native/components/ThreadLongPressActionSheet.tsx', ['default'], 'ThreadLongPressActionSheet (View raw data menu row)'),
+    (10780, 'modules/action_sheet/native/components/LongPressForumPostActionSheet.tsx', ['default'], 'LongPressForumPostActionSheet (View raw data menu row)'),
+    (12003, 'design/components/Icon/native/redesign/generated/FileIcon.tsx', ['FileIcon'], 'FileIcon (View raw data)'),
+    (8488, 'design/components/Icon/native/redesign/generated/ForumIcon.tsx', ['ForumIcon'], 'ForumIcon (View raw data)'),
+    (13951, 'design/components/Icon/native/redesign/generated/ShieldLockIcon.tsx', ['ShieldLockIcon'], 'ShieldLockIcon (View raw data)'),
 ]
 
 

@@ -63,6 +63,7 @@
     if (features.platformSpoof) selectModules([14713]);
     if (features.guildLurk) targetModules[13422] = 1;
     if (features.quietReplies) selectModules([1392, 5532, 9990]);
+    if (features.viewRaw) selectModules([9978, 10596, 17245, 10780, 17433, 14015, 7158, 7167]);
     if (features.compressUploads) selectModules([8023, 8046, 10006]);
     if (features.timeoutDuration) selectModules([2119, 2128, 8013]);
     if (features.dndBanners) selectModules([6015, 13511, 13523]);
@@ -95,7 +96,7 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, viewRaw:false, viewRawMessages:true, viewRawChannels:true, viewRawServers:true, viewRawPeople:true, viewRawRoles:true, viewRawHideContact:true, viewRawWrap:true, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, backgroundMedia:false, backgroundMediaAudio:true, backgroundMediaVideo:true, backgroundMediaSkip:10, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
         hypeSquad:false, customIdle:false, customIdleMinutes:10, pauseInvites:false, fastDeleteChannels:false, fastDeleteChannelsConfirm:true, fastDeleteChannelsMenu:true, mutualGroupDMs:false, platformSpoof:false, platformSpoofDevice:"desktop" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
@@ -113,7 +114,7 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, viewRaw: false, viewRawMessages: true, viewRawChannels: true, viewRawServers: true, viewRawPeople: true, viewRawRoles: true, viewRawHideContact: true, viewRawWrap: true, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, backgroundMedia: false, backgroundMediaAudio: true, backgroundMediaVideo: true, backgroundMediaSkip: 10, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
             hypeSquad: false, customIdle: false, customIdleMinutes: 10, pauseInvites: false, fastDeleteChannels: false, fastDeleteChannelsConfirm: true, fastDeleteChannelsMenu: true, mutualGroupDMs: false, platformSpoof: false, platformSpoofDevice: "desktop"
         }));
     }
@@ -1170,7 +1171,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^viewRaw[A-Z]/.test(key) ? "viewRaw" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : /^backgroundMedia[A-Z]/.test(key) ? "backgroundMedia" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1205,7 +1206,7 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], backgroundMedia:[8674, "PlayIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
+        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], viewRaw:[12003, "FileIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], backgroundMedia:[8674, "PlayIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
         hypeSquad:[18747, "HomeIcon"], customIdle:[14205, "UserClockIcon"], pauseInvites:[8676, "PauseIcon"], fastDeleteChannels:[18679, "ChannelListIcon"], mutualGroupDMs:[8489, "GroupIcon"], platformSpoof:[5133, "UserPlatformIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
@@ -1272,6 +1273,7 @@
         dndBanners:["Do Not Disturb", "DND", "Banner", "Banners", "In-app notifications", "Pop-up", "Focus"],
         landscapeFull:["Landscape", "Sideways", "Rotate", "Full screen", "Sidebar", "Channel list"],
         compressUploads:["Compress", "Compression", "Shrink", "Smaller", "Resize", "File size", "Too big", "Too large", "Upload limit", "Size limit", "Nitro", "Video", "Photo", "Audio", "Attachments"],
+        viewRaw:["Raw", "JSON", "Data", "Developer", "Inspect", "Debug", "ID", "IDs", "Message", "Channel", "Thread", "Forum", "Server", "User", "Role", "Copy", "ViewRaw"],
         quietReplies:["Ping", "Pings", "Mention", "Mentions", "Reply", "Replies", "@ ON", "@ OFF", "Notification", "Servers", "Group DMs", "When they mentioned you", "Silent replies", "No ping"],
         fullImages:["High-res profile pictures", "HighResProfileImages", "Avatars", "Profile pictures", "Banners", "Uncompressed", "Uncompressed images", "Original", "Full quality", "Lossless", "Compression", "Blurry", "Thumbnail", "Resolution", "Pictures", "Photos"],
         removedAlerts:["Removed", "Unfriend", "Friend", "Kicked", "Banned", "Server", "Left", "Alert", "Notifier", "Relationship", "Connection", "Removed connection alerts", "Relationship notifier", "Notify"],
@@ -1780,6 +1782,7 @@
         // Servers
         withOptions("servers", "readAll", "VENUS_READALL", "Read all button", "A button that marks servers and DMs as read.", "Read all", ReadAllSettings);
         withOptions("servers", "hiddenChannels", "VENUS_HIDDENCHANNELS", "Show hidden channels", "Channels you can't open show with a lock. Messages stay hidden.", "Hidden channels", HiddenChannelsSettings);
+        withOptions("advanced", "viewRaw", "VENUS_VIEWRAW", "View raw data", "Hold a message, channel, server, person or role to see its raw data and copy it.", "View raw data", ViewRawSettings);
         withOptions("servers", "serverInfo", "VENUS_SERVERINFO", "Server info", "Hold a server's icon to see its details, boosts and friends there.", "Server info", ServerInfoSettings);
         withOptions("servers", "serverEdit", "VENUS_SERVEREDIT", "Edit servers locally", "Give any server your own name and icon. Only you see them.", "Edit servers", ServerEditSettings);
         withOptions("servers", "cleanChannels", "VENUS_CLEANCHANNELS", "Clean channel names", "Removes emoji and symbols from channel names, and can show spaces instead of dashes.", "Clean names", CleanChannelsSettings);
@@ -10459,7 +10462,7 @@
         ["guild.reviews", "guild", 9851, "StarIcon"], ["guild.serverTag", "guild", 9365, "TagIcon"],
         ["you.status", "you", 8471, "ChatIcon"], ["you.friends", "you", 8489, "GroupIcon"], ["you.orbs", "you", 9331, "OrbsIcon"],
         ["message.reactions", "message", 9252, "ReactionIcon"], ["message.edit", "message", 10023, "PencilIcon"], ["message.reply", "message", 12274, "ArrowAngleLeftUpIcon"],
-        ["message.forward", "message", 12696, "ArrowAngleRightUpIcon"], ["message.thread", "message", 8473, "ThreadIcon"], ["message.translate", "message", 9415, "LanguageIcon"], ["message.localEdit", "message", 10023, "PencilIcon"],
+        ["message.forward", "message", 12696, "ArrowAngleRightUpIcon"], ["message.thread", "message", 8473, "ThreadIcon"], ["message.translate", "message", 9415, "LanguageIcon"], ["message.localEdit", "message", 10023, "PencilIcon"], ["message.viewRaw", "message", 12003, "FileIcon"],
         ["message.copyText", "message", 5141, "CopyIcon"], ["message.markUnread", "message", 10650, "ChatMarkUnreadIcon"], ["message.pin", "message", 10641, "PinIcon"],
         ["message.bookmark", "message", 13769, "BookmarkOutlineIcon"], ["message.reminder", "message", 5150, "ClockIcon"], ["message.apps", "message", 8506, "AppsIcon"],
         ["message.mention", "message", 8490, "AtIcon"], ["message.copyLink", "message", 5137, "LinkIcon"], ["message.copyId", "message", 10316, "IdIcon"],
@@ -10504,7 +10507,7 @@
         "message.save":"Save Image", "message.copyMedia":"Copy Media Link", "message.publish":"Publish", "message.removeEmbeds":"Remove Embeds",
         "message.removeReactions":"Remove All Reactions", "message.report":"Report to Discord", "message.delete":"Delete Message"};
     // Rows Venus adds to that menu, by the key it gives them.
-    const MESSAGE_VENUS_ROWS = {"venus-translate":"message.translate", "venus-local-edit":"message.localEdit", "venus-bulk-delete":"message.select"};
+    const MESSAGE_VENUS_ROWS = {"venus-translate":"message.translate", "venus-local-edit":"message.localEdit", "venus-bulk-delete":"message.select", "venus-view-raw":"message.viewRaw"};
     // A message in Discord's language (intl 1126), or "" when it isn't there.
     function discordText(hash) {
         try { const m = global.__r(1128), msg = m && m.t && m.t[hash]; return msg != null && m.intl ? String(m.intl.string(msg) || "") : ""; } catch (_) { return ""; }
@@ -10572,6 +10575,7 @@
             case "message.reactions": return tr("Quick reactions");
             case "message.translate": return tr("Translate");
             case "message.localEdit": return tr("Edit locally");
+            case "message.viewRaw": return tr("View raw data");
             case "message.select": return tr("Select Messages");
         }
         return key;
@@ -20373,6 +20377,287 @@
             footnote("note", "Threads and forum posts are always deleted the normal way.")];
         return settingsBody(ui, groups);
     }
+    // View raw data (#141): hold a message, channel, thread, forum post, DM, server or role, or open a person's menu, to read
+    // what Discord holds about it as formatted JSON and copy it. Everything comes from the stores Discord already filled, so
+    // nothing is requested. Records (users, servers, roles) aren't plain objects, so rawValue turns them into JSON that can
+    // never throw: Sets and Maps become lists and objects, dates ISO text, BigInts (permissions) text, loops and functions
+    // are left out. Email and phone number are left out of everything unless you turn that off.
+    const RAW_DEPTH = 10, RAW_ITEMS = 1000, RAW_SHOWN = 60000, RAW_CONTACT = /^(email|phone)$/;
+    let viewRawRole = null;
+    function rawId(id) { return typeof id === "string" && /^\d{17,20}$/.test(id); }
+    function rawValue(value, ctx, depth) {
+        if (value === null) return null;
+        switch (typeof value) {
+            case "string": case "boolean": return value;
+            case "number": return Number.isFinite(value) ? value : String(value);
+            case "bigint": return String(value);
+            case "undefined": case "function": case "symbol": return undefined;
+        }
+        if (value instanceof Date) { const time = value.getTime(); return Number.isFinite(time) ? value.toISOString() : null; }
+        if (ctx.stack.indexOf(value) >= 0) return "[Circular]";
+        if (depth >= RAW_DEPTH) return "[Too deep]";
+        ctx.stack.push(value);
+        try {
+            let source = value;
+            if (value instanceof Set) source = Array.from(value);
+            else if (value instanceof Map) { source = {}; value.forEach((item, key) => { source[String(key)] = item; }); }
+            else if (typeof value.toJS === "function") { try { const js = value.toJS(); if (js && typeof js === "object") source = js; } catch (_) {} }
+            if (Array.isArray(source)) {
+                const list = [];
+                for (let i = 0; i < source.length && i < RAW_ITEMS; i++) { const item = rawValue(source[i], ctx, depth + 1); list.push(item === undefined ? null : item); }
+                if (source.length > RAW_ITEMS) list.push("\u2026 " + (source.length - RAW_ITEMS) + " more");
+                return list;
+            }
+            const out = {}, keys = Object.keys(source);
+            for (let i = 0; i < keys.length && i < RAW_ITEMS; i++) {
+                const key = keys[i];
+                if (ctx.hide && RAW_CONTACT.test(key)) { ctx.removed++; continue; }
+                let item;
+                try { item = rawValue(source[key], ctx, depth + 1); } catch (_) { item = undefined; }
+                if (item !== undefined) out[key] = item;
+            }
+            return out;
+        } finally { ctx.stack.pop(); }
+    }
+    // What the viewer shows: the kind (its name and icon), a title, the id, and the JSON text. null when Discord has nothing.
+    function rawKind(channel) {
+        const type = channel && channel.type;
+        if (type === 1) return {label:tr("Direct message"), icon:[11671, "UserIcon"]};
+        if (type === 3) return {label:tr("Group DM"), icon:[8489, "GroupIcon"]};
+        if (type === 10 || type === 11 || type === 12) {
+            const parent = serverCall(serverStore(2068), "getChannel", channel.parent_id);
+            return parent && (parent.type === 15 || parent.type === 16) ? {label:tr("Forum post"), icon:[8488, "ForumIcon"]} : {label:tr("Thread"), icon:[8473, "ThreadIcon"]};
+        }
+        return type === 15 || type === 16 ? {label:tr("Channel"), icon:[8488, "ForumIcon"]} : {label:tr("Channel"), icon:[16648, "HashmarkIcon"]};
+    }
+    // A role's own color as #rrggbb (roles with no color are 0), so its badge in the viewer can wear it.
+    function rawColor(role) {
+        const value = role && (typeof role.color === "number" ? role.color : parseInt(role.color, 10));
+        return Number.isFinite(value) && value > 0 && value <= 0xffffff ? "#" + ("000000" + value.toString(16)).slice(-6) : null;
+    }
+    function rawSnapshot(spec) {
+        const ctx = {hide:!!settings.viewRawHideContact, removed:0, stack:[]};
+        let data, title = "", kind, content = null, accent = null;
+        if (spec.kind === "message") {
+            const message = spec.message;
+            if (!message) return null;
+            data = rawValue(message, ctx, 0);
+            kind = {label:tr("Message"), icon:[8471, "ChatIcon"]};
+            title = message.author && (message.author.globalName || message.author.username) || "";
+            content = typeof message.content === "string" ? message.content : "";
+        } else if (spec.kind === "channel") {
+            const channel = serverCall(serverStore(2068), "getChannel", spec.id);
+            if (!channel) return null;
+            data = rawValue(channel, ctx, 0);
+            kind = rawKind(channel);
+            title = channel.name ? String(channel.name) : mutualGroupName(channel);
+        } else if (spec.kind === "server") {
+            const guild = serverCall(serverStore(2090), "getGuild", spec.id);
+            if (!guild) return null;
+            data = rawValue(guild, ctx, 0);
+            kind = {label:tr("Server"), icon:[9545, "ServerIcon"]};
+            title = guild.name ? String(guild.name) : "";
+        } else if (spec.kind === "user") {
+            const user = serverCall(serverStore(1392), "getUser", spec.id);
+            if (!user) return null;
+            data = rawValue(user, ctx, 0);
+            // In a server, what the server holds about them (nickname, roles, join date) follows the person's own data.
+            const member = spec.guildId ? serverCall(serverStore(2128), "getMember", spec.guildId, spec.id) : null;
+            if (member && data && typeof data === "object") data.member = rawValue(member, ctx, 1);
+            kind = {label:tr("User"), icon:[11671, "UserIcon"]};
+            title = user.globalName || user.username || "";
+        } else if (spec.kind === "role") {
+            const role = (spec.guildId ? serverCall(serverStore(2122), "getRole", spec.guildId, spec.id) : null) || spec.role;
+            if (!role) return null;
+            data = rawValue(role, ctx, 0);
+            kind = {label:tr("Role"), icon:[8895, "ShieldUserIcon"]};
+            title = role.name ? String(role.name) : "";
+            accent = rawColor(role);
+        } else return null;
+        let json = "";
+        try { json = JSON.stringify(data, null, 2) || ""; } catch (_) { json = ""; }
+        if (!json) return null;
+        return {kind, title, accent, id:spec.id || (spec.message && String(spec.message.id)) || "", json, content, removed:ctx.removed};
+    }
+    const VIEW_RAW_DARK = {card:{backgroundColor:"#1e1f22", borderRadius:16, borderWidth:1, borderColor:"#ffffff14", overflow:"hidden"},
+        pad:{paddingHorizontal:14, paddingVertical:12}, code:{fontFamily:"monospace", fontSize:12, lineHeight:18, color:"#dbdee1"},
+        empty:{fontSize:14, color:"#949ba4"}, badge:{width:44, height:44, borderRadius:22, alignItems:"center", justifyContent:"center", backgroundColor:"#5865f229"}, badgeIcon:{color:"#94a8ff"}};
+    function useViewRawStyles() {
+        return useThemed("viewRaw", c => ({card:Object.assign({}, VIEW_RAW_DARK.card, {backgroundColor:c.BACKGROUND_BASE_LOWER, borderColor:c.BORDER_SUBTLE}),
+            pad:VIEW_RAW_DARK.pad, code:Object.assign({}, VIEW_RAW_DARK.code, {color:c.TEXT_DEFAULT}), empty:Object.assign({}, VIEW_RAW_DARK.empty, {color:c.TEXT_MUTED}),
+            badge:VIEW_RAW_DARK.badge, badgeIcon:{color:c.TEXT_BRAND || VIEW_RAW_DARK.badgeIcon.color}}), VIEW_RAW_DARK);
+    }
+    function ViewRawSheet(props) {
+        useSettings("viewRaw");
+        const ui = reviewUI(), spec = props.spec, s = useViewRawStyles();
+        const snap = React.useMemo(() => rawSnapshot(spec), [spec]);
+        const [tab, setTab] = React.useState("data");
+        const header = ui.Header ? el(ui.Header, {title:tr("Raw data"), trailing:ui.Close ? el(ui.Close, {onPress:() => hideReviewSheet(ui, props.sheetKey)}) : undefined}) : undefined;
+        const Sheet = ui.ActionSheet || RN.View;
+        if (!snap) return el(Sheet, {header}, el(RN.View, {style:{padding:24}},
+            serverText(tr("Nothing to show right now."), "text-md/medium", "text-muted", {color:"#949ba4", fontSize:16})));
+        const Button = inspectedExport(5479, "Button"), Press = RN.Pressable || RN.View, Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const showContent = snap.content !== null && tab === "content", text = showContent ? snap.content : snap.json;
+        const shown = text.length > RAW_SHOWN ? text.slice(0, RAW_SHOWN) : text, wrap = !!settings.viewRawWrap;
+        const copy = () => { if (showContent) serverCopy(snap.content, "Raw content copied"); else serverCopy(snap.json, "Raw data copied"); };
+        const copyLabel = showContent ? tr("Copy raw content") : tr("Copy raw data"), empty = showContent && !snap.content;
+        const Icon = venusIcon(snap.kind.icon[0], snap.kind.icon[1]);
+        const hero = el(RN.View, {key:"hero", style:{flexDirection:"row", alignItems:"center", gap:14, paddingHorizontal:4}},
+            el(RN.View, {style:snap.accent ? [s.badge, {backgroundColor:snap.accent + "29"}] : s.badge}, el(Icon, {size:"md", color:snap.accent || s.badgeIcon.color})),
+            el(RN.View, {style:{flex:1, gap:2}},
+                serverText(snap.title || snap.kind.label, "text-md/semibold", "text-strong", {color:"#f2f3f5", fontSize:16, fontWeight:"600"}, {numberOfLines:1}),
+                serverText(snap.kind.label + " \u00b7 " + snap.id, "text-sm/medium", "text-muted", {color:"#949ba4", fontSize:13}, {selectable:true})));
+        const code = empty ? el(RN.Text, {style:[s.empty, {padding:14}]}, tr("This message has no text.")) :
+            wrap ? el(RN.View, {style:s.pad}, el(RN.Text, {selectable:true, style:s.code}, shown)) :
+            el(RN.ScrollView, {horizontal:true, nestedScrollEnabled:true, showsHorizontalScrollIndicator:false}, el(RN.View, {style:s.pad}, el(RN.Text, {selectable:true, style:s.code}, shown)));
+        const copyButton = Button ? el(Button, {key:"copy", text:copyLabel, size:"lg", variant:"primary", grow:true, disabled:empty, onPress:copy}) :
+            el(Press, {key:"copy", onPress:empty ? undefined : copy, accessibilityRole:"button", accessibilityLabel:copyLabel,
+                style:{padding:14, borderRadius:24, alignItems:"center", backgroundColor:"#5865f2", opacity:empty ? 0.5 : 1}},
+                el(RN.Text, {style:{color:"#ffffff", fontWeight:"600"}}, copyLabel));
+        const notes = [snap.removed && !showContent ? tr("Email and phone number are left out.") : null,
+            text.length > RAW_SHOWN ? tr("Too long to show in full. Copy has everything.") : null].filter(Boolean);
+        const body = [hero,
+            snap.content !== null ? venusSegmented({key:"viewRawTabs", value:tab, onChange:setTab,
+                items:[{value:"data", label:tr("Raw data")}, {value:"content", label:tr("Raw content")}]}) : null,
+            el(RN.View, {key:"code", style:s.card}, code),
+            notes.length ? el(RN.View, {key:"notes", style:{paddingHorizontal:4, gap:2}}, notes.map(note => serverText(note, "text-xs/medium", "text-muted", {color:"#949ba4", fontSize:12}, {key:note}))) : null,
+            copyButton,
+            Switch ? el(Group, {key:"view"}, switchRow(Switch, "viewRawWrap", "Wrap lines", "Long lines wrap instead of scrolling sideways.", rowIcon(8480, "TextIcon"))) : null];
+        const content = el(RN.View, {style:{paddingHorizontal:12, paddingBottom:24, gap:16}}, body.filter(Boolean));
+        const Scroll = inspectedExport(6584, "BottomSheetScrollView");
+        return Scroll ? el(Sheet, {header, scrollable:true}, el(Scroll, null, content)) :
+            el(Sheet, {header}, RN.ScrollView ? el(RN.ScrollView, null, content) : content);
+    }
+    function openViewRaw(spec) {
+        if (!enabled("viewRaw") || !React || !RN || !spec) return;
+        const ui = reviewUI();
+        if (!ui.ActionSheet || typeof ui.showSheet !== "function") { reviewToast(ui, "The raw data viewer is unavailable right now.", venusIcon(6573, "CircleXIcon")); return; }
+        const key = "VenusViewRaw:" + spec.kind + ":" + (spec.id || spec.message && spec.message.id);
+        try { ui.showSheet({key, content:el(ViewRawSheet, {spec, sheetKey:key}), stackingBehavior:"stack"}); } catch (_) {}
+    }
+    // Message menu row.
+    function viewRawMessageSheet(orig, self, args) {
+        const tree = orig.apply(self, args), props = args[0], message = props && props.message;
+        if (!enabled("viewRaw") || !settings.viewRawMessages || !React || !tree || !message || !message.id) return tree;
+        return sheetAddRow(tree, props, "venus-view-raw", tr("View raw data"), venusIcon(12003, "FileIcon"), () => openViewRaw({kind:"message", message}));
+    }
+    // Channel, thread and forum post menus (the same shape; only the sheet's key differs).
+    function viewRawChannelHook(sheetKey) {
+        return function viewRawChannelSheet(orig, self, args) {
+            const tree = orig.apply(self, args), props = args[0];
+            if (!enabled("viewRaw") || !settings.viewRawChannels || !React || !tree || !props) return tree;
+            const id = String(props.channelId || props.channel && props.channel.id || "");
+            if (!rawId(id)) return tree;
+            return sheetAddRow(tree, props, "venus-view-raw", tr("View raw data"), venusIcon(12003, "FileIcon"), () => openViewRaw({kind:"channel", id}), sheetKey(id));
+        };
+    }
+    const viewRawChannelMenu = viewRawChannelHook(id => "ChannelLongPress-" + id);
+    const viewRawThreadMenu = viewRawChannelHook(() => "ThreadLongPressActionSheet");
+    const viewRawPostMenu = viewRawChannelHook(() => "ForumPostLongPressActionSheet");
+    // The server icon's menu: after Discord's own rows and Venus's.
+    function viewRawServerMenu(orig, self, args) {
+        const items = orig.apply(self, args), guildId = args[0] == null ? null : String(args[0]);
+        if (!enabled("viewRaw") || !settings.viewRawServers || !Array.isArray(items) || !rawId(guildId)) return items;
+        return items.concat([{IconComponent:venusIcon(12003, "FileIcon"), label:tr("View raw data"), action:() => openViewRaw({kind:"server", id:guildId})}]);
+    }
+    // A person's ⋯ menu. The row goes in its own group, above the one with Block and Report when there is one.
+    function viewRawProfileMenu(orig, self, args) {
+        const rendered = orig.apply(self, args), props = args[0];
+        if (!enabled("viewRaw") || !settings.viewRawPeople || !React || !rendered || !props) return rendered;
+        const userId = String(props.userId || props.user && props.user.id || ""), guildId = props.guildId ? String(props.guildId) : "";
+        const Menu = inspectedExport(9662, "ContextMenu");
+        if (!Menu || !rawId(userId)) return rendered;
+        const item = {label:tr("View raw data"), venusRaw:true, action:() => later(() => openViewRaw({kind:"user", id:userId, guildId:rawId(guildId) ? guildId : ""}), 60)};
+        return cloneTree(rendered, (node, nodeProps) => {
+            if (node.type !== Menu || !Array.isArray(nodeProps.items) || nodeProps.items.some(entry => entry && entry.venusRaw)) return nodeProps;
+            const items = nodeProps.items, last = items[items.length - 1];
+            const danger = Array.isArray(last) && last.some(entry => entry && entry.variant === "destructive");
+            const grouped = items.some(Array.isArray);
+            const next = !grouped ? items.concat([item]) : danger ? items.slice(0, -1).concat([[item], last]) : items.concat([[item]]);
+            return Object.assign({}, nodeProps, {items:next});
+        }, 0);
+    }
+    // Roles: a role on a profile opens its own little menu when you hold it (Copy ID), drawn by showSimpleActionSheet (7167).
+    // The role isn't in what that menu is given, so the role chip's long press is wrapped to say which role it was for
+    // while Discord's own handler runs, and the menu gets a View raw data option for that role.
+    const viewRawTypes = new WeakMap();
+    function viewRawType(type, make) {
+        let wrapped = viewRawTypes.get(type);
+        if (!wrapped) { wrapped = make(type); viewRawTypes.set(type, wrapped); }
+        return wrapped;
+    }
+    function viewRawSwap(node, match, make, depth) {
+        if (!node || typeof node !== "object" || depth > 12) return node;
+        if (Array.isArray(node)) {
+            let list = node;
+            for (let i = 0; i < node.length; i++) { const next = viewRawSwap(node[i], match, make, depth + 1); if (next !== node[i]) { if (list === node) list = node.slice(); list[i] = next; } }
+            return list;
+        }
+        const props = node.props;
+        if (!props) return node;
+        if (typeof node.type === "function" && match(props)) return React.createElement(viewRawType(node.type, make), Object.assign({}, props, {key:node.key}));
+        const children = props.children;
+        if (children == null || typeof children !== "object") return node;
+        const next = viewRawSwap(children, match, make, depth + 1);
+        return next === children ? node : React.cloneElement(node, {children:next});
+    }
+    function viewRawRoleItem(type) {
+        return function ViewRawRoleItem(props) {
+            const out = type(props), role = props && props.role;
+            if (!out || !role || typeof role !== "object") return out;
+            let done = false;
+            return cloneTree(out, (node, nodeProps) => {
+                if (done || typeof nodeProps.onLongPress !== "function") return nodeProps;
+                done = true;
+                const press = nodeProps.onLongPress;
+                return Object.assign({}, nodeProps, {onLongPress:function () {
+                    viewRawRole = {guildId:props.guildId, role};
+                    try { return press.apply(this, arguments); } finally { viewRawRole = null; }
+                }});
+            }, 0);
+        };
+    }
+    function viewRawRoleList(type) {
+        return function ViewRawRoleList(props) {
+            return viewRawSwap(type(props), p => !!p.role && typeof p.role === "object" && typeof p.role.id === "string" && "guildId" in p, viewRawRoleItem, 0);
+        };
+    }
+    function viewRawRolesCard(orig, self, args) {
+        const rendered = orig.apply(self, args);
+        if (!enabled("viewRaw") || !settings.viewRawRoles || !React || !rendered) return rendered;
+        return viewRawSwap(rendered, p => "guildMemberRoleIds" in p, viewRawRoleList, 0);
+    }
+    function viewRawSimpleSheet(orig, self, args) {
+        const ctx = viewRawRole, params = args[0];
+        if (!ctx || !params || params.key !== "RoleItem" || !Array.isArray(params.options) || !enabled("viewRaw") || !settings.viewRawRoles) return orig.apply(self, args);
+        viewRawRole = null;
+        const id = String(ctx.role.id), guildId = ctx.guildId ? String(ctx.guildId) : "";
+        const option = {label:tr("View raw data"), icon:params.options.some(o => o && o.icon) ? venusIcon(12003, "FileIcon") : undefined, onPress:() => later(() => openViewRaw({kind:"role", id, guildId:rawId(guildId) ? guildId : "", role:ctx.role}), 60)};
+        const next = Array.from(args);
+        next[0] = Object.assign({}, params, {options:params.options.concat([option])});
+        return orig.apply(self, next);
+    }
+    const VIEW_RAW_SAMPLE = "{\n  \"id\": \"1234567890123456789\",\n  \"type\": 0,\n  \"content\": \"Hello!\",\n  \"author\": {\n    \"username\": \"sam\",\n    \"globalName\": \"Sam\"\n  }\n}";
+    function ViewRawSettings() {
+        useSettings("viewRaw");
+        const ui = reviewUI(), s = useViewRawStyles();
+        if (!React || !RN) return null;
+        const on = enabled("viewRaw"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const groups = [
+            on ? null : offCard("status", venusIcon(12003, "FileIcon"), "viewRaw"),
+            el(RN.View, {key:"preview", style:[s.card, {opacity:on ? 1 : 0.5}], pointerEvents:"none"},
+                el(RN.View, {style:s.pad}, el(RN.Text, {style:s.code}, VIEW_RAW_SAMPLE))),
+            el(Group, {key:"where", title:tr("Where to show it")},
+                switchRow(Switch, "viewRawMessages", "Messages", "In the menu when you hold a message.", rowIcon(8471, "ChatIcon")),
+                switchRow(Switch, "viewRawChannels", "Channels", "In the menu for channels, threads, forum posts and DMs.", rowIcon(18679, "ChannelListIcon")),
+                switchRow(Switch, "viewRawServers", "Servers", "In the menu when you hold a server's icon.", rowIcon(9545, "ServerIcon")),
+                switchRow(Switch, "viewRawPeople", "People", "In the \u22ef menu on a profile.", rowIcon(11671, "UserIcon")),
+                switchRow(Switch, "viewRawRoles", "Roles", "In the menu when you hold a role on a profile.", rowIcon(8895, "ShieldUserIcon"))),
+            el(Group, {key:"viewer", title:tr("Viewer")},
+                switchRow(Switch, "viewRawHideContact", "Leave out email and phone", "Hides them from a person's raw data. Yours too.", rowIcon(13951, "ShieldLockIcon")),
+                switchRow(Switch, "viewRawWrap", "Wrap lines", "Long lines wrap instead of scrolling sideways.", rowIcon(8480, "TextIcon")))];
+        return settingsBody(ui, groups);
+    }
     // Mutual group DMs: a line under a profile's mutual servers and friends, and a list of the group DMs you share.
     const MUTUAL_GROUPS_SHEET = "VenusMutualGroups";
     function mutualGroupList(userId) {
@@ -21772,6 +22057,7 @@
                 if (features.translate) exports = hookComponent(exports, translateSheet);
                 if (features.noDelete) exports = hookComponent(exports, noDeleteSheet);
                 if (features.localEdit) exports = hookComponent(exports, localEditSheet);
+                if (features.viewRaw) exports = hookComponent(exports, viewRawMessageSheet);
                 return features.bulkDelete ? hookComponent(exports, bulkDeleteSheet) : exports;
             case 9561: return features.splitMessages ? maxLengthModule(exports) : exports;
             case 17538: return (features.youBarSettings || features.accountSwitcher) ? hookComponent(exports, youBarButtons) : exports;
@@ -21826,7 +22112,8 @@
                 // Edit locally, then Server info, after Discord's own rows.
                 if (features.serverEdit) exports = hookExport(exports, "default", serverEditMenu);
                 if (features.pauseInvites) exports = hookExport(exports, "default", pauseInvitesMenu);
-                return features.serverInfo ? hookExport(exports, "default", serverInfoMenu) : exports;
+                if (features.serverInfo) exports = hookExport(exports, "default", serverInfoMenu);
+                return features.viewRaw ? hookExport(exports, "default", viewRawServerMenu) : exports;
             case 11024: if (features.reviewDB) oauthModal = exports.default; return exports;
             case 6542: if (features.reviewDB) nativeRowGroup = exports.TableRowGroup; return exports;
             case 7172: if (features.reviewDB) nativeSwitchRow = exports.TableSwitchRow; return exports;
@@ -21864,7 +22151,14 @@
             case 14197: return features.mutualGroupDMs ? hookComponent(exports, mutualGroupsRow) : exports;
             case 2068: channelStore = exports.default; return exports;
             case 12849: return features.noTyping ? replaceValue(exports, "default", hookExport(hookExport(exports.default, "startTyping", typing), "stopTyping", typing)) : exports;
-            case 10596: return features.fastDeleteChannels ? hookComponent(exports, fastDeleteSheet) : exports;
+            case 10596:
+                if (features.fastDeleteChannels) exports = hookComponent(exports, fastDeleteSheet);
+                return features.viewRaw ? hookComponent(exports, viewRawChannelMenu) : exports;
+            case 17245: return features.viewRaw ? hookComponent(exports, viewRawThreadMenu) : exports;
+            case 10780: return features.viewRaw ? hookComponent(exports, viewRawPostMenu) : exports;
+            case 14015: return features.viewRaw ? hookComponent(exports, viewRawProfileMenu) : exports;
+            case 7158: return features.viewRaw ? hookComponent(exports, viewRawRolesCard) : exports;
+            case 7167: return features.viewRaw ? hookExport(exports, "showSimpleActionSheet", viewRawSimpleSheet) : exports;
             case 1128: if (features.quickDelete || features.noConfirmPin || features.fastDeleteChannels) locale = exports; return exports;
             case 14082: return features.listenAlong ? hookComponent(exports, listenAlongButton, "PlayOnSpotifyButton") : exports;
             case 9990: return features.quietReplies ? hookExport(hookExport(exports, "createPendingReply", quietReplyCreate), "createShallowPendingReply", quietReplyCreate) : exports;

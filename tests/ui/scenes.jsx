@@ -33,6 +33,12 @@
 //   scene=cloneEmoji   Discord's sheet for a custom emoji tapped in chat, with Clone emojis and stickers' Add to a server button;
 //                      add tap=Add to a server for the server picker it opens (Work Devs is full, so it shows No free slots)
 //   scene=longEdit     Send long messages: saving an edit past Discord's limit (the alert that explains why it wasn't sent)
+//   scene=viewRawMenu  View raw data: your message's hold menu with the View raw data row Venus adds
+//   scene=viewRaw      the viewer a View raw data row opens: kind=message (default; tab=content for the Raw content tab), server, user
+//                      (who=me has email and phone, left out), channel (ch=text|thread|post|dm|group) or role; set={"viewRawWrap":false} for lines that scroll
+//   scene=viewRawChannel  a channel's hold menu with its View raw data row
+//   scene=viewRawProfile  a profile's ⋯ menu opened, View raw data in a group of its own above Block and Report
+//   scene=viewRawRole  a role on a profile held: Discord's little menu with View raw data under Copy ID (tap=View raw data opens it)
 // Edge cases: friends=0 (none of your friends are in Game Night), owner=me (you own it), desc=0 (no description).
 // Each scene turns on the features it shows (SCENE_SETTINGS below), so scene=serverInfo needs no on=; set= still wins
 // (set={"readAll":false} draws the screen with the feature off). shot.cjs --scenes draws every one of them.
@@ -67,13 +73,14 @@ export const SCENE_SETTINGS = {
   messageMenu: { translate: true }, bulkDelete: { bulkDelete: true }, longMessageFailed: { splitMessages: true }, longEdit: { splitMessages: true },
   removeMode: { hideAnything: true }, removeProfile: { hideAnything: true }, removeMenu: { hideAnything: true },
   chatAdditions: { timeoutDuration: true, voiceDownload: true }, cloneEmoji: { cloneExpressions: true },
+  viewRawMenu: { viewRaw: true }, viewRaw: { viewRaw: true }, viewRawChannel: { viewRaw: true }, viewRawProfile: { viewRaw: true }, viewRawRole: { viewRaw: true },
   removeHeaders: { hideAnything: true }, removeGuild: { hideAnything: true }, removeMessage: { hideAnything: true, translate: true, bulkDelete: true },
 };
 
 // The stand-in modules: Discord's stores the sheet reads, its sheets, and the two guild-bar modules Venus hooks.
 export const hooked = [9839, 8013, 1392, 5207, 17433, 2090, 1417, 17439, 14101, 1087, 2068, 4845, 1114, 17538, 10692, 5532, 9978, 13759, 14995, 7445, 9683,
   15590, 17157, 13780, 14204, 9419, 12892, 12897, 12901, 12909, 12908,
-  14015, 15046, 10858, 14197, 8805, 11678, 11679, 10939, 7158, 14182, 17156, 17263, 12942, 14988, 14994, 14925, 14998];
+  14015, 15046, 10858, 14197, 8805, 11678, 11679, 10939, 7158, 14182, 17156, 17263, 12942, 14988, 14994, 14925, 14998, 10596, 17245, 10780, 7167];
 let host = null; // the Scene, once drawn: shows and hides sheets
 // Discord's own text for the message keys Remove anything matches labels by (en-GB, from the APK), served as intl (1128) in
 // the remove* scenes, so labels are found the way they are in Discord.
@@ -82,16 +89,18 @@ const T_ = k => EN_TEXT[k] || k;
 const removeScene = /^remove(Profile|Menu|Headers|Guild|Message)$/.test(q.get("scene") || "");
 export function setHost(next) { host = next; } // a settings page can host sheets too
 export function modules(store, me) {
-  const user = id => id === me.id ? me : allPeople.find(p => p.id === id) || null;
+  const user = id => id === me.id ? Object.assign({}, me, { email: "venus@example.com", phone: "+15555550123", verified: true, mfaEnabled: true, discriminator: "0", bot: false }) :
+    id === PROFILE_USER.id ? Object.assign({}, PROFILE_USER, { avatar: null, discriminator: "0", bot: false, publicFlags: 64, premiumType: 0, banner: null }) :
+    allPeople.find(p => p.id === id) || null;
   return {
     1392: { default: store({ getCurrentUser: () => me, getUser: user }) },
     4855: { default: store({ getFriendIDs: () => people.map(p => p.id), getRelationships: () => ({}) }) },
     5207: { default: store({ getStatus: id => (allPeople.find(p => p.id === id) || {}).status || "offline" }) },
     2090: { default: store({ getGuild: id => guilds.find(g => g.id === id) || null, getGuilds: () => Object.fromEntries(guilds.map(g => [g.id, g])) }) },
     5116: { default: store({ getMemberCount: () => 1284, getOnlineCount: () => 312 }) },
-    2128: { default: store({ getMember: (g, id) => { const p = allPeople.find(x => x.id === id); return p && id !== allPeople[2].id ? Object.assign({ nick: p.nick }, id === allPeople[1].id ? { communicationDisabledUntil: TIMEOUT_UNTIL } : null) : null; },
+    2128: { default: store({ getMember: (g, id) => { if (id === PROFILE_USER.id) return { userId: id, guildId: g, nick: "Cyn", roles: ROLE_RECORDS.map(r => r.id), joinedAt: new Date(now - 90 * DAY), premiumSince: null, pending: false, communicationDisabledUntil: null }; const p = allPeople.find(x => x.id === id); return p && id !== allPeople[2].id ? Object.assign({ nick: p.nick }, id === allPeople[1].id ? { communicationDisabledUntil: TIMEOUT_UNTIL } : null) : null; },
       getSelfMemberJoinedAt: () => new Date(now - 400 * DAY) }) },
-    2122: { default: store({ getNumRoles: () => 10 }) },
+    2122: { default: store({ getNumRoles: () => 10, getRole: (g, id) => ROLE_RECORDS.find(r => r.id === id) || null }) },
     4843: { default: store({ getChannels: () => ({ SELECTABLE: chan(12), VOCAL: chan(3) }) }) },
     6332: { default: store({ getGuildScheduledEventsForGuild: () => [{}] }) },
     6245: { default: store({ getGuildEmojis: () => new Array(24).fill({}) }) },
@@ -103,7 +112,7 @@ export function modules(store, me) {
       getGuildIconSource: g => g && g.icon ? { uri: "https://cdn.discordapp.com/icons/" + g.id + "/" + g.icon + ".png?size=" + (g.size || 96) } : null } },
     7175: { ActionSheet }, 7117: { BottomSheetTitleHeader: SheetHeader }, 7170: { ActionSheetCloseButton: SheetClose },
     5155: { default: { hideActionSheet: key => host && host.hide(key) }, showActionSheet: o => host && host.show(o.key, o.content) },
-    7167: { showSimpleActionSheet: o => host && host.show(o.key, <SimpleSheet {...o} />) },
+    7167: { showSimpleActionSheet: o => { if (q.get("scene") === "viewRaw" && o.key === "RoleItem") o.options[o.options.length - 1].onPress(); else host && host.show(o.key, <SimpleSheet {...o} />); } },
     6584: { BottomSheetScrollView: p => <RN.View>{p.children}</RN.View> },
     17429: { FastListRenderSections: SECTIONS },
     // getGuildsBarGuildMenuItems: Discord's own rows in the server icon's hold menu.
@@ -167,9 +176,9 @@ export function modules(store, me) {
     11679: { TabItem: p => <RN.View style={{ flexGrow: 1, alignItems: "center", paddingVertical: 12, borderBottomWidth: 2, borderColor: p.index === 0 ? D.tok("TEXT_STRONG") : "transparent" }}>
       <D.Text variant="text-md/semibold" color={p.index === 0 ? "text-strong" : "text-muted"}>{p.label}</D.Text></RN.View> },
     10939: { default: AboutMe },
-    7158: { default: () => <Section title={T_("LPJmL/")}><RN.View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>{ROLES.map(([name, color]) =>
-      <RN.View key={name} style={[CHIP, { gap: 6 }]}><RN.View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: color }} />
-        <D.Text variant="text-sm/medium" color="text-strong">{name}</D.Text></RN.View>)}</RN.View></Section> },
+    // Discord's roles card: a list given guildMemberRoleIds, drawing one RoleItem per role (long press: its Copy ID menu).
+    7158: { default: () => <Section title={T_("LPJmL/")}><RoleList guildMemberRoleIds={ROLE_RECORDS.map(r => r.id)} guildId={guild.id} /></Section> },
+    10596: { default: ChannelMenu }, 17245: { default: ChannelMenu }, 10780: { default: ChannelMenu },
     14182: { UserProfileAccountConnectionsCard: () => <Section title={T_("3fe7U5")}><RN.View style={{ flexDirection: "row", alignItems: "center", gap: 12, padding: 14,
       borderRadius: 12, backgroundColor: D.tok("BACKGROUND_MOD_SUBTLE") }}>{icon(9514, "GameControllerIcon", "md")}<D.Text variant="text-md/semibold" color="text-strong">CynfulSolver</D.Text></RN.View></Section> },
     17156: { default: () => ({ headerSize: MSG_HEADER, listTop: MSG_HEADER }) },
@@ -215,7 +224,15 @@ export function modules(store, me) {
 }
 // The channel's ID is its creation date, like every Discord ID.
 const LOCKED = snowflake(now - 500 * DAY);
-const CHANNELS = { [LOCKED]: { id: LOCKED, guild_id: guild.id, type: 0, name: "staff-only", lastMessageId: snowflake(now - 2 * 3600000), lastPinTimestamp: new Date(now - 12 * DAY).toISOString() } };
+const RAW_CH = { text: "1400000000000000002", thread: "1400000000000000003", forum: "1400000000000000004", post: "1400000000000000005", dm: "1400000000000000006", group: "1400000000000000007" };
+const CHANNELS = {
+  [RAW_CH.text]: { id: RAW_CH.text, guild_id: guild.id, type: 0, name: "general", topic: "Game night planning. Be nice.", position: 0, parent_id: null, nsfw: false, rateLimitPerUser: 0, lastMessageId: snowflake(now - 3600000), permissionOverwrites: { [guild.id]: { id: guild.id, type: 0, allow: 0n, deny: 2048n } } },
+  [RAW_CH.thread]: { id: RAW_CH.thread, guild_id: guild.id, type: 11, name: "Friday game plan", parent_id: RAW_CH.text, ownerId: allPeople[0].id, memberCount: 4, messageCount: 37, archived: false, autoArchiveDuration: 1440, locked: false },
+  [RAW_CH.forum]: { id: RAW_CH.forum, guild_id: guild.id, type: 15, name: "clips", topic: "Share your best plays", parent_id: null, availableTags: [{ id: "1", name: "Funny", emojiName: "\ud83d\ude02" }] },
+  [RAW_CH.post]: { id: RAW_CH.post, guild_id: guild.id, type: 11, name: "Triple kill on the last round", parent_id: RAW_CH.forum, ownerId: allPeople[1].id, memberCount: 2, messageCount: 9, appliedTags: ["1"], archived: false },
+  [RAW_CH.dm]: { id: RAW_CH.dm, type: 1, recipients: [allPeople[0].id], lastMessageId: snowflake(now - 7200000) },
+  [RAW_CH.group]: { id: RAW_CH.group, type: 3, name: "", ownerId: allPeople[0].id, recipients: [allPeople[0].id, allPeople[1].id], icon: null },
+  [LOCKED]: { id: LOCKED, guild_id: guild.id, type: 0, name: "staff-only", lastMessageId: snowflake(now - 2 * 3600000), lastPinTimestamp: new Date(now - 12 * DAY).toISOString() } };
 function Alert(p) {
   const close = () => host && host.hide("alert");
   return <RN.View style={{ marginHorizontal: 24, marginTop: 120, borderRadius: 24, padding: 24, gap: 16, backgroundColor: D.tok("MOBILE_ALERT_BACKGROUND_DEFAULT") }}>
@@ -605,6 +622,17 @@ export function Scene({ name, defined, registry }) {
         else actions.sendMessage("1", { content: line.repeat(70), invalidEmojis: [], validNonShortcutEmojis: [] }, false, {});
       }, 300);
     }
+    const kind = q.get("kind") || "message", rawMenu = id => host.show("RawMenu", React.createElement(defined[id].exports.default, { channelId: RAW_CH[q.get("ch")] || RAW_CH.text }));
+    if (name === "viewRawMenu") host.show("MessageLongPressActionSheet", React.createElement(defined[9978].exports.default, { message: RAW_MESSAGE, channel: { id: CHAT }, onClose() {} }));
+    if (name === "viewRawChannel") rawMenu(q.get("ch") === "thread" ? 17245 : q.get("ch") === "post" ? 10780 : 10596);
+    if (name === "viewRawRole" || name === "viewRaw" && kind === "role") autoHold(ROLES[0][0]);
+    if (name === "viewRaw") {
+      if (kind === "message") { host.show("MessageLongPressActionSheet", React.createElement(defined[9978].exports.default, { message: RAW_MESSAGE, channel: { id: CHAT }, onClose() {} })); autoTap("View raw data"); }
+      if (kind === "channel") { rawMenu(q.get("ch") === "thread" ? 17245 : q.get("ch") === "post" ? 10780 : 10596); autoTap("View raw data"); }
+      if (kind === "user") autoTap("View raw data");
+      if (kind === "server") { const row = defined[17433].exports.default(guild.id).find(it => it.label === "View raw data"); if (row) row.action(); else console.warn("No View raw data row"); }
+      if (q.get("tab") === "content") setTimeout(() => autoTap("Raw content"), 400);
+    }
     if (name === "serverEdit") { const row = defined[17433].exports.default((guilds[Number(q.get("server")) || 0] || guild).id).find(it => it.label === "Edit locally"); if (row) row.action(); else console.warn("No Edit locally row"); }
     if (name === "serverInfo") { const row = defined[17433].exports.default(guild.id).find(it => it.label === "Server info"); if (row) row.action(); else console.warn("No Server info row"); }
     // A hold: the pill's own onLongPress, found through React's props on the element (a browser has no long press).
@@ -625,6 +653,8 @@ export function Scene({ name, defined, registry }) {
     {name === "removeHeaders" ? <HeadersScreen defined={defined} /> : name === "removeGuild" ? <GuildMenuSheet defined={defined} /> :
       name === "removeMessage" ? <RN.View style={{ marginTop: 24 }}>{React.createElement(defined[9978].exports.default, { message: SPANISH[2], channel: { id: CHAT }, onClose() {} })}</RN.View> :
       <ProfileScreen defined={defined} />}</RemoveScene>;
+  if (!sheets.length && (name === "viewRawProfile" || name === "viewRawRole" || name === "viewRaw" && (q.get("kind") === "user" || q.get("kind") === "role")))
+    return <RN.View style={{ width: D.W, minHeight: 640, backgroundColor: D.tok("BACKGROUND_BASE_LOWER") }}><ProfileScreen defined={defined} /></RN.View>;
   if (name === "reviews") return <Profile defined={defined} />;
   if (name === "youBar") return <YouBar defined={defined} />;
   if (name === "chatAdditions") return <ChatAdditions defined={defined} />;
@@ -654,13 +684,15 @@ const TILE = { minHeight: 64, borderRadius: 16, paddingVertical: 10, paddingHori
 const CHIP = { flexDirection: "row", alignItems: "center", paddingHorizontal: 10, paddingVertical: 6, borderRadius: 10, backgroundColor: D.tok("BACKGROUND_MOD_SUBTLE") };
 const MORE = { width: 36, height: 36, borderRadius: 10, alignItems: "center", justifyContent: "center", backgroundColor: "#00000066" };
 const ROLES = [["Good Kitty <3", "#f47fff"], ["She/Her", "#5ad7e3"], ["He/Him", "#45ddc0"], ["Announcement Pings", "#a37ca0"], ["Server Booster", "#ff73fa"]];
+const ROLE_RECORDS = ROLES.map(([name, color], i) => ({ id: "15000000000000000" + (10 + i), name, color: parseInt(color.slice(1), 16), colorString: color, hoist: i === 4, mentionable: i === 3, managed: false,
+  position: 5 - i, permissions: 1071698660929n, flags: 0, icon: null, unicodeEmoji: null, version: 1 }));
 const MSG_HEADER = 100, GUILD_HEADER = 122;
 const PROFILE_USER = { id: "1200000000000000004", username: "cynfulsolver", globalName: "Cyn" };
 const REPORT = ["wqHXNt", "TbHyMG", "jhJzez"].map(k => EN_TEXT[k]).find(Boolean) || "Report User Profile";
 const MENU_ITEMS = [[{ label: T_("GISTta"), action() {} }, { label: T_("Sd8Ixw"), action() {} }, { label: T_("y5MwJy"), action() {} }, { label: T_("PHjkRE"), action() {} }],
   [{ label: T_("ytCpKs"), action() {} }, { label: T_("l4Emac"), variant: "destructive", action() {} }, { label: REPORT, variant: "destructive", action() {} }]];
 function StubContextMenu(p) {
-  const open = q.get("scene") === "removeMenu", Item = global.__r(15046).ContextMenuItem;
+  const open = q.get("scene") === "removeMenu" || q.get("scene") === "viewRawProfile" || q.get("scene") === "viewRaw" && q.get("kind") === "user", Item = global.__r(15046).ContextMenuItem;
   const groups = (p.items || []).map(g => Array.isArray(g) ? g : [g]).filter(g => g.length);
   return <RN.View style={{ position: "relative", zIndex: 5 }}>
     {typeof p.children === "function" ? p.children({ onPress() {} }) : p.children}
@@ -711,6 +743,44 @@ function AboutMe(p) {
   </RN.View>;
 }
 function FriendRequestButton(p) { const Btn = p.ButtonComponent; return <Btn brand icon={icon(5131, "UserPlusIcon", "sm")} text={T_("7815ae")} />; }
+// View raw data: Discord's role chips (a long press opens Copy ID), the channel / thread / forum post hold menu and the message
+// the viewer shows, built the way Discord builds them so Venus finds the same props it finds in Discord.
+function RoleItem({ role, guildId }) {
+  const hex = "#" + role.color.toString(16).padStart(6, "0");
+  const hold = () => global.__r(7167).showSimpleActionSheet({ key: "RoleItem", hasIcons: true, options: [{ label: "Copy ID", icon: D.makeIcon("CopyIcon"), onPress() {} }] });
+  return <RN.Pressable onPress={() => {}} onLongPress={hold} style={[CHIP, { gap: 6 }]}><RN.View style={{ width: 10, height: 10, borderRadius: 5, backgroundColor: hex }} />
+    <D.Text variant="text-sm/medium" color="text-strong">{role.name}</D.Text></RN.Pressable>;
+}
+function RoleList({ guildMemberRoleIds, guildId }) {
+  return <RN.View style={{ flexDirection: "row", flexWrap: "wrap", gap: 8 }}>{guildMemberRoleIds.map(id => <RoleItem key={id} role={ROLE_RECORDS.find(r => r.id === id)} guildId={guildId} />)}</RN.View>;
+}
+function ChannelMenu({ channelId }) {
+  const rows = [["Mark as Read", "ChatMarkUnreadIcon"], ["Mute Channel", "BellSlashIcon"], ["Notification Settings", "BellIcon", true], ["Copy Link", "LinkIcon"], ["Copy Channel ID", "CopyIcon"]];
+  return <ActionSheet header={<SheetHeader title={(CHANNELS[channelId] || {}).name} />}>
+    <RN.View style={{ paddingHorizontal: 16, paddingBottom: 24, gap: 16 }}>
+      <D.TableRowGroup>{rows.map(r => <D.TableRow key={r[0]} label={r[0]} arrow={!!r[2]} icon={<D.TableRowIcon IconComponent={D.makeIcon(r[1])} />} onPress={() => {}} />)}</D.TableRowGroup>
+    </RN.View>
+  </ActionSheet>;
+}
+const RAW_MESSAGE = { id: "1500000000000000001", channel_id: CHAT, type: 0, flags: 0, pinned: false, tts: false, mentionEveryone: false, state: "SENT", timestamp: new Date(now - 5 * 60000), editedTimestamp: null,
+  content: "Anyone up for game night on Friday?\n**8pm** works for me, bring snacks.", author: { id: allPeople[1].id, username: "sam_", globalName: "Sam", discriminator: "0", avatar: null, bot: false },
+  mentions: [], mentionRoles: [], attachments: [], embeds: [], reactions: [{ emoji: { id: null, name: "\ud83d\udd25" }, count: 3, me: true }] };
+// A tap on text that arrives a moment later (the sheet that holds it is drawn after the first render).
+function autoTap(text, tries = 0) {
+  const hit = Array.from(document.querySelectorAll("#root [role], #root div[tabindex]")).find(e => (e.innerText || "").trim() === text);
+  if (hit) hit.click(); else if (tries < 40) setTimeout(() => autoTap(text, tries + 1), 50); else console.warn("No " + text + " to tap");
+}
+// A long press: the onLongPress on the nearest React element above the text (a browser has no long press).
+function autoHold(text, tries = 0) {
+  for (const e of document.querySelectorAll("#root div, #root span")) {
+    if (e.children.length || (e.textContent || "").trim() !== text) continue;
+    const key = Object.keys(e).find(k => k.startsWith("__reactFiber"));
+    let f = key && e[key];
+    while (f && !(f.memoizedProps && f.memoizedProps.onLongPress)) f = f.return;
+    if (f) { f.memoizedProps.onLongPress({}); return; }
+  }
+  if (tries < 40) setTimeout(() => autoHold(text, tries + 1), 50); else console.warn("No " + text + " to hold");
+}
 function ProfileScreen({ defined }) {
   const Menu = defined[14015].exports.default, Info = defined[10858].exports.default, Mutuals = defined[14197].exports.default, Contact = defined[14204].exports.default;
   const Tabs = defined[11678].exports.Tabs, About = defined[10939].exports.default, Roles = defined[7158].exports.default;
@@ -719,7 +789,7 @@ function ProfileScreen({ defined }) {
     { id: "wishlist", label: T_("7lZ31J"), page: null }] });
   return <RN.View style={{ backgroundColor: D.tok("BACKGROUND_BASE_LOWER") }}>
     <RN.View style={{ height: 120, backgroundColor: "#4e3d6b" }}>
-      <RN.View style={{ position: "absolute", top: 12, right: 12 }}><Menu /></RN.View></RN.View>
+      <RN.View style={{ position: "absolute", top: 12, right: 12 }}><Menu userId={q.get("who") === "me" ? "123456789012345678" : PROFILE_USER.id} guildId={guild.id} /></RN.View></RN.View>
     <RN.View style={{ paddingHorizontal: 16, marginTop: -44, gap: 12 }}>
       <RN.View style={{ width: 88, height: 88, borderRadius: 44, borderWidth: 6, borderColor: D.tok("BACKGROUND_BASE_LOWER"), backgroundColor: "#2b2d6b" }} />
       <Info user={PROFILE_USER} guildId={guild.id} />
