@@ -2992,20 +2992,27 @@
         try { return typeof premiumOriginal[key] === "function" && premiumOriginal[key](user); }
         finally { nativeCapabilities--; }
     }
-    function catalogEligibility(orig, self, args) {
-        const user = currentUser(), feature = args[0];
-        if (!nativeCapabilities && user && args[1] && args[1].id === user.id && emojiCatalog) {
-            if (enabled("emojis") && (feature === emojiCatalog.EMOJIS_EVERYWHERE || feature === emojiCatalog.ANIMATED_EMOJIS)) return true;
-            if (enabled("appIcons") && feature === emojiCatalog.APP_ICONS) return true;
-            if (enabled("nitroThemes") && feature === emojiCatalog.CLIENT_THEMES) return true;
-        }
-        return orig.apply(self, args);
+    // canUserUse(feature, user) and the capability checks run on every render that asks about Nitro. The usual
+    // calls skip the arguments object, and the current user is only read once there is a target to compare it with.
+    function catalogGrants(feature, target) {
+        if (nativeCapabilities || !target || !emojiCatalog) return false;
+        const user = currentUser();
+        if (!user || target.id !== user.id) return false;
+        if (enabled("emojis") && (feature === emojiCatalog.EMOJIS_EVERYWHERE || feature === emojiCatalog.ANIMATED_EMOJIS)) return true;
+        if (enabled("appIcons") && feature === emojiCatalog.APP_ICONS) return true;
+        return enabled("nitroThemes") && feature === emojiCatalog.CLIENT_THEMES;
     }
+    function catalogEligibility(orig, self, args) { return catalogGrants(args[0], args[1]) || orig.apply(self, args); }
+    catalogEligibility.call2 = (orig, self, feature, target) => catalogGrants(feature, target) || orig.call(self, feature, target);
     function premiumOverride(key, setting) {
-        return function (orig, self, args) {
+        const grants = target => {
+            if (!target || !enabled(setting)) return false;
             const user = currentUser();
-            return enabled(setting) && user && args[0] && args[0].id === user.id ? true : orig.apply(self, args);
+            return !!user && target.id === user.id;
         };
+        const operation = (orig, self, args) => grants(args[0]) || orig.apply(self, args);
+        operation.call1 = (orig, self, target) => grants(target) || orig.call(self, target);
+        return operation;
     }
     function shareLink(name, uri) {
         // Escape Markdown without permitting forged mentions or link syntax in sticker names.
