@@ -130,6 +130,13 @@ object BackgroundMedia {
         return (if (seconds == 5 || seconds == 15 || seconds == 30) seconds else 10) * 1000L
     }
 
+    @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "CAST_NEVER_SUCCEEDS")
+    private fun jstr(text: String): java.lang.String = text as java.lang.String
+
+    /** A skip button's text, with the skip length in it. */
+    private fun skipLabel(key: String, fallback: String): String =
+        jstr(label(key, fallback)).replace("{n}", (skipMs() / 1000).toString())
+
     private fun label(key: String, fallback: String): String {
         val value = labels.optString(key, "")
         return if (value.length == 0) fallback else value
@@ -259,6 +266,9 @@ object BackgroundMedia {
                 startAudio(currentAudioPlayer()!!)
             }
             if (prefs == null || !prefs.optBoolean("backgroundMediaVideo", true)) return false
+            // In a call Discord's own picture-in-picture shows the call; never take it over.
+            val audio = activity.getSystemService(AudioManager::class.java)
+            if (audio != null && audio.mode == AudioManager.MODE_IN_COMMUNICATION) return false
             if (activity.isInPictureInPictureMode || !activity.packageManager.hasSystemFeature(PackageManager.FEATURE_PICTURE_IN_PICTURE)) return false
             val player = activeVideoPlayer() ?: return false
             if (!isPlaying(player) || isTrue(call(player, "isMuted"))) return false
@@ -284,6 +294,21 @@ object BackgroundMedia {
         } catch (_: Throwable) { clearPip(); false }
     }
 
+    /**
+     * ReactActivity.onPause: the screen is turning off. Android only lets an app start a foreground service while it's still
+     * in front, so the notification and service start now, before Discord's own background pause arrives.
+     */
+    @JvmStatic
+    fun onPause(activity: Activity?) {
+        try {
+            val power = activity?.getSystemService(android.os.PowerManager::class.java) ?: return
+            if (power.isInteractive) return
+            val prefs = prefs() ?: return
+            val player = currentAudioPlayer() ?: return
+            if (prefs.optBoolean("backgroundMediaAudio", true) && isPlaying(player)) startAudio(player)
+        } catch (_: Throwable) { }
+    }
+
     /** MainActivity.onPictureInPictureModeChanged: show only the video in the window, and give it back afterwards. */
     @JvmStatic
     fun onPipModeChanged(activity: Activity?, inPip: Boolean) {
@@ -297,6 +322,8 @@ object BackgroundMedia {
                 overlay.isClickable = true
                 val view = classOf(PLAYER_VIEW)!!.getConstructor(Context::class.java).newInstance(activity)
                 val surface = call(view, "getView") as View
+                // Letterbox instead of Discord's crop, so the whole picture shows in the window.
+                call(call(view, "getPlayerView"), "setResizeMode", 0)
                 overlay.addView(surface, FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT, Gravity.CENTER))
                 decor.addView(overlay, ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT))
                 pipOverlay = overlay
@@ -354,10 +381,10 @@ object BackgroundMedia {
     private fun pipParams(context: Context, playing: Boolean): PictureInPictureParams.Builder {
         val skip = (skipMs() / 1000).toString()
         val actions = ArrayList<RemoteAction>()
-        actions.add(remote(context, android.R.drawable.ic_media_rew, label("back", "Back {n} seconds").replace("{n}", skip), ACTION_BACK, 11))
+        actions.add(remote(context, android.R.drawable.ic_media_rew, skipLabel("back", "Back {n} seconds"), ACTION_BACK, 11))
         actions.add(if (playing) remote(context, android.R.drawable.ic_media_pause, label("pause", "Pause"), ACTION_TOGGLE, 12)
             else remote(context, android.R.drawable.ic_media_play, label("play", "Play"), ACTION_TOGGLE, 12))
-        actions.add(remote(context, android.R.drawable.ic_media_ff, label("forward", "Forward {n} seconds").replace("{n}", skip), ACTION_FORWARD, 13))
+        actions.add(remote(context, android.R.drawable.ic_media_ff, skipLabel("forward", "Forward {n} seconds"), ACTION_FORWARD, 13))
         val builder = PictureInPictureParams.Builder().setAspectRatio(pipAspect).setActions(actions)
         if (Build.VERSION.SDK_INT >= 31) builder.setSeamlessResizeEnabled(true)
         return builder
@@ -475,7 +502,7 @@ object BackgroundMedia {
     }
 
     private fun meta(): JSONObject? {
-        val id = audioKey.substring(0, Math.max(0, audioKey.indexOf('|')))
+        val id = audioKey.substring(0, Math.max(0, jstr(audioKey).indexOf("|")))
         return if (id.length > 0) metas.optJSONObject(id) else null
     }
 
@@ -505,8 +532,8 @@ object BackgroundMedia {
             .setActions(PlaybackState.ACTION_PLAY or PlaybackState.ACTION_PAUSE or PlaybackState.ACTION_PLAY_PAUSE or PlaybackState.ACTION_STOP or
                 PlaybackState.ACTION_SEEK_TO or PlaybackState.ACTION_REWIND or PlaybackState.ACTION_FAST_FORWARD)
             .setState(if (audioPlaying) PlaybackState.STATE_PLAYING else PlaybackState.STATE_PAUSED, position(player), if (audioPlaying) 1f else 0f)
-            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_BACK, label("back", "Back {n} seconds").replace("{n}", skip), android.R.drawable.ic_media_rew).build())
-            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_FORWARD, label("forward", "Forward {n} seconds").replace("{n}", skip), android.R.drawable.ic_media_ff).build())
+            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_BACK, skipLabel("back", "Back {n} seconds"), android.R.drawable.ic_media_rew).build())
+            .addCustomAction(PlaybackState.CustomAction.Builder(ACTION_FORWARD, skipLabel("forward", "Forward {n} seconds"), android.R.drawable.ic_media_ff).build())
             .build()
         media.setPlaybackState(state)
 
@@ -521,10 +548,10 @@ object BackgroundMedia {
             .setCategory(Notification.CATEGORY_TRANSPORT)
             .setContentIntent(openIntent(context, meta?.optString("link", "") ?: ""))
             .setDeleteIntent(broadcast(context, ACTION_STOP, 4))
-            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_rew), label("back", "Back {n} seconds").replace("{n}", skip), broadcast(context, ACTION_BACK, 1)).build())
+            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_rew), skipLabel("back", "Back {n} seconds"), broadcast(context, ACTION_BACK, 1)).build())
             .addAction(if (audioPlaying) Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_pause), label("pause", "Pause"), broadcast(context, ACTION_TOGGLE, 2)).build()
                 else Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_play), label("play", "Play"), broadcast(context, ACTION_TOGGLE, 2)).build())
-            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_ff), label("forward", "Forward {n} seconds").replace("{n}", skip), broadcast(context, ACTION_FORWARD, 3)).build())
+            .addAction(Notification.Action.Builder(Icon.createWithResource(context, android.R.drawable.ic_media_ff), skipLabel("forward", "Forward {n} seconds"), broadcast(context, ACTION_FORWARD, 3)).build())
             .setStyle(Notification.MediaStyle().setMediaSession(media.sessionToken).setShowActionsInCompactView(0, 1, 2))
         val picture = art
         if (picture != null) builder.setLargeIcon(picture)
@@ -538,11 +565,10 @@ object BackgroundMedia {
         val url = audioUrl
         if (url.length == 0) return label("voice", "Voice message")
         var path = url
-        val query = path.indexOf('?')
+        val query = jstr(path).indexOf("?")
         if (query >= 0) path = path.substring(0, query)
-        val name = Uri.decode(path.substring(path.lastIndexOf('/') + 1))
-        @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "CAST_NEVER_SUCCEEDS")
-        val lower = name.lowercase() as java.lang.String
+        val name = Uri.decode(path.substring(jstr(path).lastIndexOf("/") + 1)) ?: ""
+        val lower = jstr(jstr(name).toLowerCase(java.util.Locale.ROOT))
         return if (name.length == 0 || lower.startsWith("voice-message")) label("voice", "Voice message") else name
     }
 
@@ -668,10 +694,8 @@ object BackgroundMedia {
     private object ActionReceiver : BroadcastReceiver() {
         override fun onReceive(context: Context?, intent: Intent?) {
             val action = intent?.action ?: return
-            @Suppress("PLATFORM_CLASS_MAPPED_TO_KOTLIN", "CAST_NEVER_SUCCEEDS")
-            val raw = action as java.lang.String
             try {
-                if (raw.endsWith(".VIDEO")) videoAction(action.substring(0, action.length - 6)) else audioAction(action)
+                if (jstr(action).endsWith(".VIDEO")) videoAction(action.substring(0, action.length - 6)) else audioAction(action)
             } catch (_: Throwable) { }
         }
     }
@@ -721,7 +745,7 @@ object BackgroundMedia {
                         if (id.length > 0) {
                             if (metas.length() > 30) { val keys = metas.keys(); while (keys.hasNext()) { keys.next(); keys.remove() } }
                             metas.put(id, json)
-                            if (session != null && audioKey.indexOf("$id|") == 0) { refreshAudio(true); if (foreground) MediaService.instance?.promote() else post() }
+                            if (session != null && jstr(audioKey).startsWith("$id|")) { refreshAudio(true); if (foreground) MediaService.instance?.promote() else post() }
                         }
                     })
                     promise.resolve(true)

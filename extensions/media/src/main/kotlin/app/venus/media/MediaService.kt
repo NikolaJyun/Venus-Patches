@@ -14,6 +14,8 @@ import android.os.IBinder
 class MediaService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
+    private var wake: android.os.PowerManager.WakeLock? = null
+
     override fun onCreate() {
         super.onCreate()
         instance = this
@@ -29,6 +31,10 @@ class MediaService : Service() {
     fun promote(): Boolean {
         val notification = BackgroundMedia.currentNotification() ?: return false
         return try {
+            // Decoding needs the CPU while the screen is off; released as soon as the sound pauses.
+            if (wake == null) wake = getSystemService(android.os.PowerManager::class.java)
+                ?.newWakeLock(android.os.PowerManager.PARTIAL_WAKE_LOCK, "venus:media")?.also { it.setReferenceCounted(false) }
+            wake?.acquire(4 * 60 * 60 * 1000L)
             if (Build.VERSION.SDK_INT >= 29) startForeground(BackgroundMedia.NOTIFICATION_ID, notification, ServiceInfo.FOREGROUND_SERVICE_TYPE_MEDIA_PLAYBACK)
             else startForeground(BackgroundMedia.NOTIFICATION_ID, notification)
             true
@@ -37,12 +43,14 @@ class MediaService : Service() {
 
     /** Paused: the notification stays, but can be swiped away and no longer keeps Discord running. */
     fun demote() {
+        try { wake?.release() } catch (_: Throwable) { }
         try {
             if (Build.VERSION.SDK_INT >= 24) stopForeground(STOP_FOREGROUND_DETACH) else @Suppress("DEPRECATION") stopForeground(false)
         } catch (_: Throwable) { }
     }
 
     override fun onDestroy() {
+        try { wake?.release() } catch (_: Throwable) { }
         if (instance === this) instance = null
         super.onDestroy()
     }
