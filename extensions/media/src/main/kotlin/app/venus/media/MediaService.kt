@@ -14,6 +14,14 @@ import android.os.IBinder
 class MediaService : Service() {
     override fun onBind(intent: Intent?): IBinder? = null
 
+    private fun releaseWake() {
+        val lock = wake ?: return
+        try {
+            if (lock.isHeld) lock.release()
+        } catch (_: Throwable) {
+        }
+    }
+
     private var wake: android.os.PowerManager.WakeLock? = null
 
     override fun onCreate() {
@@ -43,14 +51,19 @@ class MediaService : Service() {
 
     /** Paused: the notification stays, but can be swiped away and no longer keeps Discord running. */
     fun demote() {
-        try { wake?.release() } catch (_: Throwable) { }
+        releaseWake()
         try {
-            if (Build.VERSION.SDK_INT >= 24) stopForeground(STOP_FOREGROUND_DETACH) else @Suppress("DEPRECATION") stopForeground(false)
+            if (Build.VERSION.SDK_INT >= 24) {
+                stopForeground(STOP_FOREGROUND_DETACH)
+            } else {
+                @Suppress("DEPRECATION")
+                stopForeground(false)
+            }
         } catch (_: Throwable) { }
     }
 
     override fun onDestroy() {
-        try { wake?.release() } catch (_: Throwable) { }
+        releaseWake()
         if (instance === this) instance = null
         super.onDestroy()
     }

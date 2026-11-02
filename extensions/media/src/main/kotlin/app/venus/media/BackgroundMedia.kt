@@ -286,7 +286,7 @@ object BackgroundMedia {
             }
             // The video's own size (ExoPlayer's VideoSize: width d, height e) beats the chat thumbnail's.
             val size = call(fieldOf(player, "exoPlayer"), "z")
-            if (size != null && size.javaClass.name.endsWith("VideoSize")) {
+            if (size != null && jstr(size.javaClass.name).endsWith("VideoSize")) {
                 val w = fieldOf(size, "d") as? Int ?: 0
                 val h = fieldOf(size, "e") as? Int ?: 0
                 if (w > 0 && h > 0) pipAspect = clampAspect(w, h)
