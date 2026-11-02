@@ -1003,8 +1003,8 @@
       "options": []
     },
     {
-      "name": "Fast delete channels",
-      "description": "Delete a channel without the confirmation, or hold it and tap Delete channel in its menu. Needs Manage Channels. There is no undo.",
+      "name": "Fake deafen",
+      "description": "Look deafened in a call while you can still hear. Choose whether your mic stays muted.",
       "default": true,
       "category": "Features",
       "dependencies": [
@@ -1037,8 +1037,8 @@
       "options": []
     },
     {
-      "name": "Fake deafen",
-      "description": "Look deafened in a call while you can still hear. Choose whether your mic stays muted.",
+      "name": "Fast delete channels",
+      "description": "Delete a channel without the confirmation, or hold it and tap Delete channel in its menu. Needs Manage Channels. There is no undo.",
       "default": true,
       "category": "Features",
       "dependencies": [
@@ -1054,12 +1054,12 @@
           "signatures": null,
           "targets": [
             {
-              "version": "350.8 - Stable",
+              "version": "351.11 - Stable",
               "versionCodes": {
-                "ARM64_V8A": 350008,
-                "ARMEABI_V7A": 350008,
-                "X86_64": 350008,
-                "X86": 350008
+                "ARM64_V8A": 351011,
+                "ARMEABI_V7A": 351011,
+                "X86_64": 351011,
+                "X86": 351011
               },
               "isExperimental": false,
               "minSdk": 26,
