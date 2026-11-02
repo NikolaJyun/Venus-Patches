@@ -19432,10 +19432,16 @@
         if (!enabled("landscapeFull") || !RN || !RN.Dimensions) return false;
         try { const d = RN.Dimensions.get("window"); return d.width > d.height && d.height < 600; } catch (_) { return false; }
     }
+    // useChatLayout() and getChatLayout() take no argument and are read on every screen render: the no-argument call skips the
+    // arguments object and apply (Hermes HBC98: 66.4 -> 48.8 us per 100 calls, 1.36x).
     function landscapeChatLayout(orig, self, args) {
         const layout = orig.apply(self, args);
         return layout && layout.isChatBesideChannelList && landscapePhone() ? LANDSCAPE_PHONE_LAYOUT : layout;
     }
+    landscapeChatLayout.call0 = (orig, self) => {
+        const layout = orig.call(self);
+        return layout && layout.isChatBesideChannelList && landscapePhone() ? LANDSCAPE_PHONE_LAYOUT : layout;
+    };
     // useChatLayout is a hook: Discord's screens only call it again when the window changes size. Without subscribing
     // here, flipping the switch changed nothing until the next rotation or restart, so every change showed up one step
     // late: turning it on seemed to do nothing, and turning it off kept the full-screen chat. The same subscription also
@@ -19444,6 +19450,10 @@
         try { if (React) useSettings("landscapeFull"); } catch (_) {}
         return landscapeChatLayout(orig, self, args);
     }
+    landscapeChatLayoutHook.call0 = (orig, self) => {
+        try { if (React) useSettings("landscapeFull"); } catch (_) {}
+        return landscapeChatLayout.call0(orig, self);
+    };
     // Download voice messages (#125, after VoiceDownload): a voice message gets a Download button of its own, right under its
     // waveform: the native call-to-action button Discord's message view already draws (Message.ctaButton, the one under
     // age-verification DMs), so it looks and feels like the rest of the chat and needs no hold menu. Its tap reaches
