@@ -53,7 +53,7 @@
     if (features.noConfirmPin) selectModules([5400, 1128]);
     if (features.listenAlong) targetModules[14082] = 1;
     if (features.clickableMentions) selectModules([1392, 2068, 2119, 12337]);
-    if (features.expandBar) selectModules([584, 1392, 12337, 12338, 12887]);
+    if (features.expandBar) selectModules([584, 1392, 12337, 12338, 12887, 12818]);
     if (features.silentLeave) selectModules([2068, 7290]);
     if (features.silentEdit || features.silentDelete) selectModules([584, 1392, 5532, 7445]);
     if (features.localEdit) selectModules([584, 1392, 5532, 8013, 9978]);
@@ -15335,6 +15335,7 @@
     }
     function TranslateBar(props) {
         useSettings("translate");
+        useSettings("expandBar");
         const [, bump] = React.useState(0);
         const channelId = props.channelId, headerHeight = useTranslateHeaderHeight(channelId);
         React.useEffect(() => {
@@ -15349,7 +15350,7 @@
             return () => msgStore.removeChangeListener(check);
         }, [channelId, settings.translate, settings.translateMode, settings.translateAsk, settings.translateTarget, settings.translateLanguage]);
         const s = useTranslateBarStyles();
-        if (!translateBarShown(channelId)) return null;
+        if (!translateBarShown(channelId) || expandBar.expanded) return null;
         const on = translate.channels.has(channelId), Press = inspectedExport(6462, "PressableOpacity") || RN.TouchableOpacity || RN.Pressable || RN.View;
         const label = on ? tr("Show original") : tr("Translate to {language}", {language:translateTargetName()});
         const tap = () => { haptic("SELECTION"); animateLayout(); translateChannel(channelId, !on); };
@@ -20654,7 +20655,13 @@
             // Without Developer Mode, Discord draws the chip with no press handlers at all (it is not even a pressable), so there is
             // nothing to hook. The chip gets a pressable around it that only listens for the hold; a plain tap still falls through.
             if (!RN || !RN.Pressable) return out;
-            return el(RN.Pressable, {onLongPress:openRaw, delayLongPress:350, accessible:false}, out);
+            // Discord's own chip pressable (the one Developer Mode uses) is swapped in for the plain view, with its style and
+            // content, so holding a role shows the same pressed highlight.
+            const Highlight = inspectedExport(6462, "PressableHighlight");
+            if (Highlight && out && typeof out === "object" && out.props && (out.type === RN.View || typeof out.type === "string")) {
+                return el(Highlight, {onLongPress:openRaw, accessibilityRole:"button", style:out.props.style}, out.props.children);
+            }
+            return el(RN.Pressable, {onLongPress:openRaw, delayLongPress:350, accessible:false, style:state => state && state.pressed ? {opacity:0.6} : null}, out);
         };
     }
     function viewRawRoleList(type) {
@@ -21015,7 +21022,7 @@
     // at the top-right of the text area flips the shared value, then re-runs the animation once from JS so the bar moves
     // right away instead of at the next keystroke. Nothing else about the bar is touched: sending, drafts and the native
     // text field work as before, and if a worklet isn't where Venus expects, the bar is simply left alone.
-    const expandBar = {expanded:false, multiline:false, content:0, shared:null, worklets:null, live:null, subscribed:false};
+    const expandBar = {expanded:false, multiline:false, pill:false, content:0, shared:null, worklets:null, live:null, subscribed:false};
     const EXPAND_BAR_RESERVE = 120;
     const expandBarHandlers = new WeakMap();
     const EXPAND_BAR_DARK = {button:{position:"absolute", top:4, right:6, width:32, height:32, borderRadius:16, alignItems:"center", justifyContent:"center"},
@@ -21133,17 +21140,27 @@
     function expandBarContent(event) {
         const height = event && event.nativeEvent && event.nativeEvent.height;
         if (typeof height !== "number") return;
+        const before = expandBar.content;
         expandBar.content = height;
         const live = expandBar.live, min = live && live.textFieldMinHeight && typeof live.textFieldMinHeight.get === "function" ? live.textFieldMinHeight.get() : 0;
         const multiline = height > (min > 0 ? min + 6 : 56);
-        if (multiline !== expandBar.multiline) { expandBar.multiline = multiline; notify("expandBar"); }
+        if (multiline !== expandBar.multiline || expandBar.expanded && height !== before) { expandBar.multiline = multiline; notify("expandBar"); }
     }
     const EXPAND_BAR_GUTTER = 40;
     // The text view stops short of the button (a margin on its own style), so typing never runs underneath it. The component
     // doesn't take a style prop (it builds its own), so this goes on the element it rendered.
-    function expandBarStyle(style) {
+    const EXPAND_BAR_TEXT = {flex:1, justifyContent:"center"}, EXPAND_BAR_TEXT_OPEN = {flex:1, justifyContent:"flex-start"};
+    function expandBarStyle(style, open) {
         const flat = RN && RN.StyleSheet && typeof RN.StyleSheet.flatten === "function" ? RN.StyleSheet.flatten(style) : style;
-        return Object.assign({}, flat && typeof flat === "object" ? flat : null, {marginRight:(flat && typeof flat.marginRight === "number" ? flat.marginRight : 0) + EXPAND_BAR_GUTTER});
+        const base = Object.assign({}, flat && typeof flat === "object" ? flat : null);
+        if (open || expandBar.multiline) base.marginRight = (typeof base.marginRight === "number" ? base.marginRight : 0) + EXPAND_BAR_GUTTER;
+        if (open) {
+            const live = expandBar.live, min = live && live.textFieldMinHeight && typeof live.textFieldMinHeight.get === "function" ? live.textFieldMinHeight.get() : 0;
+            delete base.flex;
+            base.flexGrow = 0; base.flexShrink = 0; base.flexBasis = "auto"; base.alignSelf = "stretch";
+            base.minHeight = Math.max(expandBar.content > 0 ? expandBar.content : 0, min > 0 ? min : 40);
+        }
+        return base;
     }
     function expandBarProps(props, open) {
         if (!props) return props;
@@ -21184,14 +21201,36 @@
             React.useEffect(() => { if (expandBar.expanded && !enabled("expandBar")) expandBarSet(false); });
             const next = on ? expandBarProps(props, expandBar.expanded) : props;
             let out = arguments.length > 1 ? component.call(this, next, arguments[1]) : component.call(this, next);
-            if (!on || !React) return out;
-            if ((expandBar.expanded || expandBar.multiline) && out && typeof out === "object" && out.props && !Array.isArray(out)) {
-                try { out = React.cloneElement(out, {style:expandBarStyle(out.props.style)}); } catch (_) {}
-            }
-            return el(React.Fragment, null, out, el(ExpandBarButton, {key:"venus-expand-button"}));
+            if (!on || !React || !RN || !out || typeof out !== "object" || !out.props || Array.isArray(out)) return out;
+            const open = expandBar.expanded;
+            try { out = React.cloneElement(out, {style:expandBarStyle(out.props.style, open)}); } catch (_) { return out; }
+            // Always the same shape while the feature is on (a view around the text view, and the button next to it), so
+            // opening and closing never rebuilds the text view and loses the draft or the keyboard. Open, the text view is as
+            // tall as its text and sits at the top of the bar instead of being centered in all of it.
+            return el(React.Fragment, null,
+                el(RN.View, {key:"venus-expand-text", style:open ? EXPAND_BAR_TEXT_OPEN : EXPAND_BAR_TEXT}, out),
+                expandBar.pill ? null : el(ExpandBarButton, {key:"venus-expand-button"}));
         };
         if (component.displayName) wrapped.displayName = component.displayName;
         return copyStatics(wrapped, component);
+    }
+    // The button lives on the bar itself (the rounded box that holds the text and the + / emoji / send buttons), so it sits at
+    // the bar's own top-right corner however tall the bar is. That box is the one view in ChatInput that listens for touches
+    // to focus the field. If it can't be found, the button goes next to the text view instead (expandBarWrap).
+    function expandBarPill(orig, self, args) {
+        const tree = orig.apply(self, args);
+        expandBar.pill = false;
+        if (!enabled("expandBar") || !React || !tree) return tree;
+        let added = false;
+        const next = cloneTree(tree, (node, props) => {
+            if (added || !("onStartShouldSetResponder" in props) || !("onResponderRelease" in props) || !("accessibilityElementsHidden" in props) || props.collapsable !== false) return props;
+            added = true;
+            const kids = Array.isArray(props.children) ? props.children : props.children == null ? [] : [props.children];
+            return Object.assign({}, props, {children:kids.concat([el(ExpandBarButton, {key:"venus-expand-button"})])});
+        }, 0, () => added);
+        expandBar.pill = added;
+        if (!added && settings.debugLog) dlog("W", "hooks", "expand message bar: the bar's box wasn't found, so the button goes beside the text");
+        return next;
     }
     function expandBarInit(flux) {
         if (expandBar.subscribed || !flux || typeof flux.subscribe !== "function") return;
@@ -22478,6 +22517,7 @@
             }
             case 12338: return features.expandBar ? expandBarHeights(exports) : exports;
             case 12887: return features.expandBar ? hookExport(exports, "default", expandBarHeightHook) : exports;
+            case 12818: return features.expandBar ? hookComponent(exports, expandBarPill) : exports;
             case 7293: return features.removedAlerts ? hookRemovedMine(exports, ["removeFriend", "removeRelationship"]) : exports;
             case 6377: return features.removedAlerts ? hookRemovedMine(exports, ["deleteGuild"]) : exports;
             case 8910: return features.removedAlerts ? hookRemovedMine(exports, ["leaveGuild", "deleteGuild"]) : exports;

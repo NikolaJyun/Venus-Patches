@@ -471,6 +471,7 @@ BOOTSTRAP_MODULES = [
     (7290, 'actions/ChannelActionCreators.tsx', ['default'], 'ChannelActionCreators (Hide blocked: Close their DM; Leave group DMs silently: closePrivateChannel)'),
     (8537, 'modules/suspicious_downloads/SuspiciousDownloadUtils.tsx', ['isSuspiciousDownload'], 'SuspiciousDownloadUtils (Always trust)'),
     (8766, 'stores/MaskedLinkStore.tsx', ['default'], 'MaskedLinkStore (Always trust)'),
+    (12818, 'modules/chat_input/native/ChatInput.tsx', ['displayName', 'default'], 'ChatInput (Expand the message bar: the button sits on the bar)'),
     (12337, 'modules/chat_input/native/ChatInputNativeComponent.tsx', ['displayName', 'default'], 'ChatInputNativeComponent (Tap mentions to open profiles; Expand the message bar)'),
     (12338, 'modules/chat_input/native/useChatInputMaxHeight.tsx', ['getChatInputMaxHeightWorklet', 'getChatInputHeightAnimationTimingWorklet', 'getChatInputMaxHeight'], 'useChatInputMaxHeight (Expand the message bar: the height cap)'),
     (12887, 'modules/chat_input/native/useChatInputHeightWorklet.native.tsx', ['default', 'getIsChatInputHeightWorkletEnabled'], 'useChatInputHeightWorklet (Expand the message bar: the live height)'),

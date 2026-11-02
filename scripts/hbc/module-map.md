@@ -350,6 +350,7 @@ The supported Discord version and bundle hash live in `DiscordPatches.kt` and `H
 | 12668 | `design/components/Icon/native/redesign/generated/GiftIcon.tsx` | GiftIcon | GiftIcon |
 | 12696 | `design/components/Icon/native/redesign/generated/ArrowAngleRightUpIcon.tsx` | ArrowAngleRightUpIcon | ArrowAngleRightUpIcon (Remove anything: Forward) |
 | 12809 | `modules/messages/native/createChannelStream.tsx` | default | createChannelStream (Hide blocked or ignored messages) |
+| 12818 | `modules/chat_input/native/ChatInput.tsx` | displayName, default | ChatInput (Expand the message bar: the button sits on the bar) |
 | 12849 | `actions/TypingActionCreators.tsx` | default | TypingActionCreators |
 | 12887 | `modules/chat_input/native/useChatInputHeightWorklet.native.tsx` | default, getIsChatInputHeightWorkletEnabled | useChatInputHeightWorklet (Expand the message bar: the live height) |
 | 12892 | `modules/chat_input/native/action_buttons/ChatInputActions.tsx` | displayName, default | ChatInputSendAndGiftButton |
