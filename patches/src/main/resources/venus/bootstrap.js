@@ -20634,23 +20634,27 @@
         return function ViewRawRoleItem(props) {
             const out = type(props), role = props && props.role;
             if (!out || !role || typeof role !== "object") return out;
+            const openRaw = function () {
+                haptic("IMPACT_LIGHT");
+                const id = String(role.id), guildId = props.guildId ? String(props.guildId) : "";
+                openViewRaw({kind:"role", id, guildId:rawId(guildId) ? guildId : "", role});
+            };
             let done = false;
-            return cloneTree(out, (node, nodeProps) => {
+            const tree = cloneTree(out, (node, nodeProps) => {
                 if (done || !("onLongPress" in nodeProps) || !("onPress" in nodeProps)) return nodeProps;
                 done = true;
                 const press = nodeProps.onLongPress;
-                // Discord only opens a role's menu (Copy ID) in Developer Mode. Without it the chip has no long press at all, so
-                // holding it does nothing; here it opens the raw data directly.
-                if (typeof press !== "function") return Object.assign({}, nodeProps, {onLongPress:function () {
-                    haptic("IMPACT_LIGHT");
-                    const id = String(role.id), guildId = props.guildId ? String(props.guildId) : "";
-                    openViewRaw({kind:"role", id, guildId:rawId(guildId) ? guildId : "", role});
-                }});
+                if (typeof press !== "function") return Object.assign({}, nodeProps, {onLongPress:openRaw});
                 return Object.assign({}, nodeProps, {onLongPress:function () {
                     viewRawRole = {guildId:props.guildId, role};
                     try { return press.apply(this, arguments); } finally { viewRawRole = null; }
                 }});
             }, 0);
+            if (done) return tree;
+            // Without Developer Mode, Discord draws the chip with no press handlers at all (it is not even a pressable), so there is
+            // nothing to hook. The chip gets a pressable around it that only listens for the hold; a plain tap still falls through.
+            if (!RN || !RN.Pressable) return out;
+            return el(RN.Pressable, {onLongPress:openRaw, delayLongPress:350, accessible:false}, out);
         };
     }
     function viewRawRoleList(type) {
@@ -21011,7 +21015,7 @@
     // at the top-right of the text area flips the shared value, then re-runs the animation once from JS so the bar moves
     // right away instead of at the next keystroke. Nothing else about the bar is touched: sending, drafts and the native
     // text field work as before, and if a worklet isn't where Venus expects, the bar is simply left alone.
-    const expandBar = {expanded:false, multiline:false, shared:null, worklets:null, live:null, subscribed:false};
+    const expandBar = {expanded:false, multiline:false, content:0, shared:null, worklets:null, live:null, subscribed:false};
     const EXPAND_BAR_RESERVE = 120;
     const expandBarHandlers = new WeakMap();
     const EXPAND_BAR_DARK = {button:{position:"absolute", top:4, right:6, width:32, height:32, borderRadius:16, alignItems:"center", justifyContent:"center"},
@@ -21072,7 +21076,16 @@
             timing.__initData = {code:"function venusExpandTiming(contentSize,minHeight){const{max,shared,withTiming,timingFastDuration,Easing}=this.__closure;" +
                 "const cap=max();const value=shared.get()>0?cap:Math.min(Math.max(contentSize,minHeight),cap);" +
                 "return withTiming(value,{duration:timingFastDuration,easing:Easing.linear});}"};
-            expandBar.worklets = {max, timing};
+            // From the JS thread the answer is worked out here from plain numbers (a shared value just set from JS may not have
+            // reached the UI thread yet, so reading it back would give the old answer).
+            const cap = function (reserve) {
+                if (!(reserve > 0)) return origMax();
+                const keys = mc.getKeyboardStateWorklet();
+                const keyboard = keys.keyboardType !== mc.KeyboardTypes.SYSTEM ? keys.customKeyboardHeight : keys.keyboardHeight;
+                const win = mc.getWindowDimensionsWorklet({ignoreKeyboard:true});
+                return Math.max(mc.MIN_HEIGHT * 2, win.height - keyboard - reserve);
+            };
+            expandBar.worklets = {max, timing, cap, withTiming:tc.withTiming, duration:tc.timingFastDuration, easing:tc.Easing.linear};
             return replaceValue(replaceValue(exports, "getChatInputMaxHeightWorklet", max), "getChatInputHeightAnimationTimingWorklet", timing);
         } catch (error) {
             if (settings.debugLog) try { dlog("W", "hooks", "expand message bar: " + dlogText(error)); } catch (_) {}
@@ -21083,13 +21096,30 @@
     function expandBarHeightHook(orig, self, args) {
         const out = orig.apply(self, args), input = args && args[0];
         const pick = key => out && out[key] != null ? out[key] : input && input[key];
-        expandBar.live = {textFieldHeight:pick("textFieldHeight"), contentSize:pick("contentSize"), textFieldMinHeight:pick("textFieldMinHeight")};
+        const live = {textFieldHeight:pick("textFieldHeight"), textFieldMinHeight:pick("textFieldMinHeight")};
+        // The hook keeps its content size to itself (a shared value that never leaves it), so the size comes from the text
+        // view's own change events instead (expandBarContent).
+        if (live.textFieldHeight && typeof live.textFieldHeight.set === "function") expandBar.live = live;
         return out;
     }
     function expandBarApply() {
         const live = expandBar.live, w = expandBar.worklets;
-        if (!live || !w || !live.textFieldHeight || !live.contentSize || !live.textFieldMinHeight) return;
-        try { live.textFieldHeight.set(w.timing(live.contentSize.get(), live.textFieldMinHeight.get())); } catch (_) {}
+        if (!live || !live.textFieldHeight) { if (settings.debugLog) dlog("W", "hooks", "expand message bar: the bar's height isn't known yet"); return; }
+        const min = live.textFieldMinHeight && typeof live.textFieldMinHeight.get === "function" ? live.textFieldMinHeight.get() : 0;
+        const content = expandBar.content > 0 ? expandBar.content : min;
+        try {
+            let top = 0, timing = null, options = {duration:200};
+            if (w) { top = w.cap(expandBar.expanded ? EXPAND_BAR_RESERVE : 0); timing = w.withTiming; options = {duration:w.duration, easing:w.easing}; }
+            if (!(top > 0)) {
+                // The height worklets aren't in place: use the window's height instead.
+                const win = RN && RN.Dimensions ? RN.Dimensions.get("window").height : 800;
+                top = Math.max(min * 2, win * (expandBar.expanded ? 0.45 : 0.3));
+                timing = inspectedExport(1658, "withTiming");
+            }
+            const target = expandBar.expanded ? top : Math.min(Math.max(content, min), top);
+            if (settings.debugLog) dlog("I", "hooks", "expand message bar: " + (expandBar.expanded ? "open" : "close") + " to " + Math.round(target));
+            live.textFieldHeight.set(typeof timing === "function" ? timing(target, options) : target);
+        } catch (error) { if (settings.debugLog) try { dlog("W", "hooks", "expand message bar: " + dlogText(error)); } catch (_) {} }
     }
     function expandBarSet(next) {
         next = !!next;
@@ -21103,12 +21133,14 @@
     function expandBarContent(event) {
         const height = event && event.nativeEvent && event.nativeEvent.height;
         if (typeof height !== "number") return;
+        expandBar.content = height;
         const live = expandBar.live, min = live && live.textFieldMinHeight && typeof live.textFieldMinHeight.get === "function" ? live.textFieldMinHeight.get() : 0;
         const multiline = height > (min > 0 ? min + 6 : 56);
         if (multiline !== expandBar.multiline) { expandBar.multiline = multiline; notify("expandBar"); }
     }
     const EXPAND_BAR_GUTTER = 40;
-    // The text view stops short of the button (a margin on its own style), so typing never runs underneath it.
+    // The text view stops short of the button (a margin on its own style), so typing never runs underneath it. The component
+    // doesn't take a style prop (it builds its own), so this goes on the element it rendered.
     function expandBarStyle(style) {
         const flat = RN && RN.StyleSheet && typeof RN.StyleSheet.flatten === "function" ? RN.StyleSheet.flatten(style) : style;
         return Object.assign({}, flat && typeof flat === "object" ? flat : null, {marginRight:(flat && typeof flat.marginRight === "number" ? flat.marginRight : 0) + EXPAND_BAR_GUTTER});
@@ -21129,9 +21161,8 @@
         }
         // The gutter follows the button: it's there while the button is (a second line or more, or open). The size the text is
         // measured at is the narrower one, so a message that needs two lines keeps needing them and the button can't flicker.
-        const gutter = open || expandBar.multiline;
-        if (handler === orig && !open && !gutter) return props;
-        return Object.assign({}, props, open ? {maxHeight:4000, onChangeContentSize:handler} : {onChangeContentSize:handler}, gutter ? {style:expandBarStyle(props.style)} : null);
+        if (handler === orig && !open) return props;
+        return Object.assign({}, props, open ? {maxHeight:4000, onChangeContentSize:handler} : {onChangeContentSize:handler});
     }
     function ExpandBarButton() {
         useSettings("expandBar");
@@ -21152,8 +21183,12 @@
             const on = enabled("expandBar");
             React.useEffect(() => { if (expandBar.expanded && !enabled("expandBar")) expandBarSet(false); });
             const next = on ? expandBarProps(props, expandBar.expanded) : props;
-            const out = arguments.length > 1 ? component.call(this, next, arguments[1]) : component.call(this, next);
-            return on && React ? el(React.Fragment, null, out, el(ExpandBarButton, {key:"venus-expand-button"})) : out;
+            let out = arguments.length > 1 ? component.call(this, next, arguments[1]) : component.call(this, next);
+            if (!on || !React) return out;
+            if ((expandBar.expanded || expandBar.multiline) && out && typeof out === "object" && out.props && !Array.isArray(out)) {
+                try { out = React.cloneElement(out, {style:expandBarStyle(out.props.style)}); } catch (_) {}
+            }
+            return el(React.Fragment, null, out, el(ExpandBarButton, {key:"venus-expand-button"}));
         };
         if (component.displayName) wrapped.displayName = component.displayName;
         return copyStatics(wrapped, component);
