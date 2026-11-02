@@ -21130,6 +21130,7 @@
     // The settings page's picture of it: a message grows to three lines, the arrows appear, one tap opens the bar tall.
     function ExpandBarPreview(props) {
         useSettings("expandBar");
+        useLanguage();
         const s = useChatPreviewStyles(), k = usePreviewChrome(), on = !!props.on;
         const blank = {lines:0, open:false, pulse:null};
         const [state, setState] = React.useState(blank);
@@ -21142,14 +21143,15 @@
             [2000, () => update({pulse:{who:"btn", id:"collapse"}}), tr("Tap them again to shrink it back")],
             [450, () => { animateLayout(); haptic("IMPACT_LIGHT"); update({open:false, pulse:null}); }],
             [1400, () => {}]
-        ], []);
+        ], [settings.language]);
         const lines = on ? state.lines : 3, open = on ? state.open : false;
         const Press = RN.View, Plus = venusIcon(10621, "PlusLargeIcon"), Send = venusIcon(5139, "SendMessageIcon");
         const pill = el(RN.View, {key:"pill", style:[k.pill, {alignItems:"flex-start", alignSelf:"stretch", minHeight:open ? 190 : 40, paddingVertical:9, paddingRight:44, flexDirection:"column", gap:2}]},
             lines === 0 ? el(RN.Text, {style:[s.muted, {fontSize:15}]}, tr("Message {channel}", {channel:"#general"})) :
                 EXPAND_BAR_SAMPLE.slice(0, lines).map(line => el(RN.Text, {key:line, style:[s.text, {fontSize:15, lineHeight:20}]}, tr(line))),
-            lines >= 2 || open ? popIn("btn:" + (open ? "1" : "0"), el(Press, {style:[EXPAND_BAR_DARK.button, {top:5, right:6}], accessible:false},
-                expandBarGlyph(open, k.icon.color, 20), tapRipple(state.pulse, "btn"))) : null);
+            lines >= 2 || open ? el(RN.View, {key:"corner", pointerEvents:"none", style:{position:"absolute", top:4, right:5, width:32, height:32}},
+                popIn("btn:" + (open ? "1" : "0"), el(Press, {style:[EXPAND_BAR_DARK.button, {position:"relative", top:0, right:0}], accessible:false},
+                    expandBarGlyph(open, k.icon.color, 20), tapRipple(state.pulse, "btn")))) : null);
         return el(RN.View, {key:"preview"}, previewScreen(s, "preview", "Message bar preview", [
             el(RN.View, {key:"stage", style:{height:268, justifyContent:"flex-end"}},
                 el(RN.View, {key:"chat", style:{flex:1, overflow:"hidden", justifyContent:"flex-end"}},
