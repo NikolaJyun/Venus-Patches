@@ -124,13 +124,21 @@ fun main(args: Array<String>) {
             ?: definition.superclass?.let { resolveField(reference, it, seen) }
             ?: definition.interfaces.firstNotNullOfOrNull { resolveField(reference, it, seen) }
     }
+    // A Venus class that extends an Android class (Keep media playing's MediaService extends android.app.Service) calls methods
+    // the platform supplies, which the APK's DEX doesn't contain. Its chain ends at an android.* or java.* type outside the APK.
+    fun inheritsPlatform(type: String, seen: MutableSet<String> = mutableSetOf()): Boolean {
+        if (!type.startsWith("Lapp/venus/") || !seen.add(type)) return false
+        val superclass = allClasses[type]?.superclass ?: return false
+        if (superclass !in allClasses) return superclass.startsWith("Landroid/") || superclass.startsWith("Ljava/")
+        return inheritsPlatform(superclass, seen)
+    }
     fun isHost(type: String) = type.startsWith("Lkotlin/") || type.startsWith("Lapp/venus/") ||
         type.startsWith("Lcom/facebook/react/")
     for (reference in references) {
         when (reference) {
             is MethodReference -> if (isHost(reference.definingClass)) {
                 val resolved = resolve(reference)
-                if (resolved == null) abiErrors.add("Unresolved extension dependency: $reference")
+                if (resolved == null && !inheritsPlatform(reference.definingClass)) abiErrors.add("Unresolved extension dependency: $reference")
                 else if (!reference.definingClass.startsWith("Lapp/venus/") && resolved.accessFlags and 0x1 == 0)
                     abiErrors.add("Non-public host dependency: $reference")
             }
