@@ -279,10 +279,18 @@ object BackgroundMedia {
             val playerView = if (mediaView == null) null else fieldOf(mediaView, "mediaPlayerView")
             val surface = call(playerView, "getView") as? View
             val hint = Rect()
+            pipAspect = Rational(16, 9)
             if (surface != null && surface.width > 0 && surface.height > 0) {
                 pipAspect = clampAspect(surface.width, surface.height)
                 surface.getGlobalVisibleRect(hint)
-            } else pipAspect = Rational(16, 9)
+            }
+            // The video's own size (ExoPlayer's VideoSize: width d, height e) beats the chat thumbnail's.
+            val size = call(fieldOf(player, "exoPlayer"), "z")
+            if (size != null && size.javaClass.name.endsWith("VideoSize")) {
+                val w = fieldOf(size, "d") as? Int ?: 0
+                val h = fieldOf(size, "e") as? Int ?: 0
+                if (w > 0 && h > 0) pipAspect = clampAspect(w, h)
+            }
             pipPlayer = player
             pipOriginalView = playerView
             pipActivity = WeakReference(activity)
@@ -311,12 +319,12 @@ object BackgroundMedia {
 
     /** MainActivity.onPictureInPictureModeChanged: show only the video in the window, and give it back afterwards. */
     @JvmStatic
-    fun onPipModeChanged(activity: Activity?, inPip: Boolean) {
-        val player = pipPlayer ?: return
+    fun onPipModeChanged(activity: Activity?, inPip: Boolean): Boolean {
+        val player = pipPlayer ?: return false
         try {
             if (inPip) {
-                if (activity == null || pipOverlay != null) return
-                val decor = activity.window.decorView as? ViewGroup ?: return
+                if (activity == null || pipOverlay != null) return true
+                val decor = activity.window.decorView as? ViewGroup ?: return true
                 val overlay = FrameLayout(activity)
                 overlay.setBackgroundColor(Color.BLACK)
                 overlay.isClickable = true
@@ -335,6 +343,7 @@ object BackgroundMedia {
                 main.postDelayed(Runnable { if (pipOverlay == null && pipActivity?.get()?.isInPictureInPictureMode != true) clearPip() }, 1500)
             }
         } catch (_: Throwable) { restorePipSurface(); clearPip() }
+        return true
     }
 
     /** MainActivity.onStop: Discord stopped while (or right after) in the window, so the window was closed: pause. */
