@@ -20008,13 +20008,13 @@
         const ui = reviewUI();
         if (!React || !RN) return null;
         const on = enabled("customIdle"), minutes = customIdleValue(settings.customIdleMinutes), Icon = venusIcon(14205, "UserClockIcon");
-        const text = n => n === 0 ? tr("Never") : pl(n, "{n} minute", "{n} minutes");
+        const text = n => n === 0 ? tr("Never") : n >= 60 && n % 60 === 0 ? tr("{n} h", {n:n / 60}) : tr("{n} min", {n});
         const groups = [
             on ? null : offCard("status", Icon, "customIdle"),
             statusCard("now", minutes === 0 ? "Discord never sets you to Idle on its own." : pl(minutes, "Discord sets you to Idle after {n} minute without activity.",
                 "Discord sets you to Idle after {n} minutes without activity."), {IconComponent:Icon}),
             el(PresetOrCustom, {key:"time", title:tr("Go idle after"), value:minutes, disabled:!on, placeholder:CUSTOM_IDLE_DEFAULT, min:1, max:720,
-                inputLabel:tr("Minutes, {min} to {max}", {min:1, max:720}), format:text, presets:[1, 5, 10, 30, 60, 0].map(n => ({value:n, label:text(n)})),
+                inputLabel:tr("Minutes, {min} to {max}", {min:1, max:720}), format:text, presets:[10, 30, 60, 0].map(n => ({value:n, label:text(n)})),
                 onChange:value => setSetting("customIdleMinutes", value), hint:tr("Discord's own time is 10 minutes.")}),
             footnote("note", "Opening Discord again sets you back to active.")];
         return settingsBody(ui, groups);
