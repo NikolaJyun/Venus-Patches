@@ -56,6 +56,11 @@
     if (features.silentLeave) selectModules([2068, 7290]);
     if (features.silentEdit || features.silentDelete) selectModules([584, 1392, 5532, 7445]);
     if (features.localEdit) selectModules([584, 1392, 5532, 8013, 9978]);
+    if (features.customIdle) selectModules([1087]);
+    if (features.pauseInvites) selectModules([17433, 2090, 4845, 1087]);
+    if (features.fastDeleteChannels) selectModules([10596, 5400, 1128, 2068, 4845, 1087]);
+    if (features.mutualGroupDMs) selectModules([14197, 2068, 1392, 1114]);
+    if (features.platformSpoof) selectModules([14713]);
     if (features.guildLurk) targetModules[13422] = 1;
     if (features.quietReplies) selectModules([1392, 5532, 9990]);
     if (features.compressUploads) selectModules([8023, 8046, 10006]);
@@ -90,7 +95,8 @@
         accountSwitcher:false, accountSwitcherYouBar:true, accountSwitcherShare:false, accountSwitcherNotify:true, appIcons:false, nitroThemes:false, customThemes:false, customThemesBackground:true, materialYou:false, materialYouColor:"wallpaper", materialYouTint:"balanced",
         iconPacks:false, iconPacksTheme:true,
         messageHighlight:false, messageHighlightThickness:2, messageHighlightBrightness:50, messageHighlightPingColor:"default", serverInfo:false, serverInfoFriends:true, serverEdit:false,
-        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"" };
+        fixEmbeds:false, fixEmbedsSites:"", fixEmbedsOptions:"", tenorGifs:false, tenorGifsSource:"both", hideBlocked:false, hideBlockedBlocked:true, hideBlockedIgnored:true, hideBlockedReplies:false, hideBlockedCloseDms:false, bulkDelete:false, bulkDeleteConfirm:true, bulkDeleteIncludeCached:true, experiments:false, noHandsfree:false, voiceOptions:false, voiceOptionsVolume:false, voiceOptionsVolumeLevel:50, voiceOptionsOutput:"default", voiceOptionsJoinSound:true, voiceOptionsLeaveSound:true, voiceOptionsSoundVolume:100, voiceOptionsExit:false, voiceOptionsExitSound:"", cleanChannels:false, cleanChannelsEmoji:true, cleanChannelsSymbols:true, cleanChannelsFonts:true, cleanChannelsSpaces:false, anonFiles:false, staffTag:false, staffTagOwner:true, staffTagAdmin:true, staffTagManager:true, staffTagMod:true, staffTagCrown:true, removedAlerts:false, removedAlertsFriends:true, removedAlertsServers:true, removedAlertsClosed:true, removedAlertsPush:false, fullImages:false, fullImagesChat:true, fullImagesViewer:true, fullImagesGifs:false, fullImagesAvatars:true, alwaysTrust:false, alwaysTrustLinks:true, alwaysTrustFiles:true, noConfirmPin:false, clickableMentions:false, silentLeave:false, silentEdit:false, silentEditNotice:true, silentDelete:false, localEdit:false, localEditMark:true, guildLurk:false, guildLurkIds:"", quietReplies:false, timeoutDuration:false, dndBanners:false, voiceDownload:false, cloneExpressions:false, listenAlong:false, listenAlongOffset:0, landscapeFull:false, quietRepliesGuilds:true, quietRepliesGroups:true, quietRepliesMentioned:false, compressUploads:false, compressUploadsPhotos:true, compressUploadsVideos:true, compressUploadsAudio:true, hideAnything:false, hideAnythingSpots:"", language:"auto", hiddenFeatures:"",
+        hypeSquad:false, customIdle:false, customIdleMinutes:10, pauseInvites:false, fastDeleteChannels:false, fastDeleteChannelsConfirm:true, fastDeleteChannelsMenu:true, mutualGroupDMs:false, platformSpoof:false, platformSpoofDevice:"desktop" };
     // The settings every feature starts from, for Reset to defaults on the Backup page.
     let DEFAULT_SETTINGS = null;
     function defaultSettings() {
@@ -107,7 +113,8 @@
             accountSwitcher: false, accountSwitcherYouBar: true, accountSwitcherShare: false, accountSwitcherNotify: true, appIcons: false, nitroThemes: false, customThemes: false, customThemesBackground: true, materialYou: false, materialYouColor: "wallpaper", materialYouTint: "balanced",
             iconPacks: false, iconPacksTheme: true,
             messageHighlight: false, messageHighlightThickness: 2, messageHighlightBrightness: 50, messageHighlightPingColor: "default", serverInfo: false, serverInfoFriends: true, serverEdit: false,
-            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: ""
+            fixEmbeds: false, fixEmbedsSites: "", fixEmbedsOptions: "", tenorGifs: false, tenorGifsSource: "both", hideBlocked: false, hideBlockedBlocked: true, hideBlockedIgnored: true, hideBlockedReplies: false, hideBlockedCloseDms: false, bulkDelete: false, bulkDeleteConfirm: true, bulkDeleteIncludeCached: true, experiments: false, noHandsfree: false, voiceOptions: false, voiceOptionsVolume: false, voiceOptionsVolumeLevel: 50, voiceOptionsOutput: "default", voiceOptionsJoinSound: true, voiceOptionsLeaveSound: true, voiceOptionsSoundVolume: 100, voiceOptionsExit: false, voiceOptionsExitSound: "", cleanChannels: false, cleanChannelsEmoji: true, cleanChannelsSymbols: true, cleanChannelsFonts: true, cleanChannelsSpaces: false, anonFiles: false, staffTag: false, staffTagOwner: true, staffTagAdmin: true, staffTagManager: true, staffTagMod: true, staffTagCrown: true, removedAlerts: false, removedAlertsFriends: true, removedAlertsServers: true, removedAlertsClosed: true, removedAlertsPush: false, fullImages: false, fullImagesChat: true, fullImagesViewer: true, fullImagesGifs: false, fullImagesAvatars: true, alwaysTrust: false, alwaysTrustLinks: true, alwaysTrustFiles: true, noConfirmPin: false, clickableMentions: false, silentLeave: false, silentEdit: false, silentEditNotice: true, silentDelete: false, localEdit: false, localEditMark: true, guildLurk: false, guildLurkIds: "", quietReplies: false, timeoutDuration: false, dndBanners: false, voiceDownload: false, cloneExpressions: false, listenAlong: false, listenAlongOffset: 0, landscapeFull: false, quietRepliesGuilds: true, quietRepliesGroups: true, quietRepliesMentioned: false, compressUploads: false, compressUploadsPhotos: true, compressUploadsVideos: true, compressUploadsAudio: true, hideAnything: false, hideAnythingSpots: "", language: "auto", hiddenFeatures: "",
+            hypeSquad: false, customIdle: false, customIdleMinutes: 10, pauseInvites: false, fastDeleteChannels: false, fastDeleteChannelsConfirm: true, fastDeleteChannelsMenu: true, mutualGroupDMs: false, platformSpoof: false, platformSpoofDevice: "desktop"
         }));
     }
     // Backup and restore (#68): when you last saved a backup, and whether a restore is being applied right now.
@@ -142,6 +149,8 @@
     const MAX_DELETED = 999999, ARCHIVE_BYTES = 64 * 1024 * 1024;
     // What the Read all button clears: servers, DMs, or both.
     const READ_ALL_MODES = ["guilds", "dms", "both"];
+    // The devices Platform spoof can show, and Discord's own time before it sets you to Idle (minutes).
+    const SPOOF_DEVICES = ["desktop", "web", "console"], CUSTOM_IDLE_DEFAULT = 10;
     // What double-tapping your own message does: edit it, or reply like anyone else's.
     const GESTURE_OWN_MODES = ["edit", "reply"];
     // Which language Translate messages translates into: Discord's own language, the phone's, or one you pick (#79).
@@ -448,6 +457,8 @@
         if (key === "fixEmbedsOptions") return fixOptionsClean(value);
         if (key === "translateSkip") return translateSkipText(value);
         if (key === "guildLurkIds") return guildLurkText(value);
+        if (key === "customIdleMinutes") return customIdleValue(value);
+        if (key === "platformSpoofDevice") return SPOOF_DEVICES.includes(value) ? value : undefined;
         if (key === "hiddenFeatures") return hiddenFeaturesText(value);
         if (key === "hideAnythingSpots") return hideSpotsText(value);
         if (key === "materialYouColor") return myIsColor(value) ? value.toLowerCase() : undefined;
@@ -577,6 +588,18 @@
             if (limit === settings.noDeleteLimit && status.storage !== "loading" && status.storage !== "waiting") return true;
             settings.noDeleteLimit = limit; dirty.add(key); trimDeleted(); save(); notify(key); return true;
         }
+        if (key === "customIdleMinutes") {
+            const mins = customIdleValue(value);
+            if (mins === settings.customIdleMinutes && status.storage !== "loading" && status.storage !== "waiting") return true;
+            settings.customIdleMinutes = mins; dirty.add(key); save(); notify(key); return true;
+        }
+        if (key === "platformSpoofDevice") {
+            if (!SPOOF_DEVICES.includes(value)) return false;
+            if (settings.platformSpoofDevice === value && status.storage !== "loading" && status.storage !== "waiting") return true;
+            settings.platformSpoofDevice = value; dirty.add(key); save(); notify(key);
+            if (features.platformSpoof && !backup.restoring && status.storage !== "loading" && status.storage !== "waiting") later(platformSpoofAsk, 0);
+            return true;
+        }
         if (key === "badgesCycleMinutes") {
             const mins = badgeCycleMinutes(value);
             if (mins === settings.badgesCycleMinutes && status.storage !== "loading" && status.storage !== "waiting") return true;
@@ -641,6 +664,7 @@
         }
         if (features.quests && featureFor(key) === "quests") questsSettingChanged(key, value);
         if (features.badges && featureFor(key) === "badges") badgesSettingChanged(key, value);
+        if (key === "platformSpoof" && features.platformSpoof && !backup.restoring && status.storage !== "loading" && status.storage !== "waiting") later(platformSpoofAsk, 0);
         if (key === "systemFont" && features.systemFont && !backup.restoring && status.storage !== "loading" && status.storage !== "waiting" && value !== fontInUse) later(() => askRestart("font"), 0);
         if (key === "systemEmoji" && features.systemEmoji && !backup.restoring && status.storage !== "loading" && status.storage !== "waiting" && value !== emojiInUse) later(() => askRestart("emoji"), 0);
         save();
@@ -1136,7 +1160,7 @@
     const featureFor = key => {
         const cached = featureTable[key];
         if (cached !== undefined) return cached;
-        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
+        return featureTable[key] = key === "reviewWarning" ? "reviewDB" : key === "emojis" || key === "stickers" || key === "hyperlinks" ? "freeNitro" : /^noDelete[A-Z]/.test(key) ? "noDelete" : /^pi[A-Z]/.test(key) ? "platformIndicators" : key === "pastelAll" || key === "pastelContent" ? "pastelize" : key === "readAllMode" ? "readAll" : /^compressUploads[A-Z]/.test(key) ? "compressUploads" : /^quests[A-Z]/.test(key) ? "quests" : /^badges[A-Z]/.test(key) ? "badges" : /^gesture[A-Z]/.test(key) ? "gestures" : /^translate[A-Z]/.test(key) ? "translate" : /^removedAlerts[A-Z]/.test(key) ? "removedAlerts" : /^userNotif[A-Z]/.test(key) ? "userNotif" : /^accountSwitcher[A-Z]/.test(key) ? "accountSwitcher" : /^hiddenChannels[A-Z]/.test(key) ? "hiddenChannels" : /^customThemes[A-Z]/.test(key) ? "customThemes" : /^materialYou[A-Z]/.test(key) ? "materialYou" : /^iconPacks[A-Z]/.test(key) ? "iconPacks" : /^messageHighlight[A-Z]/.test(key) ? "messageHighlight" : /^serverInfo[A-Z]/.test(key) ? "serverInfo" : /^fixEmbeds[A-Z]/.test(key) ? "fixEmbeds" : /^tenorGifs[A-Z]/.test(key) ? "tenorGifs" : /^hideBlocked[A-Z]/.test(key) ? "hideBlocked" : /^bulkDelete[A-Z]/.test(key) ? "bulkDelete" : key === "systemFontSource" ? "systemFont" : key === "systemEmojiSource" ? "systemEmoji" : /^cleanChannels[A-Z]/.test(key) ? "cleanChannels" : /^voiceOptions[A-Z]/.test(key) ? "voiceOptions" : /^anonFiles[A-Z]/.test(key) ? "anonFiles" : /^staffTag[A-Z]/.test(key) ? "staffTag" : /^fullImages[A-Z]/.test(key) ? "fullImages" : /^alwaysTrust[A-Z]/.test(key) ? "alwaysTrust" : /^quietReplies[A-Z]/.test(key) ? "quietReplies" : /^hideAnything[A-Z]/.test(key) ? "hideAnything" : /^guildLurk[A-Z]/.test(key) ? "guildLurk" : /^customIdle[A-Z]/.test(key) ? "customIdle" : /^fastDeleteChannels[A-Z]/.test(key) ? "fastDeleteChannels" : /^platformSpoof[A-Z]/.test(key) ? "platformSpoof" : /^silentEdit[A-Z]/.test(key) ? "silentEdit" : /^localEdit[A-Z]/.test(key) ? "localEdit" : /^listenAlong[A-Z]/.test(key) ? "listenAlong" : key;
     };
     // Section titles are read whenever Discord draws the list, so they follow the language too. "Venus" is a name.
     function section(label, keys) {
@@ -1171,7 +1195,8 @@
         hiddenChannels:[8495, "LockIcon"], systemFont:[16730, "LettersIcon"], systemEmoji:[13827, "ChatSmileIcon"],
         youBarSettings:[7368, "SettingsIcon"], quests:[13929, "QuestsIcon"],
         badges:[9211, "TrophyIcon"], userNotif:[9045, "BellIcon"], accountSwitcher:[8489, "GroupIcon"], appIcons:[8506, "AppsIcon"],
-        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"]};
+        compressUploads:[11636, "FileUpIcon"], customThemes:[16412, "EyeDropperIcon"], iconPacks:[11449, "ImageSparkleIcon"], messageHighlight:[17627, "PaintbrushThinIcon"], serverInfo:[5145, "CircleInformationIcon"], serverEdit:[10023, "PencilIcon"], fixEmbeds:[13836, "EmbedIcon"], tenorGifs:[10051, "GifIcon"], nitroThemes:[11733, "SparklesIcon"], materialYou:[16320, "PaintPaletteIcon"], hideBlocked:[11619, "ChatShieldIcon"], bulkDelete:[7144, "CircleCheckIcon"], experiments:[16650, "BeakerIcon"], cleanChannels:[12158, "MagicWandIcon"], noHandsfree:[13214, "HeadphonesIcon"], voiceOptions:[8501, "VoiceNormalIcon"], staffTag:[10563, "CrownIcon"], removedAlerts:[5135, "UserMinusIcon"], hideAnything:[10561, "XLargeIcon"], fullImages:[12328, "ImagesIcon"], alwaysTrust:[10733, "ShieldIcon"], noConfirmPin:[10641, "PinIcon"], clickableMentions:[8490, "AtIcon"], quietReplies:[10654, "BellSlashIcon"], timeoutDuration:[5150, "ClockIcon"], dndBanners:[13603, "BellZIcon"], voiceDownload:[5143, "DownloadIcon"], cloneExpressions:[11657, "ImagePlusIcon"], listenAlong:[13214, "HeadphonesIcon"], landscapeFull:[16089, "FullscreenEnterIcon"], silentLeave:[11384, "DoorExitIcon"], guildLurk:[6929, "EyeIcon"], silentEdit:[13745, "PencilSparkleIcon"], silentDelete:[5148, "TrashIcon"], localEdit:[10023, "PencilIcon"],
+        hypeSquad:[18747, "HomeIcon"], customIdle:[14205, "UserClockIcon"], pauseInvites:[8676, "PauseIcon"], fastDeleteChannels:[18679, "ChannelListIcon"], mutualGroupDMs:[8489, "GroupIcon"], platformSpoof:[5133, "UserPlatformIcon"]};
     const venusIcons = new Map();
     function venusIcon(id, name, fallback) {
         const slot = id + ":" + name;
@@ -1223,6 +1248,12 @@
         silentEdit:["Silent edit", "Edited", "(edited)", "Edit message", "No edit mark"],
         silentDelete:["Silent delete", "Anti log", "Message logger", "Delete without logs"],
         localEdit:["Local edit", "Edit locally", "Fake message", "Edit other people's messages"],
+        hypeSquad:["HypeSquad", "House", "Bravery", "Brilliance", "Balance", "Badge"],
+        customIdle:["Custom idle", "Idle", "AFK", "Away", "Idle timeout", "Status"],
+        pauseInvites:["Pause invites", "Invites", "Lock invites", "Raid", "Security"],
+        fastDeleteChannels:["Delete channel", "Fast delete", "Remove channel", "Skip confirmation"],
+        mutualGroupDMs:["Mutual group DMs", "Shared groups", "Mutual groups", "Group chats"],
+        platformSpoof:["Platform spoof", "Device", "Mobile", "Desktop", "Web", "Console", "Fake platform"],
         guildLurk:["GuildLurk", "Guild lurk", "Lurk", "Lurker", "Preview", "Invite link", "Server ID"],
         timeoutDuration:["Timeout", "Timed out", "Muted", "Mute", "Communication disabled", "Moderation", "ShowTimeoutDuration"],
         cloneExpressions:["Clone", "Copy", "Steal", "Emoji", "Emojis", "Sticker", "Stickers", "Expressions", "ExpressionCloner", "Add to a server"],
@@ -1720,6 +1751,10 @@
         toggle("people", "copyBios", "Copy profile bios", "Hold a bio to select and copy it.");
         toggle("servers", "cloneExpressions", "Clone emojis and stickers", "Tap a custom emoji or sticker in chat to add it to one of your servers.");
         toggle("people", "timeoutDuration", "Show timeout duration", "A tag next to timed-out people says how long until they can talk again.");
+        withOptions("people", "hypeSquad", "VENUS_HYPESQUAD", "HypeSquad house", "Join or leave a HypeSquad house from here.", "HypeSquad", HypeSquadSettings);
+        withOptions("people", "customIdle", "VENUS_CUSTOMIDLE", "Custom idle time", "Choose when Discord sets you to Idle, or never.", "Idle time", CustomIdleSettings);
+        withOptions("people", "platformSpoof", "VENUS_PLATFORMSPOOF", "Platform spoof", "Show as desktop, web or console instead of mobile. Discord doesn't allow this.", "Platform spoof", PlatformSpoofSettings);
+        toggle("people", "mutualGroupDMs", "Mutual group DMs", "Profiles show the group DMs you share with that person.");
         toggle("people", "silentLeave", "Leave group DMs silently", "Leave group DMs without the \"left the group\" message.");
         withOptions("messages", "silentEdit", "VENUS_SILENTEDIT", "Edit without the (edited) mark", "Only works when your message is the latest in the chat. Others see a new message, not an edit.", "Silent edit", SilentEditSettings);
         toggle("messages", "silentDelete", "Delete without a trace", "Blanks your message before deleting it, so message loggers have nothing to keep.");
@@ -1736,6 +1771,8 @@
         withOptions("servers", "serverInfo", "VENUS_SERVERINFO", "Server info", "Hold a server's icon to see its details, boosts and friends there.", "Server info", ServerInfoSettings);
         withOptions("servers", "serverEdit", "VENUS_SERVEREDIT", "Edit servers locally", "Give any server your own name and icon. Only you see them.", "Edit servers", ServerEditSettings);
         withOptions("servers", "cleanChannels", "VENUS_CLEANCHANNELS", "Clean channel names", "Removes emoji and symbols from channel names, and can show spaces instead of dashes.", "Clean names", CleanChannelsSettings);
+        toggle("servers", "pauseInvites", "Pause invites", "Hold a server's icon to pause or resume its invites. Needs Manage Server.");
+        withOptions("servers", "fastDeleteChannels", "VENUS_FASTDELETECHANNELS", "Fast delete channels", "Delete channels without the confirmation, or from the channel menu. There is no undo.", "Fast delete", FastDeleteChannelsSettings);
         withOptions("servers", "guildLurk", "VENUS_GUILDLURK", "Preview servers without joining", "Open a server from its ID or invite link and read it without joining.", "Preview servers", GuildLurkSettings);
         // Appearance
         withOptions("appearance", "systemFont", "VENUS_SYSTEMFONT", "Use your phone's font", "Replaces Discord's font everywhere with your phone's or one you import. Android 9 or newer.", "Font", SystemFontSettings);
@@ -3182,6 +3219,7 @@
         }
         if (enabled("quickDelete") && (matches("AMvpS4") || matches("vXZ+Fo")))
             return popup.onConfirm();
+        if (enabled("fastDeleteChannels") && settings.fastDeleteChannelsConfirm && fastDeleteAlert(popup)) return popup.onConfirm();
         // Skip pin confirmation (based on NoConfirmPin by Skamt): LongPressMessageActionSheetUtils (9988) asks "Are you sure you
         // want to pin this message?" (WG5dyo) inside the alert's children, and "You sure you want to remove this pinned message?"
         // (NjEPp7) as the unpin alert's body. Only those two exact texts in Discord's language skip the alert.
@@ -19748,7 +19786,7 @@
             new Promise(resolve => later(() => resolve(orig.apply(self, args)), 350)));
     }
     // One new row in a message's hold menu (LongPressMessageActionSheet 9978), styled like Discord's own rows.
-    function sheetAddRow(tree, props, key, label, IconComponent, onPress) {
+    function sheetAddRow(tree, props, key, label, IconComponent, onPress, sheetKey, variant) {
         let added = false;
         return cloneTree(tree, function (node, nodeProps) {
             if (added || !Array.isArray(nodeProps.children)) return nodeProps;
@@ -19756,11 +19794,11 @@
             if (!rows.length || nodeProps.children.some(child => child && child.key === key)) return nodeProps;
             added = true;
             const template = rows[rows.length - 1], icon = template.props.icon;
-            const row = React.cloneElement(template, {key, label, arrow:false, variant:undefined, disabled:false,
+            const row = React.cloneElement(template, {key, label, arrow:false, variant:variant, disabled:false,
                 icon:icon && icon.props && "IconComponent" in icon.props ? React.cloneElement(icon, {IconComponent}) : icon,
                 onPress:function () {
                     const sheets = reviewUI().sheets;
-                    try { if (sheets && typeof sheets.hideActionSheet === "function") sheets.hideActionSheet("MessageLongPressActionSheet"); } catch (_) {}
+                    try { if (sheets && typeof sheets.hideActionSheet === "function") sheets.hideActionSheet(sheetKey || "MessageLongPressActionSheet"); } catch (_) {}
                     if (props && typeof props.onClose === "function") try { props.onClose(); } catch (_) {}
                     later(onPress, 60);
                 }});
@@ -19891,6 +19929,266 @@
             n ? el(Group, {key:"clear"}, actionRow(ui, "restore", "Restore all messages", "Every message goes back to what was sent.",
                 () => confirmAction("Restore all messages?", "Every message you edited locally goes back to what was sent.", "Restore all", localEditClear), !on, true, rowIcon(12093, "UndoIcon"))) : null,
             footnote("note", "Only you see these changes, and only on this phone. Nothing is sent to Discord.")];
+        return settingsBody(ui, groups);
+    }
+    // HypeSquad, Custom idle, Pause invites, Fast delete channels, Mutual group DMs and Platform spoof (issue #129 and the
+    // requests that came with it). HypeSquad and Pause invites are plain API calls; Custom idle swaps Discord's idle time
+    // for a live value; Fast delete skips the channel delete alert and adds a row to the channel menu; Mutual group DMs adds
+    // a line to profiles; Platform spoof changes the device the gateway sign-in (IDENTIFY) tells Discord about.
+    const HYPESQUAD_HOUSES = [[1, 64, "#9c84ef"], [2, 128, "#f47b67"], [3, 256, "#45ddc0"]];
+    function houseName(id) { return id === 1 ? tr("Bravery") : id === 2 ? tr("Brilliance") : tr("Balance"); }
+    const hype = {house:undefined, busy:false};
+    function hypeSquadCurrent() {
+        const user = currentUser(), flags = user && (user.publicFlags != null ? user.publicFlags : user.public_flags != null ? user.public_flags : user.flags);
+        if (typeof flags !== "number") return 0;
+        for (let i = 0; i < HYPESQUAD_HOUSES.length; i++) if (flags & HYPESQUAD_HOUSES[i][1]) return HYPESQUAD_HOUSES[i][0];
+        return 0;
+    }
+    function hypeSquadHouse() { return hype.house !== undefined ? hype.house : hypeSquadCurrent(); }
+    // house 1 to 3 joins, 0 leaves.
+    function hypeSquadJoin(house) {
+        if (hype.busy || !enabled("hypeSquad")) return;
+        hype.busy = true; notify("hypeSquad");
+        const request = house ? httpCall("post", {url:"/hypesquad/online", body:{house_id:house}}) : httpCall("del", {url:"/hypesquad/online"});
+        request.then(() => {
+            hype.busy = false; hype.house = house; notify("hypeSquad"); haptic("IMPACT_LIGHT");
+            reviewToast(reviewUI(), house ? "HypeSquad house changed" : "Left HypeSquad", venusIcon(6473, "CheckmarkLargeIcon"));
+        }, () => {
+            hype.busy = false; notify("hypeSquad");
+            reviewToast(reviewUI(), "Couldn't change your HypeSquad house", venusIcon(7838, "WarningIcon"));
+        });
+    }
+    function HypeSquadSettings() {
+        useSettings("hypeSquad");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("hypeSquad"), Group = ui.TableRowGroup || RN.View, Row = ui.TableRow, current = hypeSquadHouse(), Check = venusIcon(6473, "CheckmarkLargeIcon");
+        const house = HYPESQUAD_HOUSES.find(entry => entry[0] === current);
+        const dot = color => el(RN.View, {style:{width:24, height:24, borderRadius:12, backgroundColor:color}});
+        const rows = Row ? HYPESQUAD_HOUSES.map(([id, , color]) => el(Row, {key:id, label:houseName(id), icon:dot(color), disabled:!on || hype.busy,
+            trailing:id === current ? el(Check, {size:"md"}) : undefined, onPress:() => { if (id !== current) { haptic("SELECTION"); hypeSquadJoin(id); } }})) : [];
+        const groups = [
+            on ? null : offCard("status", venusIcon(18747, "HomeIcon"), "hypeSquad"),
+            statusCard("now", house ? tr("You're in {house}.", {house:houseName(house[0])}) : "You're not in a HypeSquad house.", {IconComponent:venusIcon(18747, "HomeIcon")}),
+            el(Group, {key:"houses", title:tr("Pick a house")}, rows),
+            current ? el(Group, {key:"leave"}, actionRow(ui, "leave", "Leave HypeSquad", "You keep your account. Only the house badge goes.",
+                () => confirmAction("Leave HypeSquad?", "Your house badge is removed from your profile.", "Leave", () => hypeSquadJoin(0)), !on || hype.busy, true, rowIcon(6485, "XSmallIcon"))) : null,
+            footnote("note", "Discord limits how often you can change house, so a change may be refused for a while.")];
+        return settingsBody(ui, groups);
+    }
+    // Custom idle: IdleStore (6144) reads Discord's IDLE_DURATION (1087) once, but compares against it on every check. An
+    // object whose valueOf answers with the current choice makes that comparison live, with no restart.
+    function customIdleValue(value) { const n = Math.round(Number(value)); return Number.isFinite(n) ? Math.max(0, Math.min(720, n)) : CUSTOM_IDLE_DEFAULT; }
+    function customIdleMillis() {
+        if (!enabled("customIdle")) return CUSTOM_IDLE_DEFAULT * 60000;
+        const minutes = customIdleValue(settings.customIdleMinutes);
+        return minutes > 0 ? minutes * 60000 : Infinity;
+    }
+    function customIdleApply(exports) {
+        if (!exports || exports.IDLE_DURATION === undefined) return exports;
+        return replaceValue(exports, "IDLE_DURATION", {valueOf:customIdleMillis, toString:() => String(customIdleMillis())});
+    }
+    function CustomIdleSettings() {
+        useSettings("customIdle");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("customIdle"), minutes = customIdleValue(settings.customIdleMinutes), Icon = venusIcon(14205, "UserClockIcon");
+        const text = n => n === 0 ? tr("Never") : pl(n, "{n} minute", "{n} minutes");
+        const groups = [
+            on ? null : offCard("status", Icon, "customIdle"),
+            statusCard("now", minutes === 0 ? "Discord never sets you to Idle on its own." : pl(minutes, "Discord sets you to Idle after {n} minute without activity.",
+                "Discord sets you to Idle after {n} minutes without activity."), {IconComponent:Icon}),
+            el(PresetOrCustom, {key:"time", title:tr("Go idle after"), value:minutes, disabled:!on, placeholder:CUSTOM_IDLE_DEFAULT, min:1, max:720,
+                inputLabel:tr("Minutes, {min} to {max}", {min:1, max:720}), format:text, presets:[1, 5, 10, 30, 60, 0].map(n => ({value:n, label:text(n)})),
+                onChange:value => setSetting("customIdleMinutes", value), hint:tr("Discord's own time is 10 minutes.")}),
+            footnote("note", "Opening Discord again sets you back to active.")];
+        return settingsBody(ui, groups);
+    }
+    // Pause invites: the server icon's hold menu gets Pause invites (or Resume invites) for anyone who can manage the server.
+    // Discord's own switch lives in the server's Safety settings; this is PUT /guilds/:id/incident-actions, the same call.
+    const PAUSE_INVITES_SHEET = "VenusPauseInvites";
+    function pauseInvitesGuild(id) { return serverCall(serverStore(2090), "getGuild", id) || null; }
+    function pauseInvitesPaused(guild) {
+        const feat = guild && guild.features, until = guild && guild.incidentsData && guild.incidentsData.invitesDisabledUntil;
+        const flagged = !!feat && (typeof feat.has === "function" ? feat.has("INVITES_DISABLED") : Array.isArray(feat) && feat.indexOf("INVITES_DISABLED") >= 0);
+        const stamp = until instanceof Date ? until.getTime() : typeof until === "string" ? Date.parse(until) : 0;
+        return flagged || stamp > Date.now();
+    }
+    function pauseInvitesAllowed(guild) {
+        const P = inspectedExport(1087, "Permissions") || inspectedExport(1098, "Permissions"), perms = permissions || inspectedExport(4845, "default");
+        try { return !!(guild && P && P.MANAGE_GUILD != null && perms && perms.can(P.MANAGE_GUILD, guild)); } catch (_) { return false; }
+    }
+    function pauseInvitesMenu(orig, self, args) {
+        const items = orig.apply(self, args), guildId = args[0] == null ? null : String(args[0]);
+        if (!enabled("pauseInvites") || !Array.isArray(items) || !guildId || !/^\d{17,20}$/.test(guildId)) return items;
+        const guild = pauseInvitesGuild(guildId);
+        if (!guild || !pauseInvitesAllowed(guild)) return items;
+        const paused = pauseInvitesPaused(guild);
+        return items.concat([{IconComponent:paused ? venusIcon(12093, "UndoIcon") : venusIcon(8676, "PauseIcon"), label:tr(paused ? "Resume invites" : "Pause invites"),
+            action:() => { if (paused) pauseInvitesSet(guildId, 0); else pauseInvitesAsk(guildId); }}]);
+    }
+    function pauseInvitesAsk(guildId) {
+        const ui = reviewUI();
+        if (typeof ui.simpleSheet !== "function") { pauseInvitesSet(guildId, 24); return; }
+        const Clock = venusIcon(5150, "ClockIcon");
+        const options = [1, 6, 24].map(hours => ({label:pl(hours, "{n} hour", "{n} hours"), IconComponent:Clock, onPress:() => { hideReviewSheet(ui, PAUSE_INVITES_SHEET); pauseInvitesSet(guildId, hours); }}));
+        try { ui.simpleSheet({key:PAUSE_INVITES_SHEET, header:{title:tr("Pause invites for"), onClose:() => hideReviewSheet(ui, PAUSE_INVITES_SHEET)}, options}); } catch (_) {}
+    }
+    // hours 0 resumes. The server also holds a pause on DMs: it's sent back as it is, so this never changes it.
+    function pauseInvitesSet(guildId, hours) {
+        const guild = pauseInvitesGuild(guildId), data = guild && guild.incidentsData, dms = data && data.dmsDisabledUntil;
+        const dmsStamp = dms instanceof Date ? dms.getTime() : typeof dms === "string" ? Date.parse(dms) : 0;
+        const body = {invites_disabled_until:hours ? new Date(Date.now() + hours * 3600000).toISOString() : null,
+            dms_disabled_until:dmsStamp > Date.now() ? new Date(dmsStamp).toISOString() : null};
+        httpCall("put", {url:"/guilds/" + guildId + "/incident-actions", body}).then(() => {
+            haptic("IMPACT_LIGHT"); reviewToast(reviewUI(), hours ? "Invites paused" : "Invites resumed", venusIcon(6473, "CheckmarkLargeIcon"));
+        }, () => reviewToast(reviewUI(), "Couldn't change invites. Check that you can manage this server.", venusIcon(7838, "WarningIcon")));
+    }
+    // Fast delete channels: channel settings stops asking, and a channel's hold menu gets a Delete channel row.
+    const FAST_DELETE_TITLES = ["8D8Rsb", "H7vTe2", "nEOg1N", "ifbXnL"];
+    function fastDeleteAlert(popup) {
+        const title = popup && popup.title;
+        if (typeof title !== "string" || typeof popup.onConfirm !== "function" || !locale || !locale.intl || !locale.t) return false;
+        return FAST_DELETE_TITLES.some(key => { const token = locale.t[key], label = token && locale.intl.string(token); return typeof label === "string" && label === title; });
+    }
+    function fastDeleteAllowed(channel) {
+        if (!channel || !channel.guild_id || channel.type === 10 || channel.type === 11 || channel.type === 12) return false;
+        const P = inspectedExport(1087, "Permissions") || inspectedExport(1098, "Permissions"), perms = permissions || inspectedExport(4845, "default");
+        try { return !!(P && P.MANAGE_CHANNELS != null && perms && perms.can(P.MANAGE_CHANNELS, channel)); } catch (_) { return false; }
+    }
+    function fastDeleteSheet(orig, self, args) {
+        const tree = orig.apply(self, args), props = args[0];
+        if (!enabled("fastDeleteChannels") || !settings.fastDeleteChannelsMenu || !React || !tree || !props || !props.channelId) return tree;
+        const channel = channelStore && typeof channelStore.getChannel === "function" ? channelStore.getChannel(String(props.channelId)) : null;
+        if (!fastDeleteAllowed(channel)) return tree;
+        return sheetAddRow(tree, props, "venus-delete-channel", tr("Delete channel"), venusIcon(5148, "TrashIcon"), () => fastDeleteChannel(channel),
+            "ChannelLongPress-" + props.channelId, "destructive");
+    }
+    function fastDeleteChannel(channel) {
+        if (!channel || !channel.id) return;
+        httpCall("del", {url:"/channels/" + channel.id}).then(() => { haptic("IMPACT_LIGHT"); reviewToast(reviewUI(), "Channel deleted", venusIcon(5148, "TrashIcon")); },
+            () => reviewToast(reviewUI(), "Couldn't delete the channel", venusIcon(7838, "WarningIcon")));
+    }
+    function FastDeleteChannelsSettings() {
+        useSettings("fastDeleteChannels");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("fastDeleteChannels"), Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
+        const groups = [
+            on ? null : offCard("status", venusIcon(18679, "ChannelListIcon"), "fastDeleteChannels"),
+            statusCard("warn", "A deleted channel can't be brought back.", {title:tr("No undo"), IconComponent:venusIcon(7838, "WarningIcon")}),
+            el(Group, {key:"opts", title:tr("Delete faster")},
+                switchRow(Switch, "fastDeleteChannelsConfirm", "Skip the confirmation", "Channel settings deletes right away, without asking first.", rowIcon(6573, "CircleXIcon")),
+                switchRow(Switch, "fastDeleteChannelsMenu", "Delete from the channel menu", "Hold a channel to delete it from its menu. Needs Manage Channels.", rowIcon(5148, "TrashIcon"))),
+            footnote("note", "Threads and forum posts are always deleted the normal way.")];
+        return settingsBody(ui, groups);
+    }
+    // Mutual group DMs: a line under a profile's mutual servers and friends, and a list of the group DMs you share.
+    const MUTUAL_GROUPS_SHEET = "VenusMutualGroups";
+    function mutualGroupList(userId) {
+        let list = [];
+        try { list = channelStore && typeof channelStore.getSortedPrivateChannels === "function" ? channelStore.getSortedPrivateChannels() : []; } catch (_) { list = []; }
+        return Array.isArray(list) ? list.filter(channel => channel && channel.type === 3 && Array.isArray(channel.recipients) && channel.recipients.indexOf(userId) >= 0) : [];
+    }
+    function mutualGroupName(channel) {
+        if (channel.name) return String(channel.name);
+        const names = (channel.recipients || []).map(id => { const user = userStore && userStore.getUser(id); return user && (user.globalName || user.username); }).filter(Boolean);
+        return names.length ? names.join(", ") : tr("Group DM");
+    }
+    function mutualGroupsRow(orig, self, args) {
+        const result = orig.apply(self, args);
+        if (!enabled("mutualGroupDMs") || !React || !RN) return result;
+        const user = args[0] && args[0].user, me = currentUser();
+        if (!user || !user.id || me && user.id === me.id) return result;
+        const count = mutualGroupList(user.id).length;
+        return count ? el(React.Fragment, null, result, el(MutualGroupsRow, {key:"venus-mutual-groups", userId:user.id, count})) : result;
+    }
+    function MutualGroupsRow(props) {
+        const Text = inspectedExport(5187, "Text"), Press = RN.Pressable || RN.TouchableOpacity || RN.View, Icon = venusIcon(8489, "GroupIcon"), Chevron = venusIcon(7182, "ChevronSmallRightIcon");
+        const label = pl(props.count, "{n} mutual group DM", "{n} mutual group DMs");
+        return el(Press, {onPress:() => { haptic("SELECTION"); mutualGroupsOpen(props.userId); }, accessibilityRole:"button", accessibilityLabel:label,
+            style:{flexDirection:"row", alignItems:"center", gap:6, paddingVertical:8}},
+            el(Icon, {size:"xs"}), Text ? el(Text, {variant:"text-sm/medium", color:"text-default"}, label) : el(RN.Text, {style:{color:"#dbdee1", fontSize:14}}, label), el(Chevron, {size:"xs"}));
+    }
+    function mutualGroupsOpen(userId) {
+        const ui = reviewUI();
+        if (!enabled("mutualGroupDMs") || typeof ui.showSheet !== "function") return;
+        try { ui.showSheet({key:MUTUAL_GROUPS_SHEET, content:el(MutualGroupsSheet, {userId}), stackingBehavior:"stack"}); } catch (_) {}
+    }
+    function mutualGroupGo(channelId) {
+        const ui = reviewUI();
+        try { if (ui.sheets && typeof ui.sheets.hideAllActionSheets === "function") ui.sheets.hideAllActionSheets(); } catch (_) {}
+        const go = inspectedExport(1114, "transitionTo");
+        if (typeof go === "function") later(() => { try { go("/channels/@me/" + channelId); } catch (_) {} }, 250);
+    }
+    function MutualGroupsSheet(props) {
+        useSettings("mutualGroupDMs");
+        const ui = reviewUI(), Group = ui.TableRowGroup || RN.View, Row = ui.TableRow;
+        const close = () => hideReviewSheet(ui, MUTUAL_GROUPS_SHEET);
+        const header = ui.Header ? el(ui.Header, {title:tr("Mutual group DMs"), trailing:ui.Close ? el(ui.Close, {onPress:close}) : undefined}) : null;
+        const rows = Row ? mutualGroupList(props.userId).map(channel => el(Row, {key:channel.id, label:mutualGroupName(channel), arrow:true, icon:rowIcon(8489, "GroupIcon"),
+            subLabel:pl((channel.recipients || []).length + 1, "{n} member", "{n} members"), onPress:() => { haptic("SELECTION"); mutualGroupGo(channel.id); }})) : [];
+        const content = el(RN.View, {style:{paddingHorizontal:12, paddingBottom:24, gap:16}}, rows.length ? el(Group, {key:"list"}, rows) :
+            footnote("none", "You don't share any group DMs."));
+        return serverEditScroll(ui, header, content);
+    }
+    // Platform spoof: the gateway sign-in (IDENTIFY) carries the client's properties, and Discord decides from them whether
+    // you show as mobile, desktop or web. GatewaySocketSingleton (14713) builds the sign-in with socket.handleIdentify.
+    const platformSpoof = {hooked:false, applied:undefined};
+    function platformSpoofProperties(kind, base) {
+        const keep = {client_launch_id:base.client_launch_id, client_heartbeat_session_id:base.client_heartbeat_session_id};
+        const locale = base.system_locale || questLocale();
+        if (kind === "web") return Object.assign({os:"Windows", browser:"Chrome", device:"", system_locale:locale, has_client_mods:false,
+            browser_user_agent:"Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/" + QUEST_DESKTOP.chrome + " Safari/537.36",
+            browser_version:QUEST_DESKTOP.chrome, os_version:"10", referrer:"", referring_domain:"", referrer_current:"", referring_domain_current:"", release_channel:"stable",
+            client_build_number:QUEST_DESKTOP.build, client_event_source:null}, keep);
+        if (kind === "console") return Object.assign({os:"Xbox", browser:"Discord Embedded", device:"", system_locale:locale, has_client_mods:false, release_channel:"stable",
+            client_build_number:QUEST_DESKTOP.build, client_event_source:null}, keep);
+        return Object.assign({os:"Windows", browser:"Discord Client", release_channel:"stable", client_version:QUEST_DESKTOP.version, os_version:QUEST_DESKTOP.osVersion,
+            os_arch:"x64", app_arch:"x64", system_locale:locale, has_client_mods:false, browser_user_agent:QUEST_DESKTOP_UA, browser_version:QUEST_DESKTOP.electron,
+            os_sdk_version:QUEST_DESKTOP.osSdk, client_build_number:QUEST_DESKTOP.build, native_build_number:QUEST_DESKTOP.native, client_event_source:null}, keep);
+    }
+    function platformSpoofResult(result) {
+        const wanted = enabled("platformSpoof") ? settings.platformSpoofDevice : "";
+        platformSpoof.applied = wanted;
+        if (!wanted || !result || typeof result !== "object" || !result.properties || typeof result.properties !== "object") return result;
+        return Object.assign({}, result, {properties:platformSpoofProperties(wanted, result.properties)});
+    }
+    function platformSpoofHook(exports) {
+        const socket = exports && exports.socket;
+        if (!socket || typeof socket.handleIdentify !== "function" || platformSpoof.hooked) return exports;
+        platformSpoof.hooked = true;
+        const orig = socket.handleIdentify;
+        replaceValue(socket, "handleIdentify", function () {
+            const result = orig.apply(this, arguments);
+            try { return result && typeof result.then === "function" ? result.then(platformSpoofResult) : platformSpoofResult(result); } catch (_) { return result; }
+        });
+        return exports;
+    }
+    // A new device only shows once Discord signs in again, so a change asks to reopen (when Venus can reopen Discord).
+    function platformSpoofAsk() {
+        const wanted = enabled("platformSpoof") ? settings.platformSpoofDevice : "";
+        if (!features.platformSpoof || platformSpoof.applied === undefined || platformSpoof.applied === wanted || !RN) return;
+        const ui = reviewUI();
+        if (!features.systemFont || !files) { reviewToast(ui, "Reopen Discord to show your new device", venusIcon(11630, "RefreshIcon")); return; }
+        const reopen = () => { Promise.resolve().then(() => files.writeFile("documents", PREFS, settingsSnapshot(), "utf8")).then(() => files.fileExists("venus-font-v1:restart")).catch(() => {}); };
+        const title = tr("Show your new device"), body = tr("Discord shows it the next time it signs in. Reopen Discord to do that now.");
+        if (ui.alerts && typeof ui.alerts.show === "function") try { ui.alerts.show({title, body, confirmText:tr("Reopen now"), cancelText:tr("Later"), onConfirm:reopen}); return; } catch (_) {}
+        if (RN.Alert) RN.Alert.alert(title, body, [{text:tr("Later"), style:"cancel"}, {text:tr("Reopen now"), onPress:reopen}]);
+    }
+    function PlatformSpoofSettings() {
+        useSettings("platformSpoof");
+        const ui = reviewUI();
+        if (!React || !RN) return null;
+        const on = enabled("platformSpoof");
+        const groups = [
+            on ? null : offCard("status", venusIcon(5133, "UserPlatformIcon"), "platformSpoof"),
+            statusCard("risk", "Discord doesn't allow this. It could put your account at risk.", {title:tr("Use at your own risk"), IconComponent:venusIcon(7838, "WarningIcon")}),
+            radioGroup(ui, "device", "Show me as", "platformSpoofDevice", on, [
+                ["desktop", "Desktop", "A computer", rowIcon(9386, "ScreenIcon")],
+                ["web", "Web", "A web browser", rowIcon(9393, "GlobeEarthIcon")],
+                ["console", "Console", "A game console", rowIcon(9514, "GameControllerIcon")]]),
+            footnote("note", "Anyone who sees device icons sees this. It shows the next time Discord signs in, so reopen Discord after changing it.")];
         return settingsBody(ui, groups);
     }
     // Tap mentions to open profiles (based on ClickableMentions by mwittrien). The message bar is a native view
@@ -20862,7 +21160,9 @@
                 return exports;
             case 1417: return features.serverEdit ? serverEditHookAvatars(exports) : exports;
             case 10002: if ((features.quests || features.badges || features.userNotif || features.removedAlerts) && exports && exports.default) { bgKeepAlive.fg = exports.default; backgroundSync(); } return exports;
-            case 14713: return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookGatewaySocket(exports) : exports;
+            case 14713:
+                if (features.platformSpoof) exports = platformSpoofHook(exports);
+                return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookGatewaySocket(exports) : exports;
             case 14748: return (features.quests || features.badges || features.userNotif || features.removedAlerts) ? hookPauseGateway(exports) : exports;
             case 6015: if (features.dndBanners && exports && exports.default) dndBanners.presence = exports.default; return features.badges ? hookSelfPresenceStore(exports) : exports;
             case 9839: return features.cloneExpressions ? hookComponent(exports, cloneEmojiSheet) : exports;
@@ -20928,6 +21228,7 @@
             case 17433:
                 // Edit locally, then Server info, after Discord's own rows.
                 if (features.serverEdit) exports = hookExport(exports, "default", serverEditMenu);
+                if (features.pauseInvites) exports = hookExport(exports, "default", pauseInvitesMenu);
                 return features.serverInfo ? hookExport(exports, "default", serverInfoMenu) : exports;
             case 11024: if (features.reviewDB) oauthModal = exports.default; return exports;
             case 6542: if (features.reviewDB) nativeRowGroup = exports.TableRowGroup; return exports;
@@ -20963,12 +21264,14 @@
             case 10036: return features.tenorGifs ? hookExport(exports, "getSearchPlaceholder", tenorPlaceholder) : exports;
             case 10035: return features.favouriteAnything ? hookExport(exports, "addFavoriteGIF", favouriteAdd) : exports;
             case 10038: return features.favouriteAnything ? hookExport(exports, "useFavoriteGIFsMobile", favouriteList) : exports;
+            case 14197: return features.mutualGroupDMs ? hookComponent(exports, mutualGroupsRow) : exports;
             case 2068: channelStore = exports.default; return exports;
             case 12849: return features.noTyping ? replaceValue(exports, "default", hookExport(hookExport(exports.default, "startTyping", typing), "stopTyping", typing)) : exports;
-            case 1128: if (features.quickDelete || features.noConfirmPin) locale = exports; return exports;
+            case 10596: return features.fastDeleteChannels ? hookComponent(exports, fastDeleteSheet) : exports;
+            case 1128: if (features.quickDelete || features.noConfirmPin || features.fastDeleteChannels) locale = exports; return exports;
             case 14082: return features.listenAlong ? hookComponent(exports, listenAlongButton, "PlayOnSpotifyButton") : exports;
             case 9990: return features.quietReplies ? hookExport(hookExport(exports, "createPendingReply", quietReplyCreate), "createShallowPendingReply", quietReplyCreate) : exports;
-            case 5400: return features.quickDelete || features.noConfirmPin ? replaceValue(exports, "default", hookExport(exports.default, "show", quickConfirm)) : exports;
+            case 5400: return features.quickDelete || features.noConfirmPin || features.fastDeleteChannels ? replaceValue(exports, "default", hookExport(exports.default, "show", quickConfirm)) : exports;
             case 5534: if (features.noDelete) { messageRecords = exports; restoreDeleted(); } return exports;
             case 1392:
                 if (exports && exports.default && (features.validUser || features.splitMessages || features.fixEmbeds || features.translate || features.userNotif || features.removedAlerts || features.accountSwitcher || features.appIcons || features.nitroThemes || features.messageHighlight || features.serverInfo || features.noDelete || features.reviewDB || features.platformIndicators || features.hiddenChannels || features.gestures || features.freeNitro || features.badges || features.bulkDelete || features.experiments || features.quietReplies || features.silentEdit || features.silentDelete || features.localEdit))
@@ -21016,6 +21319,7 @@
                 }
                 return exports;
             case 1087: case 1098:
+                if (id === 1087 && features.customIdle) exports = customIdleApply(exports);
                 if (features.hiddenChannels && exports.Permissions) viewPermission = exports.Permissions.VIEW_CHANNEL;
                 if (features.bulkDelete && exports.Permissions && bulkDelete.managePermission === undefined)
                     bulkDelete.managePermission = exports.Permissions.MANAGE_MESSAGES;
