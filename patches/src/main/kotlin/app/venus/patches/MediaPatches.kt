@@ -70,6 +70,17 @@ private fun requireLocals(method: MutableMethod, count: Int) {
 }
 
 /**
+ * Fails the patch if a parameter sits above v15. The guards below pass p-registers to instructions with 4-bit register
+ * fields (invoke-static {p0}, invoke-super, invoke-virtual {p1, v0}), which can't reach v16 and up; the encoded instruction
+ * would read the wrong register and ART would reject the whole class at runtime.
+ */
+private fun requireLowRegisters(method: MutableMethod) {
+    val implementation = method.implementation ?: throw PatchException("${method.name} has no code")
+    if (implementation.registerCount > 16)
+        throw PatchException("${method.definingClass}->${method.name} now has ${implementation.registerCount} registers")
+}
+
+/**
  * AudioPlayerManager.pauseCurrentPlayer(remember): the JS VoiceMessagesPlaybackManager asks for it with remember = true
  * when Discord goes to the background. Venus answers first; true means the sound keeps playing.
  * 4 registers, 2 of them parameters: v0 is free.
@@ -78,6 +89,7 @@ internal fun keepAudioPlaying(method: MutableMethod) {
     if (method.parameterTypes.map { it.toString() } != listOf("Z") || method.returnType != "V")
         throw PatchException("AudioPlayerManager.pauseCurrentPlayer ABI changed")
     requireLocals(method, 1)
+    requireLowRegisters(method)
     requireUnpatched(method, "venus-")
     method.addInstructions(0, """
         invoke-static {p1}, $BACKGROUND_MEDIA->keepAudio(Z)Z
@@ -89,13 +101,19 @@ internal fun keepAudioPlaying(method: MutableMethod) {
     """)
 }
 
-/** MediaView's onHostPause pauses its video when Discord's screen pauses; not the one in Venus' picture-in-picture window. */
+/**
+ * MediaView's onHostPause pauses its video when Discord's screen pauses; not the one in Venus' picture-in-picture window.
+ * onHostPause has 25 registers, so `this` (p0) is v24, which iget-object's 4-bit register fields can't address: reading
+ * the field straight from p0 left v0 unset and ART rejected the whole class, crashing every embed and attachment as it
+ * inflated. `this` is copied into v0 first with move-object/from16, which reaches any register.
+ */
 internal fun keepVideoPlaying(method: MutableMethod) {
     if (method.parameterTypes.isNotEmpty() || method.returnType != "V") throw PatchException("MediaView onHostPause ABI changed")
     requireLocals(method, 1)
     requireUnpatched(method, "venus-")
     method.addInstructions(0, """
-        iget-object v0, p0, $MEDIA_VIEW_LIFECYCLE->this${'$'}0:$MEDIA_VIEW
+        move-object/from16 v0, p0
+        iget-object v0, v0, $MEDIA_VIEW_LIFECYCLE->this${'$'}0:$MEDIA_VIEW
         invoke-static {v0}, $BACKGROUND_MEDIA->keepVideo(Landroid/view/View;)Z
         move-result v0
         if-eqz v0, :venus_pause_video
@@ -113,6 +131,7 @@ internal fun keepVideoPlaying(method: MutableMethod) {
  */
 internal fun activityGuard(method: MutableMethod, call: String, registers: String, label: String) {
     requireLocals(method, 1)
+    requireLowRegisters(method)
     requireUnpatched(method, "venus-")
     val code = method.implementation?.instructions?.toList() ?: throw PatchException("${method.name} has no code")
     val superCall = code.firstOrNull {
@@ -136,6 +155,7 @@ internal fun activityGuard(method: MutableMethod, call: String, registers: Strin
 /** After super: tells Venus, then Discord's own code runs as before. */
 internal fun activityNotice(method: MutableMethod, call: String) {
     requireUnpatched(method, "venus-")
+    requireLowRegisters(method)
     method.addInstructions(afterSuper(method), "invoke-static {p0}, $BACKGROUND_MEDIA->$call")
 }
 
@@ -151,6 +171,7 @@ internal fun mediaBridge(method: MutableMethod) {
     if (method.parameterTypes.map { it.toString() } != listOf("Ljava/lang/String;", "Ljava/lang/String;", "Ljava/lang/String;", PROMISE) ||
         method.returnType != "V") throw PatchException("FileModule.moveFile ABI changed")
     requireLocals(method, 1)
+    requireLowRegisters(method)
     requireUnpatched(method, "venus-")
     method.addInstructions(0, """
         const-string v0, "venus-media-v1:"
