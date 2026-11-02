@@ -105,14 +105,28 @@ internal fun keepVideoPlaying(method: MutableMethod) {
     """)
 }
 
-/** After super: Venus first. Discord's own code (its call picture-in-picture) only runs when Venus didn't act. */
+/**
+ * Venus first; Discord's own code (its call picture-in-picture) only runs when Venus didn't act. The guard goes at the very
+ * start of the method and calls super itself before returning: a branch inserted after the super call of these short
+ * methods came out pointing inside an instruction (VerifyApk caught it), while a prefix at index 0 encodes cleanly, like
+ * every other Venus guard.
+ */
 internal fun activityGuard(method: MutableMethod, call: String, registers: String, label: String) {
     requireLocals(method, 1)
     requireUnpatched(method, "venus-")
-    method.addInstructions(afterSuper(method), """
+    val code = method.implementation?.instructions?.toList() ?: throw PatchException("${method.name} has no code")
+    val superCall = code.firstOrNull {
+        it.opcode == Opcode.INVOKE_SUPER && ((it as ReferenceInstruction).reference as MethodReference).name == method.name
+    } ?: throw PatchException("${method.definingClass}->${method.name} no longer calls super")
+    val reference = (superCall as ReferenceInstruction).reference as MethodReference
+    if (reference.parameterTypes.map { it.toString() } != method.parameterTypes.map { it.toString() })
+        throw PatchException("${method.definingClass}->${method.name} calls a different super method")
+    val params = (0..method.parameterTypes.size).joinToString(", ") { "p$it" }
+    method.addInstructions(0, """
         invoke-static {$registers}, $BACKGROUND_MEDIA->$call
         move-result v0
         if-eqz v0, :$label
+        invoke-super {$params}, $reference
         return-void
         :$label
         nop
