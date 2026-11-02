@@ -21152,8 +21152,8 @@
         }
         // Across several chats the dialog says so: the messages aren't all in front of you.
         const body = chats > 1 ?
-            pl(count, "Are you sure you want to delete {n} selected message in {chats} chats? This can't be undone.",
-                "Are you sure you want to delete {n} selected messages in {chats} chats? This can't be undone.", {chats}) :
+            pl(chats, "Are you sure you want to delete your selection from {n} chat? Messages selected: {count}. This can't be undone.",
+                "Are you sure you want to delete your selection from {n} chats? Messages selected: {count}. This can't be undone.", {count}) :
             pl(count, "Are you sure you want to delete {n} selected message? This can't be undone.",
                 "Are you sure you want to delete {n} selected messages? This can't be undone.");
         const ui = reviewUI();
@@ -21437,7 +21437,7 @@
         const chats = deleting ? 1 : bulkDeleteByChat().size;
         const statusText = deleting ?
             tr("Deleting {done} of {total}…", {done:Math.min(bulkDelete.attempted + 1, bulkDelete.total), total:bulkDelete.total}) :
-            chats > 1 ? tr("{n} selected in {chats} chats", {n:count, chats}) : tr("{n} selected", {n:count});
+            chats > 1 ? pl(chats, "{count} selected in {n} chat", "{count} selected in {n} chats", {count}) : tr("{n} selected", {n:count});
         const height = Math.max(56, Number.isFinite(inputHeight) && inputHeight > 0 ? inputHeight : 0);
         // A plain view placed with layout, never a native-driven transform or popIn wrapper: on Android those draw the bar
         // where it belongs but leave its touch area behind (#82). The slot takes every touch, so the hidden composer
