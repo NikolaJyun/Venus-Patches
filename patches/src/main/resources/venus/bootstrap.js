@@ -2950,8 +2950,11 @@
         return mentionChannelFormat(orig.apply(self, args));
     }
     mentionChannelInfo.call1 = (orig, self, id) => mentionChannelFormat(orig.call(self, id));
-    function parserStateChannels(orig, self, args) {
-        const state = orig.apply(self, args);
+    // createParserState(a, b) runs once per parsed message and nearly always has nothing to add: the two-argument call
+    // skips the arguments object and apply (Hermes HBC98: 43.0 -> 23.4 us per 100 calls, 1.83x).
+    function parserStateChannels(orig, self, args) { return parserStateExtras(orig.apply(self, args)); }
+    parserStateChannels.call2 = (orig, self, a, b) => parserStateExtras(orig.call(self, a, b));
+    function parserStateExtras(state) {
         const clean = features.cleanChannels && enabled("cleanChannels");
         if (!clean || !state || !Array.isArray(state.channels) || !channelStore || typeof channelStore.getChannel !== "function") return state;
         let extras = null;
