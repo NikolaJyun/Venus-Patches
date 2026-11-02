@@ -21561,9 +21561,10 @@
         useSettings("bulkDelete");
         const s = useChatPreviewStyles(), k = usePreviewChrome(), on = !!props.on;
         const includeCached = !!settings.bulkDeleteIncludeCached;
-        const blank = {sheet:false, selecting:false, picked:["m1"], gone:false, pulse:null};
+        const blank = {sheet:false, selecting:false, picked:["m1"], gone:false, pulse:null, chat:0};
         const [state, setState] = React.useState(blank);
         const update = change => setState(st => Object.assign({}, st, typeof change === "function" ? change(st) : change));
+        const state0 = {picked:includeCached ? ["m1", "m2", "m3"] : ["m1", "m2"]};
         const story = useStory(on, () => {
             const steps = [
                 [0, () => setState(blank), tr("You sent a couple of messages you want to clean up")],
@@ -21580,6 +21581,10 @@
                     tr("Kept deleted messages can be selected too")]);
             }
             steps.push(
+                [1000, () => { animateLayout(); haptic("SELECTION"); update({chat:1, picked:state0.picked.concat(["x1"])}); },
+                    tr("Switch to another chat, server or DM: your selection stays")],
+                [950, () => { haptic("SELECTION"); update({pulse:{who:"x2", id:"pick4"}, picked:state0.picked.concat(["x1", "x2"])}); },
+                    tr("Keep picking there")],
                 [950, () => update({pulse:{who:"delBtn", id:"del"}}), tr("Tap Delete on the bar to remove them all at once")],
                 [450, () => { animateLayout(); haptic("IMPACT_MEDIUM"); update({gone:true, selecting:false, pulse:null}); },
                     tr("They're all gone at once")],
@@ -21589,7 +21594,9 @@
         }, [includeCached]);
         const Check = venusIcon(7101, "CheckmarkSmallIcon"), Trash = venusIcon(5148, "TrashIcon"), CircleCheck = venusIcon(7144, "CircleCheckIcon");
         const selecting = on ? state.selecting : true;
-        const picked = on ? state.picked : (includeCached ? ["m1", "m2", "m3"] : ["m1", "m2"]);
+        const picked = on ? state.picked : (includeCached ? ["m1", "m2", "m3", "x1"] : ["m1", "m2", "x1"]);
+        const chatTwo = on && state.chat === 1;
+        const chats = picked.some(id => id[0] === "x") && picked.some(id => id[0] === "m") ? 2 : 1;
         const gone = on ? state.gone : false;
         const circle = isChecked => el(RN.View, {
             style:{
@@ -21612,7 +21619,11 @@
                     selecting ? popIn("c:" + id + ":" + (isChecked ? "1" : "0"), circle(isChecked)) : null),
                 tapRipple(state.pulse, id));
         };
-        const rows = [
+        const rows = chatTwo ? [
+            previewMessage(s, "kim", "Kim", "#faa61a", tr("Today at 4:10 PM"), el(RN.Text, {style:s.text}, tr("Anyone up for a game later?"))),
+            msgRow("x1", tr("You"), "#5865f2", tr("Today at 4:11 PM"), tr("Wait, wrong link"), false),
+            msgRow("x2", tr("You"), "#5865f2", tr("Today at 4:12 PM"), tr("Let me clean these up"), false)
+        ] : [
             previewMessage(s, "sam", "Sam", "#eb459e", tr("Today at 4:01 PM"), el(RN.Text, {style:s.text}, tr("Anyone up for a game later?"))),
             gone ? null : msgRow("m1", tr("You"), "#5865f2", tr("Today at 4:02 PM"), tr("Wait, wrong link"), false),
             gone ? null : msgRow("m2", tr("You"), "#5865f2", tr("Today at 4:03 PM"), tr("Let me clean these up"), false),
@@ -21633,7 +21644,7 @@
         const bar = selecting ? popIn("bar", el(RN.View, {key:"bar", style:{marginHorizontal:10, marginBottom:8, paddingHorizontal:12, paddingVertical:8, borderRadius:18, backgroundColor:"#2b2d31", borderWidth:1, borderColor:"#ffffff18", flexDirection:"row", alignItems:"center", gap:8}},
             el(RN.View, {style:{minWidth:22, height:22, borderRadius:11, paddingHorizontal:6, backgroundColor:"#5865f2", alignItems:"center", justifyContent:"center"}},
                 el(RN.Text, {style:{color:"#ffffff", fontSize:12, fontWeight:"700"}}, String(picked.length))),
-            el(RN.Text, {style:[s.name, {fontSize:13, flex:1}], numberOfLines:1}, tr("{n} selected", {n:picked.length})),
+            el(RN.Text, {style:[s.name, {fontSize:13, flex:1}], numberOfLines:1}, chats > 1 ? pl(chats, "{count} selected in {n} chat", "{count} selected in {n} chats", {count:picked.length}) : tr("{n} selected", {n:picked.length})),
             el(RN.View, {style:{flexDirection:"row", alignItems:"center", gap:5, paddingHorizontal:12, height:30, borderRadius:15, backgroundColor:"#f23f43"}},
                 el(Trash, {size:"xxs", color:"#ffffff"}),
                 el(RN.Text, {style:{color:"#ffffff", fontSize:12, fontWeight:"700"}}, tr("Delete")),
@@ -21644,7 +21655,7 @@
                 bar,
                 sheet
             ], {
-                header:previewHeader(k, {title:"general"}),
+                header:previewHeader(k, {title:chatTwo ? "random" : "general"}),
                 footer:el(RN.View, {key:"foot"},
                     !selecting && !sheet ? previewInput(k, s, {placeholder:tr("Message {channel}", {channel:"#general"})}) : null,
                     on ? storyStrip(k, s, story) : null)
