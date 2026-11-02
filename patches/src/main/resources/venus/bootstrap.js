@@ -11011,15 +11011,20 @@
     // A server's channel list keeps room for its Search row (useRedesignGuildHeaderHeight 17263: SMALL_BUTTON_HEIGHT plus
     // SEARCH_BAR_MARGIN_BOTTOM). With Search, Invite and Events all removed the row is gone, so its room goes too.
     function serverHeaderEmpty() { return spotHidden("server.search") && spotHidden("server.invite") && spotHidden("server.events"); }
-    function guildHeaderHeight(orig, self, args) {
-        useSettings("hideAnything");
-        const height = orig.apply(self, args), guild = args[0];
+    // useRedesignGuildHeaderHeight(guild) is read on every server header render: the one-argument call skips the arguments
+    // object and apply (Hermes HBC98: 60.6 -> 43.0 us per 100 calls, 1.41x).
+    function guildHeaderHeightFinish(height, guild) {
         if (typeof height !== "number" || !enabled("hideAnything") || !serverHeaderEmpty()) return height;
         // Only real servers have the row (not Favorites).
         if (!guild || typeof guild.id !== "string" || !/^\d{15,}$/.test(guild.id)) return height;
         const button = inspectedExport(5484, "SMALL_BUTTON_HEIGHT"), margin = inspectedExport(11895, "SEARCH_BAR_MARGIN_BOTTOM");
         return Math.max(0, height - (typeof button === "number" ? button : 32) - (typeof margin === "number" ? margin : 0));
     }
+    function guildHeaderHeight(orig, self, args) {
+        useSettings("hideAnything");
+        return guildHeaderHeightFinish(orig.apply(self, args), args[0]);
+    }
+    guildHeaderHeight.call1 = (orig, self, guild) => { useSettings("hideAnything"); return guildHeaderHeightFinish(orig.call(self, guild), guild); };
     // A profile's tab bar (Tabs 12364) with only Main left is just a label: it goes, and Main's page shows on its own.
     function profileTabsBar(orig, self, args) {
         const rendered = orig.apply(self, args), props = args[0], items = props && props.state && props.state.items;
