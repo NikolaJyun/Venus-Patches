@@ -18,6 +18,10 @@
 * **Discord - Read all button:** Fixed muted servers being skipped, so their channels stayed unread after tapping Read all
 * **Discord - Read all button:** Fixed the debug log filling up with a line every time the server bar scrolled past the button, pushing out everything useful
 * **Discord - Custom branding:** Fixed Custom branding being selected by default when adding the source, so patching installed a renamed second copy of Discord
+* **Discord - Send long messages:** Fixed spoilers, `>>>` quotes and inline code breaking when a long message was cut into parts, showing hidden text in the clear
+* **Discord - Send long messages:** Fixed a cut landing inside a custom emoji, mention, link, flag or joined emoji, leaving broken text in both parts
+* **Discord - Send long messages:** Fixed long forum posts and scheduled message edits skipping Discord's length check and then being refused when sent
+* **Discord - Send long messages:** Fixed a sticker sent with long typed text being refused, losing both the sticker and the text
 
 ## [1.21.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.20.0...v1.21.0) (2026-11-02)
 
