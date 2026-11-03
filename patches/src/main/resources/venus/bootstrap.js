@@ -7364,7 +7364,9 @@
             el(RN.Pressable || RN.View,{onPress:disabled ? undefined : onPress,accessibilityRole:"button",accessibilityLabel:tr(buttonText),disabled:!!disabled,
                 style:{paddingHorizontal:16,height:40,borderRadius:20,justifyContent:"center",backgroundColor:"#5865f2",opacity:disabled ? 0.5 : 1}},
                 el(RN.Text,{style:{color:"#ffffff",fontWeight:"600"}},tr(buttonText)));
-        return el(RN.View,{key,style:{flexDirection:"row",alignItems:"flex-end",gap:8}},el(RN.View,{style:{flex:1}},input),button);
+        // With a label above the field the button lines up with the field's bottom edge; without one it's centered on the
+        // field. Bottom-aligned, it sat low next to Discord's field, which keeps room under its box (#145, Preview servers).
+        return el(RN.View,{key,style:{flexDirection:"row",alignItems:inputProps && inputProps.label ? "flex-end" : "center",gap:8}},el(RN.View,{style:{flex:1}},input),button);
     }
     function hexInt(hex) { const m=/^#?([0-9a-f]{6})$/i.exec(String(hex || "").trim()); return m ? parseInt(m[1],16) : null; }
     function intHex(n) { return typeof n==="number" && isFinite(n) ? "#"+(n & 0xffffff).toString(16).padStart(6,"0") : null; }
