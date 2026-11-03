@@ -13943,8 +13943,8 @@
     // also ask useMessageMaxLength, but neither sends through sendMessage: a forum post goes out with the thread
     // (POST /channels/:id/threads) and a scheduled edit replaces one message, so neither can be sent in parts. Given the
     // unlimited length they skipped Discord's "too long" check and the server refused the post or edit. They import
-    // useMessageMaxLength through this facade instead, which answers with the real limit.
-    const SPLIT_REAL_LIMIT_MODULES = {9995:1, 13811:1};
+    // useMessageMaxLength through this facade instead, which answers with the real limit. decorateDefine picks the two
+    // modules by ID itself: it runs before the core is loaded, so it can't read a table declared here.
     let splitRealFacade = null, splitRealSource = null;
     function splitRealLength(value) { return value >= SPLIT_UNLIMITED ? messageLimit() : value; }
     function splitRealImport(importer) {
@@ -23222,7 +23222,7 @@
                     factoryArgs[2] = listImport(factoryArgs[2], id);
                     factoryArgs[3] = listImport(factoryArgs[3], id);
                     result = factory.apply(this, factoryArgs);
-                } else if (features.splitMessages && SPLIT_REAL_LIMIT_MODULES[id] === 1) {
+                } else if (features.splitMessages && (id === 9995 || id === 13811)) {
                     const factoryArgs = Array.from(arguments);
                     factoryArgs[1] = splitRealImport(factoryArgs[1]);
                     factoryArgs[2] = splitRealImport(factoryArgs[2]);
