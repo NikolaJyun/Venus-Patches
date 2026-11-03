@@ -19631,7 +19631,7 @@
     // messages get the same native tag Discord draws for BOT and Venus draws for staff: "Timed out · 2h 14m", with the
     // exact end time for screen readers. Rows aren't drawn again on their own, so while a tag shows, the open chat is
     // redrawn once a minute: the tag counts down, and goes away when the timeout ends.
-    const timeoutTag = {members:null, shown:new Map(), timer:undefined};
+    const timeoutTag = {members:null, shown:new Map(), timer:undefined, due:0};
     function timeoutUntil(guildId, userId) {
         const members = timeoutTag.members || (timeoutTag.members = inspectedExport(2128, "default"));
         let member = null;
@@ -19639,8 +19639,10 @@
         const raw = member && member.communicationDisabledUntil, until = raw ? Date.parse(raw) : NaN;
         return Number.isFinite(until) && until > Date.now() ? until : 0;
     }
-    // 45m, 3h 20m, 2d 5h: the two biggest units, rounded up so it never says 0m while the timeout is still on.
+    // 45m, 3h 20m, 2d 5h: the two biggest units, rounded up so it never says 0m while the timeout is still on. The last
+    // minute counts down in seconds: in minutes a 1 minute timeout said 1m the whole time (#145).
     function timeoutLeft(ms) {
+        if (ms <= 60000) return tr("{n} s", {n:Math.max(1, Math.ceil(ms / 1000))});
         const minutes = Math.max(1, Math.ceil(ms / 60000)), days = Math.floor(minutes / 1440), hours = Math.floor(minutes % 1440 / 60), mins = minutes % 60;
         if (days) return hours ? tr("{d}d {h}h", {d:days, h:hours}) : tr("{n}d", {n:days});
         if (hours) return mins ? tr("{h}h {m}m", {h:hours, m:mins}) : tr("{n}h", {n:hours});
@@ -19666,17 +19668,25 @@
         copy.tagTextColor = text;
         copy.tagBackgroundColor = tint;
         const channelId = String(message.channelId || source && (source.channel_id || source.channelId) || ""), id = String(message.id || source && source.id || "");
-        if (channelId && id) timeoutTagSeen(channelId, id);
+        if (channelId && id) timeoutTagSeen(channelId, id, until);
         return copy;
     }
-    function timeoutTagSeen(channelId, id) {
+    // The chat is drawn again right when the soonest tag's text changes: the next whole minute (rounded up, so 2m turns 1m
+    // as the time left drops to 60 s), or the next second in the last minute. A fixed minute from when the tag first
+    // showed could lag behind by almost a minute.
+    function timeoutTagSeen(channelId, id, until) {
         let ids = timeoutTag.shown.get(channelId);
         if (!ids) { if (timeoutTag.shown.size > 20) timeoutTag.shown.clear(); timeoutTag.shown.set(channelId, ids = new Set()); }
         if (ids.size < 200) ids.add(id);
-        if (timeoutTag.timer === undefined) timeoutTag.timer = later(timeoutTagTick, 60000, false);
+        const left = Math.max(0, (until || 0) - Date.now()), step = left <= 60000 ? 1000 : 60000;
+        const due = Date.now() + Math.max(250, left % step || step) + 30;
+        if (timeoutTag.timer !== undefined && timeoutTag.due <= due) return;
+        if (timeoutTag.timer !== undefined && typeof global.clearTimeout === "function") global.clearTimeout(timeoutTag.timer);
+        timeoutTag.due = due;
+        timeoutTag.timer = later(timeoutTagTick, due - Date.now(), false);
     }
     function timeoutTagTick() {
-        timeoutTag.timer = undefined;
+        timeoutTag.timer = undefined; timeoutTag.due = 0;
         if (!enabled("timeoutDuration") || !timeoutTag.shown.size) return;
         const selected = inspectedExport(2119, "default");
         let channelId = null;
