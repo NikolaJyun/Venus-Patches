@@ -19960,7 +19960,7 @@
             Button ? el(Button, {text:tr("Add to a server"), variant:"secondary", size:"md", grow:true, icon:venusIcon(11657, "ImagePlusIcon"), onPress:() => cloneOpen(item)}) : null);
     }
     function cloneButton(item) { return el(CloneButton, {key:"venus-clone", item}); }
-    function cloneIntoSheet(tree, item) {
+    function cloneIntoSheet(tree, item, inner) {
         if (!tree || !item || !React) return tree;
         let added = false;
         const next = cloneTree(tree, (node, nodeProps) => {
@@ -19969,7 +19969,7 @@
             const kids = Array.isArray(nodeProps.children) ? nodeProps.children : [nodeProps.children];
             return Object.assign({}, nodeProps, {children:kids.concat([cloneButton(item)])});
         }, 0, () => added);
-        return added ? next : cloneIntoInner(tree, item);
+        return added || inner ? next : cloneIntoInner(tree, item);
     }
     // MessageEmojiActionSheet doesn't draw the sheet itself: it returns MessageCustomEmojiActionSheet (or the standard
     // one), a component of its own, so the sheet wasn't in its tree and custom emojis never got the button (#145; the
@@ -19986,7 +19986,10 @@
                 const inner = Object.assign({}, props), next = inner.venusCloneItem;
                 delete inner.venusCloneItem;
                 const out = render(inner);
-                return next && out && typeof out === "object" && !Array.isArray(out) && typeof out.type !== "function" ? cloneIntoSheet(out, next) : out;
+                // Discord's BottomSheet is itself a function component, so what the inner sheet drew is always searched (the
+                // first version skipped any element whose type was a function, which is every sheet, and the button never
+                // showed). inner=true stops it from wrapping a second level.
+                return next && out && typeof out === "object" ? cloneIntoSheet(out, next, true) : out;
             };
             if (render.displayName || render.name) wrapped.displayName = render.displayName || render.name;
             cloneInnerTypes.set(render, wrapped);
