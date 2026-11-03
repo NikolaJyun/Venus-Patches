@@ -605,6 +605,13 @@
             if (features.platformSpoof && !backup.restoring && status.storage !== "loading" && status.storage !== "waiting") later(platformSpoofAsk, 0);
             return true;
         }
+        // Keep media playing's skip length is a number: without its own branch it fell through to the switches below and
+        // was saved as true, so no pill showed as chosen and a restart went back to 10 s (#145).
+        if (key === "backgroundMediaSkip") {
+            if (![5, 10, 15, 30].includes(value)) return false;
+            if (settings.backgroundMediaSkip === value && status.storage !== "loading" && status.storage !== "waiting") return true;
+            settings.backgroundMediaSkip = value; dirty.add(key); save(); notify(key); return true;
+        }
         if (key === "badgesCycleMinutes") {
             const mins = badgeCycleMinutes(value);
             if (mins === settings.badgesCycleMinutes && status.storage !== "loading" && status.storage !== "waiting") return true;
