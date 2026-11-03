@@ -33,7 +33,7 @@
     if (features.gestures) selectModules([8254, 9738, 13762, 12935, 1392, 11114]);
     if (features.validUser) selectModules([584, 1392]);
     if (features.youBarSettings) targetModules[17538] = 1;
-    if (features.splitMessages) selectModules([1087, 1392, 2068, 7445, 9561]);
+    if (features.splitMessages) selectModules([1087, 1392, 2068, 7445, 9561, 9995, 13811]);
     if (features.translate) selectModules([584, 1392, 5532, 8013, 9978, 10692]);
     if (features.userNotif) selectModules([584, 1392, 2068, 2090, 2119, 2128, 4855, 5207, 7254, 10002, 14713, 14748]);
     if (features.accountSwitcher) selectModules([584, 1392, 2049, 6194, 6900, 13073, 13074, 13075, 13076, 13078, 17076, 17520, 17538]);
@@ -13898,6 +13898,30 @@
         };
         return hookExport(exports, "default", useBig);
     }
+    // The forum post composer (ForumComposer 9995) and the scheduled message editor (ScheduledMessageEditContentModal 13811)
+    // also ask useMessageMaxLength, but neither sends through sendMessage: a forum post goes out with the thread
+    // (POST /channels/:id/threads) and a scheduled edit replaces one message, so neither can be sent in parts. Given the
+    // unlimited length they skipped Discord's "too long" check and the server refused the post or edit. They import
+    // useMessageMaxLength through this facade instead, which answers with the real limit.
+    const SPLIT_REAL_LIMIT_MODULES = {9995:1, 13811:1};
+    let splitRealFacade = null, splitRealSource = null;
+    function splitRealLength(value) { return value >= SPLIT_UNLIMITED ? messageLimit() : value; }
+    function splitRealImport(importer) {
+        if (typeof importer !== "function") return importer;
+        return function () {
+            const result = importer.apply(this, arguments);
+            if (arguments[0] !== 9561 || !result || typeof result !== "object") return result;
+            if (splitRealSource !== result) {
+                splitRealSource = result;
+                // Read at call time: the hooks on 9561 are only added once Discord's environment is ready.
+                splitRealFacade = Object.create(result, {
+                    default:{enumerable:true, value:function () { return splitRealLength(result.default.apply(this, arguments)); }},
+                    getMaxMessageLength:{enumerable:true, value:function () { return splitRealLength(result.getMaxMessageLength.apply(this, arguments)); }}
+                });
+            }
+            return splitRealFacade;
+        };
+    }
     // Constants (1087): DraftStore (7239) and useMessageMaxLength (9561) both read MAX_MESSAGE_LENGTH and
     // MAX_MESSAGE_LENGTH_PREMIUM once at module evaluation time during startup (before venus-patches.json finishes
     // loading settings.splitMessages) and cache the numbers in closure environment slots. Always return
@@ -23154,6 +23178,12 @@
                     factoryArgs[1] = listImport(factoryArgs[1], id);
                     factoryArgs[2] = listImport(factoryArgs[2], id);
                     factoryArgs[3] = listImport(factoryArgs[3], id);
+                    result = factory.apply(this, factoryArgs);
+                } else if (features.splitMessages && SPLIT_REAL_LIMIT_MODULES[id] === 1) {
+                    const factoryArgs = Array.from(arguments);
+                    factoryArgs[1] = splitRealImport(factoryArgs[1]);
+                    factoryArgs[2] = splitRealImport(factoryArgs[2]);
+                    factoryArgs[3] = splitRealImport(factoryArgs[3]);
                     result = factory.apply(this, factoryArgs);
                 } else {
                     result = factory.apply(this, arguments);

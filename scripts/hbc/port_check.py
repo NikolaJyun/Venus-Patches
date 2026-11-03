@@ -214,6 +214,8 @@ BOOTSTRAP_MODULES = [
     (11657, 'design/components/Icon/native/redesign/generated/ImagePlusIcon.tsx', ['ImagePlusIcon'], 'ImagePlusIcon'),
     (10604, 'design/components/Icon/native/redesign/generated/ArrowSmallRightIcon.tsx', ['ArrowSmallRightIcon'], 'ArrowSmallRightIcon'),
     (9561, 'modules/messages/useMessageMaxLength.tsx', ['default', 'getMaxMessageLength'], 'useMessageMaxLength'),
+    (9995, 'modules/forums/native/composer/ForumComposer.tsx', ['default'], 'ForumComposer (Send long messages keeps the real limit)'),
+    (13811, 'modules/scheduled_messages/native/ScheduledMessageEditContentModal.tsx', ['default'], 'ScheduledMessageEditContentModal (Send long messages keeps the real limit)'),
     (9767, 'modules/app_icons/native/AppIconConstants.tsx', ['getDefaultIcon', 'getOfficialAlternateIcons', 'getLimitedAlternateIcons'], 'AppIconConstants'),
     (9705, 'design/components/Icon/native/redesign/generated/UploadIcon.tsx', ['UploadIcon'], 'UploadIcon'),
     (8855, 'design/void/Form/native/index.tsx', ['Form', 'FormArrow', 'FormCheckbox'], 'Form'),
