@@ -13834,6 +13834,47 @@
         chain.then(() => { if (sent < chunks.length && stillOn()) splitUnsent(chunks.slice(sent)); }, () => {});
         return result;
     }
+    // Picking a sticker sends it with whatever is typed in the box (handleSelectSticker, 12848): it passes Discord's length
+    // check (chatInputValidateContentLength asks getMaxMessageLength, unlimited while this is on), then sendStickers(channelId,
+    // stickerIds, {content, tts}, options) goes straight to _sendMessage, never through sendMessage. Typed text over the limit
+    // went out as one message and the server refused both the sticker and the text. The sticker now goes with the first part
+    // (it keeps the reply); the other parts follow one at a time, as written, like the rest of a long message.
+    function splitStickers(orig, self, args) {
+        const message = args[2];
+        const content = typeof message === "string" ? message : message && typeof message.content === "string" ? message.content : "";
+        if (content.length <= 2000 || !enabled("splitMessages")) return orig.apply(self, args);
+        const limit = messageLimit();
+        if (content.length <= limit) return orig.apply(self, args);
+        const chunks = splitContent(content, limit);
+        if (!chunks || chunks.length < 2) return orig.apply(self, args);
+        const first = Array.from(args);
+        first[2] = typeof message === "string" ? chunks[0] : Object.assign({}, message, {content:chunks[0]});
+        const result = orig.apply(self, first);
+        const channelId = args[0], options = args[3];
+        const followOptions = splitFollowUpOptions(options);
+        if (SPLIT_SILENT.test(content)) followOptions.flags = (Number(followOptions.flags) || 0) | 4096;
+        const generation = split.generation, author = currentUser(), authorId = author && author.id;
+        const stillOn = () => { const user = currentUser(); return enabled("splitMessages") && split.generation === generation && !!user && user.id === authorId; };
+        const gap = splitGapMs(channelId);
+        // Each part already fits and carries its reopened formatting, so it goes out as written: joining the parts and
+        // splitting again would open a code block, quote or spoiler twice.
+        const base = {tts:!!(message && typeof message === "object" && message.tts), invalidEmojis:[], validNonShortcutEmojis:[]};
+        let sent = 0;
+        let chain = Promise.resolve(result).then(res => { if (res && res.hasErr) return false; sent++; return true; }, () => false);
+        for (let i = 1; i < chunks.length; i++) {
+            const part = chunks[i];
+            chain = chain.then(ok => {
+                if (!ok || !stillOn()) return false;
+                return new Promise(resolve => later(resolve, gap)).then(() => {
+                    const send = msgActions && msgActions.sendMessage;
+                    if (!stillOn() || typeof send !== "function") return false;
+                    return send.call(msgActions, channelId, Object.assign({content:part}, base), true, Object.assign({}, followOptions));
+                }).then(res => { if (res && res.hasErr) return false; sent++; return true; }, () => false);
+            });
+        }
+        chain.then(() => { if (sent < chunks.length && stillOn()) splitUnsent(chunks.slice(sent)); }, () => {});
+        return result;
+    }
     // An edit replaces one message, so it can't be split. The message box allows any length while this is on, and Discord
     // ends editing as soon as it saves (handleSaveEditing, 11665), so an edit over the limit was refused and its text lost.
     // Now it isn't sent: you're told why and can copy it.
@@ -23010,6 +23051,8 @@
                 if (splitLater) {
                     actions = hookExport(actions, "sendMessage", splitSend);
                     actions = hookExport(actions, "editMessage", splitEdit);
+                    // Outside Nitro links' sendStickers, so the sticker's own part is cut to fit before its links are added.
+                    actions = hookExport(actions, "sendStickers", splitStickers);
                 }
                 // Under the other edit hooks: it only ever sees the final text.
                 if (features.silentEdit) actions = hookExport(actions, "editMessage", silentEdit);
