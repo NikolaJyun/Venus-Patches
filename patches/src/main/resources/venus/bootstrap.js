@@ -19961,12 +19961,35 @@
     function cloneIntoSheet(tree, item) {
         if (!tree || !item || !React) return tree;
         let added = false;
-        return cloneTree(tree, (node, nodeProps) => {
+        const next = cloneTree(tree, (node, nodeProps) => {
             if (added || nodeProps.startExpanded === undefined) return nodeProps;
             added = true;
             const kids = Array.isArray(nodeProps.children) ? nodeProps.children : [nodeProps.children];
             return Object.assign({}, nodeProps, {children:kids.concat([cloneButton(item)])});
         }, 0, () => added);
+        return added ? next : cloneIntoInner(tree, item);
+    }
+    // MessageEmojiActionSheet doesn't draw the sheet itself: it returns MessageCustomEmojiActionSheet (or the standard
+    // one), a component of its own, so the sheet wasn't in its tree and custom emojis never got the button (#145; the
+    // sticker sheet draws its own, which is why stickers had it). That inner component is swapped for one that draws it
+    // and then adds the button to what it drew. One stable wrapper per component, so React keeps its state.
+    const cloneInnerTypes = new WeakMap();
+    function cloneIntoInner(tree, item) {
+        const type = tree && typeof tree === "object" && !Array.isArray(tree) ? tree.type : null;
+        const memo = type && typeof type === "object" && typeof type.type === "function" ? type : null, render = memo ? memo.type : type;
+        if (typeof render !== "function" || render.prototype && render.prototype.isReactComponent) return tree;
+        let wrapped = cloneInnerTypes.get(render);
+        if (!wrapped) {
+            wrapped = function VenusCloneSheet(props) {
+                const inner = Object.assign({}, props), next = inner.venusCloneItem;
+                delete inner.venusCloneItem;
+                const out = render(inner);
+                return next && out && typeof out === "object" && !Array.isArray(out) && typeof out.type !== "function" ? cloneIntoSheet(out, next) : out;
+            };
+            if (render.displayName || render.name) wrapped.displayName = render.displayName || render.name;
+            cloneInnerTypes.set(render, wrapped);
+        }
+        return React.createElement(wrapped, Object.assign({}, tree.props, {key:tree.key, ref:tree.ref || undefined, venusCloneItem:item}));
     }
     function cloneEmojiSheet(orig, self, args) {
         const tree = orig.apply(self, args), props = args[0], node = props && props.emojiNode;
