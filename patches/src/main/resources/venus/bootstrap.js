@@ -3632,6 +3632,12 @@
             timestamp:message.timestamp && typeof message.timestamp.toISOString === "function" ? message.timestamp.toISOString() : message.timestamp,
             type:message.type || 0,flags:message.flags || 0,attachments:message.attachments || [],embeds:message.embeds || [],
             mentions:message.mentions || [],mention_roles:message.mentionRoles || [],referenced_message:null};
+        // Stickers too (#145): without them a kept sticker message came back empty after a restart. MessageRecord reads
+        // sticker_items ({id, name, format_type}) back, and stickers for the full objects it may already have.
+        const items = message.stickerItems || message.sticker_items;
+        if (Array.isArray(items) && items.length) raw.sticker_items = items.filter(Boolean).map(item =>
+            ({id:item.id, name:item.name, format_type:item.format_type != null ? item.format_type : item.formatType}));
+        if (Array.isArray(message.stickers) && message.stickers.length) raw.stickers = message.stickers;
         return JSON.parse(JSON.stringify(raw));
     }
     // A new color or brightness for kept messages reaches chat at once: Discord redraws a row when its message
