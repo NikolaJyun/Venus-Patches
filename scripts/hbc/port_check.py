@@ -139,6 +139,7 @@ BOOTSTRAP_MODULES = [
     (6540, 'design/components/TableRow/native/TableRadioGroup.native.tsx', ['TableRadioGroupContext', 'TableRadioGroup'], 'TableRadioGroup'),
     (6542, 'design/components/TableRow/native/TableRowGroup.native.tsx', ['TableRowGroupTitle', 'TableRowGroup'], 'TableRowGroup'),
     (6584, None, ['BottomSheetScrollView', 'BottomSheetFlatList', 'BottomSheetModal'], '@gorhom/bottom-sheet (Server info sheet scrolling)'),
+    (6727, None, ['LegacyScrollView', 'LegacyFlatList', 'LegacyTextInput'], 'react-native-gesture-handler GestureComponents (View raw data sideways scrolling)'),
     (6563, 'design/components/TextInput/native/TextInput.native.tsx', ['TextInput'], 'TextInput'),
     (7199, 'stores/views/PrivateChannelSortStore.tsx', ['default'], 'PrivateChannelSortStore (Read all, more than 20 unread DMs)'),
     (6917, 'design/components/Icon/native/redesign/generated/KeyIcon.tsx', ['KeyIcon'], 'KeyIcon'),

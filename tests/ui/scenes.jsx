@@ -113,7 +113,7 @@ export function modules(store, me) {
     7175: { ActionSheet }, 7117: { BottomSheetTitleHeader: SheetHeader }, 7170: { ActionSheetCloseButton: SheetClose },
     5155: { default: { hideActionSheet: key => host && host.hide(key) }, showActionSheet: o => host && host.show(o.key, o.content) },
     7167: { showSimpleActionSheet: o => { if (q.get("scene") === "viewRaw" && o.key === "RoleItem") o.options[o.options.length - 1].onPress(); else host && host.show(o.key, <SimpleSheet {...o} />); } },
-    6584: { BottomSheetScrollView: p => <RN.View>{p.children}</RN.View> },
+    6584: { BottomSheetScrollView: p => <RN.View>{p.children}</RN.View> }, 6727: { LegacyScrollView: RN.ScrollView },
     17429: { FastListRenderSections: SECTIONS },
     // getGuildsBarGuildMenuItems: Discord's own rows in the server icon's hold menu.
     17433: { default: () => [{ IconComponent: D.makeIcon("EnvelopeIcon"), label: "Invite", action() {} },

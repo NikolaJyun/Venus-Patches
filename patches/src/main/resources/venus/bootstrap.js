@@ -20678,6 +20678,9 @@
         const Button = inspectedExport(5479, "Button"), Press = RN.Pressable || RN.View, Group = ui.TableRowGroup || RN.View, Switch = ui.TableSwitchRow;
         const showContent = snap.content !== null && tab === "content", text = showContent ? snap.content : snap.json;
         const shown = text.length > RAW_SHOWN ? text.slice(0, RAW_SHOWN) : text, wrap = !!settings.viewRawWrap;
+        // The sheet scrolls through react-native-gesture-handler, which takes every pan from React Native's own ScrollView,
+        // so with wrapping off the lines couldn't be scrolled sideways (#145). Gesture handler's ScrollView takes part.
+        const SideScroll = inspectedExport(6727, "LegacyScrollView") || RN.ScrollView;
         const copy = () => { if (showContent) serverCopy(snap.content, "Raw content copied"); else serverCopy(snap.json, "Raw data copied"); };
         const copyLabel = showContent ? tr("Copy raw content") : tr("Copy raw data"), empty = showContent && !snap.content;
         const Icon = venusIcon(snap.kind.icon[0], snap.kind.icon[1]);
@@ -20688,7 +20691,8 @@
                 serverText(snap.kind.label + " \u00b7 " + snap.id, "text-sm/medium", "text-muted", {color:"#949ba4", fontSize:13}, {selectable:true})));
         const code = empty ? el(RN.Text, {style:[s.empty, {padding:14}]}, tr("This message has no text.")) :
             wrap ? el(RN.View, {style:s.pad}, el(RN.Text, {selectable:true, style:s.code}, shown)) :
-            el(RN.ScrollView, {horizontal:true, nestedScrollEnabled:true, showsHorizontalScrollIndicator:false}, el(RN.View, {style:s.pad}, el(RN.Text, {selectable:true, style:s.code}, shown)));
+            el(SideScroll, {horizontal:true, nestedScrollEnabled:true, showsHorizontalScrollIndicator:true, contentContainerStyle:{flexGrow:1}},
+                el(RN.View, {style:s.pad}, el(RN.Text, {selectable:true, style:s.code}, shown)));
         const copyButton = Button ? el(Button, {key:"copy", text:copyLabel, size:"lg", variant:"primary", grow:true, disabled:empty, onPress:copy}) :
             el(Press, {key:"copy", onPress:empty ? undefined : copy, accessibilityRole:"button", accessibilityLabel:copyLabel,
                 style:{padding:14, borderRadius:24, alignItems:"center", backgroundColor:"#5865f2", opacity:empty ? 0.5 : 1}},
