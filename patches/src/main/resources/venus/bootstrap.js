@@ -13683,6 +13683,7 @@
     const SPLIT_TOKENS = /<a?:\w+:\d+>|<(?:@[!&]?|#)\d+>|<\/[^<>\n]+:\d+>|<t:-?\d+(?::[tTdDfFR])?>|<id:\w+>|\[[^\]\n]*\]\([^)\s]*\)|https?:\/\/[^\s<]+/g;
     // Moves a cut back so it lands between whole characters and outside every token above. Joined emoji (ZWJ families,
     // skin tones, flags' variation selectors) used to be cut into pieces that showed as two or three separate emoji.
+    function splitRegional(low) { return low >= 0xDDE6 && low <= 0xDDFF; }
     function splitSafeCut(text, start, cut) {
         const windowFrom = Math.max(start, cut - 2048);
         if (text.indexOf("<", windowFrom) >= 0 || text.indexOf("[", windowFrom) >= 0 || text.indexOf("://", windowFrom) >= 0) {
@@ -13694,11 +13695,20 @@
                 if (end > cut && match.index > start) { cut = match.index; break; }
             }
         }
-        for (let steps = 0; steps < 32 && cut - 1 > start; steps++) {
-            const next = text.charCodeAt(cut), prev = text.charCodeAt(cut - 1);
-            const skinTone = next === 0xD83C && (text.charCodeAt(cut + 1) & 0xFFF8) === 0xDFF8 && text.charCodeAt(cut + 1) >= 0xDFFB;
-            if (next >= 0xDC00 && next <= 0xDFFF || next === 0x200D || prev === 0x200D || next === 0xFE0F || next === 0x20E3 || skinTone) cut--;
+        for (let steps = 0; steps < 64 && cut - 1 > start; steps++) {
+            const next = text.charCodeAt(cut), prev = text.charCodeAt(cut - 1), after = text.charCodeAt(cut + 1);
+            // Skin tones (U+1F3FB-1F3FF), tag characters of subdivision flags (U+E0020-E007F) and combining accents
+            // belong to the character before them.
+            const joined = next === 0xD83C && after >= 0xDFFB && after <= 0xDFFF || next === 0xDB40 && after >= 0xDC20 && after <= 0xDC7F ||
+                next >= 0x0300 && next <= 0x036F;
+            if (next >= 0xDC00 && next <= 0xDFFF || next === 0x200D || prev === 0x200D || next === 0xFE0F || next === 0x20E3 || joined) cut--;
             else break;
+        }
+        // A country flag is two regional indicators (U+1F1E6-1F1FF): cutting after an odd number of them splits a flag.
+        if (text.charCodeAt(cut) === 0xD83C && splitRegional(text.charCodeAt(cut + 1))) {
+            let count = 0;
+            for (let at = cut - 2; at >= start && text.charCodeAt(at) === 0xD83C && splitRegional(text.charCodeAt(at + 1)); at -= 2) count++;
+            if (count % 2 && cut - 2 > start) cut -= 2;
         }
         return cut;
     }
@@ -23172,6 +23182,18 @@
     // it's a plain value again, so those reads aren't getter calls. Setting it again still decorates it.
     function holdDefine(value) {
         Object.defineProperty(global, "__d", { configurable: true, enumerable: true,
+            get: () => value, set: next => { defineValue(decorateDefine(next)); } });
+    }
+    function defineValue(value) {
+        Object.defineProperty(global, "__d", { configurable: true, enumerable: true, writable: true, value });
+    }
+    const existing = global.__d;
+    if (typeof existing === "function") defineValue(decorateDefine(existing));
+    else holdDefine(existing);
+    // Local diagnostics/test API; not a network endpoint and no client-mod globals.
+    global.__venusPatches = Object.freeze({ revision, settings, features, status, setSetting, formatSize, getSize });
+})(globalThis);
+true, enumerable: true,
             get: () => value, set: next => { defineValue(decorateDefine(next)); } });
     }
     function defineValue(value) {
