@@ -19957,7 +19957,9 @@
         useLanguage();
         const Button = inspectedExport(5479, "Button");
         return el(RN.View, {style:{paddingHorizontal:16, paddingTop:12, paddingBottom:8}},
-            Button ? el(Button, {text:tr("Add to a server"), variant:"secondary", size:"md", grow:true, icon:venusIcon(11657, "ImagePlusIcon"), onPress:() => cloneOpen(item)}) : null);
+            // No icon: Discord's Button only draws an asset source or an element there, so a component left an empty slot
+            // that pushed the text off center.
+            Button ? el(Button, {text:tr("Add to a server"), variant:"secondary", size:"md", grow:true, onPress:() => cloneOpen(item)}) : null);
     }
     function cloneButton(item) { return el(CloneButton, {key:"venus-clone", item}); }
     function cloneIntoSheet(tree, item, inner) {
@@ -20153,8 +20155,10 @@
                 guildLurkGo(props.guildId);
             });
         };
+        // Text only, like Accept and No Thanks next to it. An icon component here isn't drawn (Discord's Button takes an asset
+        // source or an element), but its empty slot pushed "Preview" about 20 dp right of center (#145).
         return el(Button, {variant:"secondary", size:props.size || "lg", text:tr("Preview"), accessibilityLabel:tr("Preview servers without joining"),
-            icon:venusIcon(6929, "EyeIcon"), onPress:press, loading:busy, disabled:busy});
+            onPress:press, loading:busy, disabled:busy});
     }
     function invitePreviewDetails(orig, self, args) {
         const result = orig.apply(self, args), props = args[0];
