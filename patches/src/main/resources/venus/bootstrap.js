@@ -10817,10 +10817,10 @@
     // button and the X sits just inside its corner, so it is never cut off by the screen's top edge or drawn over the next button.
     const HIDE_COMPACT = {cover:Object.assign({}, HIDE_MARK.cover, {top:0, left:0, right:0, bottom:0, borderRadius:12}),
         badge:Object.assign({}, HIDE_MARK.badge, {top:-2, right:-2, width:20, height:20, borderRadius:10})};
-    // Text tabs packed in a row (a channel's Members, Media, Pins, Links and Files): the X goes in the gap after the label,
-    // never over its last letters.
-    const HIDE_TAB = {cover:Object.assign({}, HIDE_MARK.cover, {top:-2, left:-4, right:-4, bottom:-2, borderRadius:10}),
-        badge:Object.assign({}, HIDE_MARK.badge, {top:"50%", marginTop:-9, right:-21, width:18, height:18, borderRadius:9, borderWidth:1.5})};
+    // Text tabs packed edge to edge (a channel's Members, Media, Pins, Links and Files): the outline stays inside the tab so
+    // neighbours never overlap, and the X sits centered on its top edge, above the label instead of over its last letters.
+    const HIDE_TAB = {cover:Object.assign({}, HIDE_MARK.cover, {top:0, left:1, right:1, bottom:0, borderRadius:10}),
+        badge:Object.assign({}, HIDE_MARK.badge, {top:-9, right:undefined, left:"50%", marginLeft:-9, width:18, height:18, borderRadius:9, borderWidth:1.5})};
     const HIDE_COMPACT_SPOTS = {"details.search":1, "details.mute":1, "details.settings":1, "details.more":1,
         "dm.call":1, "dm.video":1, "dm.search":1, "dm.options":1};
     function HideMark(props) {
