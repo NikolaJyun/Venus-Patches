@@ -19364,27 +19364,43 @@
     //    Photos keep every pixel while quality 88 or better fits, then shrink a little at a time; sound is re-saved as AAC at the best
     //    bitrate that fits.
     //  - Video: Discord's own transcoder does the work and Venus only picks its numbers (VideoUploadUtils 8046): the bitrate that
-    //    fills the limit for this length, and, only when that is too few bits per pixel for a clean picture, a smaller size. A result
-    //    that still comes out over the limit is made again with a lower bitrate.
-    const COMPRESS_PREFIX = "venus-compress-v1:", COMPRESS_FILL = {image:0.93, audio:0.93, video:0.9};
+    //    fills the limit for this length, and, only when that is too few bits per pixel for a clean picture, a smaller size. Both
+    //    come from the source video, not from Discord's quality tier: calculateOptimalBitrate is min(max(floor, source), tier) and
+    //    the free tiers stop at 0.8-2.25 Mbps and 360-720p, so taking the smaller of Discord's and Venus's numbers sent a long
+    //    video at ~3 MB when 20 MB was allowed. A result over the limit is made again lower; one far under it, again higher.
+    const COMPRESS_PREFIX = "venus-compress-v1:", COMPRESS_FILL = {image:0.95, audio:0.96, video:0.94};
     const COMPRESS_KEYS = {image:"compressUploadsPhotos", video:"compressUploadsVideos", audio:"compressUploadsAudio"};
     const COMPRESS_MAX = {image:268435456, audio:1073741824, video:4294967296};
-    const COMPRESS_BPP = 0.03, COMPRESS_HEIGHTS = [1080, 720, 540, 480, 360, 270, 240];
-    const compressInstrumented = new WeakSet(), videoSeen = new WeakMap(), compressVideoState = {shrink:1};
+    // Phone H.264 encoders (MediaCodec, what Discord's transcoder uses) need noticeably more bits than x264 for the same picture.
+    const COMPRESS_BPP = 0.05, COMPRESS_HEIGHTS = [1080, 720, 540, 480, 360, 270, 240], COMPRESS_MAX_BITRATE = 20000000;
+    const compressInstrumented = new WeakSet(), videoSeen = new WeakMap(), compressVideoState = {shrink:1, capped:false};
     let videoChain = Promise.resolve();
     const imageName = /\.(jpe?g|png|webp|heic|heif|bmp)$/i, videoName = /\.(mp4|m4v|mov|mkv|webm|3gp|3gpp)$/i;
     function compressEven(n) { return Math.max(2, Math.round(n / 2) * 2); }
     // The video's bitrate and size for a limit, or null when it can't be made to fit (too long for a watchable picture).
     // Bits go to the picture first: keep the size while there are at least COMPRESS_BPP bits per pixel per frame (measured with x264 and SSIM:
     // below about 0.02 a smaller picture scores as well or better, above 0.035 the full size is clearly better), otherwise take the biggest standard height that gets there.
+    // The frame rate Discord's transcoder will encode at (convertVideo): the source's on Android 15+, else at most its default.
+    function compressFps(meta) {
+        const source = meta && meta.frameRate > 0 ? meta.frameRate : 30;
+        let api = 0;
+        try { api = Number(RN && RN.Platform && RN.Platform.Version) || 0; } catch (_) {}
+        if (api > 34) return Math.min(120, source);
+        const config = inspectedExport(8046, "DEFAULT_VIDEO_ENCODING_CONFIG"), most = config && config.frameRate > 0 ? config.frameRate : 30;
+        return Math.min(most, source);
+    }
     function compressVideoPlan(meta, limit, width, height) {
         const seconds = meta && meta.durationMs > 0 ? meta.durationMs / 1000 : 0;
         if (!(seconds > 0.5) || !(width > 0) || !(height > 0) || !(limit > 0)) return null;
-        const bits = limit * COMPRESS_FILL.video * 8, audio = Math.min(128000, Math.max(24000, bits / seconds * 0.1));
+        // Room for the sound Discord keeps (AAC, usually ~128 kbps), never more than a quarter of the file.
+        const bits = limit * COMPRESS_FILL.video * 8, audio = Math.min(132000, Math.max(24000, bits / seconds * 0.25));
         const video = Math.floor(bits / seconds - audio);
         if (!(video >= 100000)) return null;
-        const fps = Math.min(30, meta.frameRate > 0 ? meta.frameRate : 30), bpp = video / (fps * width * height);
+        // Never past 1080p: a phone's encoder may refuse more, and nothing bigger is worth its bits at this size.
         let w = width, h = height;
+        const start = Math.min(w, h);
+        if (start > COMPRESS_HEIGHTS[0]) { const f = COMPRESS_HEIGHTS[0] / start; w = compressEven(w * f); h = compressEven(h * f); }
+        const bpp = video / (compressFps(meta) * w * h);
         if (bpp < COMPRESS_BPP) {
             const short = Math.min(w, h), reach = short * Math.sqrt(bpp / COMPRESS_BPP);
             let target = COMPRESS_HEIGHTS[COMPRESS_HEIGHTS.length - 1];
@@ -19434,14 +19450,17 @@
     }
     function compressSkipCheck(orig, self, args) {
         const meta = args[1], size = args[2], limit = args[3];
-        if (enabled("compressUploadsVideos") && meta && typeof meta === "object" && typeof size === "number" && typeof limit === "number" && size > limit)
+        if (enabled("compressUploads") && enabled("compressUploadsVideos") && meta && typeof meta === "object" && typeof size === "number" &&
+            typeof limit === "number" && size > limit)
             videoSeen.set(meta, {limit, plan:null});
         return orig.apply(self, args);
     }
+    // Planned from the source's own size; Discord's answer (already cut to its quality tier) is only the fallback.
     function compressDimensions(orig, self, args) {
         const out = orig.apply(self, args), meta = args[0], seen = meta && typeof meta === "object" ? videoSeen.get(meta) : null;
         if (!seen || !out || !(out.width > 0) || !(out.height > 0)) return out;
-        seen.plan = compressVideoPlan(meta, seen.limit, out.width, out.height);
+        const sourceSized = meta.width > 0 && meta.height > 0;
+        seen.plan = compressVideoPlan(meta, seen.limit, sourceSized ? meta.width : out.width, sourceSized ? meta.height : out.height);
         return seen.plan ? {width:seen.plan.width, height:seen.plan.height} : out;
     }
     function compressBitrate(orig, self, args) {
@@ -19449,8 +19468,11 @@
         if (!seen) return out;
         const plan = seen.plan || compressVideoPlan(meta, seen.limit, meta.width, meta.height);
         if (!plan) return out;
-        const bitrate = Math.floor(plan.bitrate * compressVideoState.shrink);
-        return typeof out === "number" && out < bitrate ? out : bitrate;
+        // More than the source had only adds size, not quality.
+        const wanted = Math.min(COMPRESS_MAX_BITRATE, Math.floor(plan.bitrate * compressVideoState.shrink));
+        const source = meta.bitRate > 0 ? meta.bitRate : Infinity;
+        compressVideoState.capped = source <= wanted;
+        return Math.max(100000, Math.floor(Math.min(wanted, source)));
     }
     function hookCompressVideo(exports) {
         return hookExport(hookExport(hookExport(exports, "canSkipVideoTranscode", compressSkipCheck), "calculateTargetDimensions", compressDimensions),
@@ -19505,27 +19527,36 @@
             });
         });
     }
-    // Video: made by Discord's transcoder with Venus's numbers (compressBitrate); made again, lower, when the first one overshoots.
+    // Video: made by Discord's transcoder with Venus's numbers (compressBitrate). Encoders miss their bitrate, so the result is
+    // checked: over the limit, it is made again lower; under 60% of the aim (with room left in the source), again higher, and
+    // that second try is only kept when it still fits. At most two encodes.
+    function compressRestore(upload, from) { Object.keys(from).forEach(key => { try { upload[key] = from[key]; } catch (_) {} }); }
     function compressVideo(orig, upload, args, job, limit) {
+        const aim = limit * COMPRESS_FILL.video;
         const go = () => compressSizeOf(compressUri(upload)).then(first => {
             if (first > limit) compressToast(tr("Making it smaller to fit\u2026"));
-            const turn = (shrink, tries) => {
-                const before = Object.assign({}, upload);
-                compressVideoState.shrink = shrink;
+            const encode = shrink => {
+                compressVideoState.shrink = shrink; compressVideoState.capped = false;
                 return Promise.resolve(orig.apply(upload, args)).then(result => {
+                    const capped = compressVideoState.capped;
                     compressVideoState.shrink = 1;
-                    return compressSizeOf(compressUri(upload)).then(size => {
-                        if (!(size > limit) || tries >= 1 || compressCancelled(upload, job)) { compressDoneToast(first, size); return result; }
-                        const kept = Object.assign({}, upload);
-                        Object.keys(before).forEach(key => { try { upload[key] = before[key]; } catch (_) {} });
-                        return turn(Math.max(0.4, shrink * limit * COMPRESS_FILL.video / size), tries + 1).catch(() => {
-                            Object.keys(kept).forEach(key => { try { upload[key] = kept[key]; } catch (_) {} });
-                            return result;
-                        });
-                    });
+                    return compressSizeOf(compressUri(upload)).then(size => ({result, size, capped}));
                 }, error => { compressVideoState.shrink = 1; throw error; });
             };
-            return turn(1, 0);
+            const before = Object.assign({}, upload);
+            return encode(1).then(one => {
+                const over = one.size > limit, under = one.size < aim * 0.6 && !one.capped;
+                if (!(one.size > 0) || !(over || under) || compressCancelled(upload, job)) { compressDoneToast(first, one.size); return one.result; }
+                const kept = Object.assign({}, upload);
+                compressRestore(upload, before);
+                const shrink = over ? Math.max(0.3, aim * 0.97 / one.size) : Math.min(1.8, aim * 0.95 / one.size);
+                return encode(shrink).then(two => {
+                    // A higher try that no longer fits, or a lower one that came out bigger, gives way to the first.
+                    if (!over && !(two.size <= limit) || over && !(two.size < one.size)) { compressRestore(upload, kept); compressDoneToast(first, one.size); return one.result; }
+                    compressDoneToast(first, two.size);
+                    return two.result;
+                }, () => { compressRestore(upload, kept); compressDoneToast(first, one.size); return one.result; });
+            });
         });
         const next = videoChain.then(go, go);
         videoChain = next.then(() => undefined, () => undefined);
@@ -19546,6 +19577,8 @@
         });
         const promise = (kind === "video" ? compressVideo(orig, upload, args, job, limit) :
             Promise.resolve(orig.apply(upload, args)).then(result => compressNative(upload, job, limit).then(() => result, () => result))).then(done);
+        // A failed attempt is forgotten, so Discord's Retry prepares the file again instead of getting the same failure back.
+        promise.catch(() => { if (compressJobs.get(upload) === job) compressJobs.delete(upload); });
         job.promise = promise;
         compressJobs.set(upload, job);
         return promise;
