@@ -20160,6 +20160,20 @@
             } catch (_) {}
         }, 0);
     }
+    // joinGuild's promise settles when the HTTP call returns, but the server itself arrives a moment later over the
+    // gateway (GUILD_CREATE). Opening it before then landed on an empty screen, so this waits (up to 6 s) until Discord
+    // has the server or lists it as one you're previewing. The original plugin waited a fixed 100 ms.
+    function guildLurkReady(id) {
+        return new Promise(resolve => {
+            const start = Date.now();
+            const check = () => {
+                if (guildLurkGuild(id) || guildLurkIsLurking(id)) { resolve(true); return; }
+                if (Date.now() - start > 6000) { resolve(false); return; }
+                later(check, 150);
+            };
+            check();
+        });
+    }
     function guildLurkRemember(id) { setSetting("guildLurkIds", [id].concat(guildLurkList().filter(other => other !== id)).join(",")); }
     function guildLurkForget(id) { haptic("SELECTION"); animateLayout(); setSetting("guildLurkIds", guildLurkList().filter(other => other !== id).join(",")); }
     function guildLurkOpen(target) {
@@ -20170,7 +20184,7 @@
             if (!id) { reviewToast(ui, "That invite doesn't work", info); return false; }
             // Already a member, or already previewing it: just open it.
             if (guildLurkGuild(id) || guildLurkIsLurking(id)) { guildLurkRemember(id); guildLurkGo(id); return true; }
-            return guildLurkJoin(id).then(done => { if (done) guildLurkGo(id); return done; });
+            return guildLurkJoin(id).then(done => done ? guildLurkReady(id).then(() => { guildLurkGo(id); return true; }) : false);
         }).catch(() => { reviewToast(ui, "This server doesn't allow previews", info); return false; });
     }
     // Joins as a lurker (Discord's own joinGuild with lurker:true), remembers the server, and says so when Discord refuses.
@@ -20202,7 +20216,7 @@
         const press = () => {
             if (busy) return;
             setBusy(true);
-            guildLurkJoin(props.guildId).then(done => {
+            guildLurkJoin(props.guildId).then(done => done ? guildLurkReady(props.guildId).then(() => true) : false).then(done => {
                 setBusy(false);
                 if (!done) return;
                 try { if (typeof props.onClose === "function") props.onClose(); } catch (_) {}
