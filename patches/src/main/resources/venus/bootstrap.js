@@ -10813,6 +10813,16 @@
     // Rows with a switch or a picture at the end keep their X clear of it.
     const HIDE_TRAIL = {right:76};
     const HIDE_ARROW = {right:44};
+    // Icon-only buttons packed side by side at the top of a screen (a channel's details, a DM's header): the outline hugs the
+    // button and the X sits just inside its corner, so it is never cut off by the screen's top edge or drawn over the next button.
+    const HIDE_COMPACT = {cover:Object.assign({}, HIDE_MARK.cover, {top:0, left:0, right:0, bottom:0, borderRadius:12}),
+        badge:Object.assign({}, HIDE_MARK.badge, {top:-2, right:-2, width:20, height:20, borderRadius:10})};
+    // Text tabs packed in a row (a channel's Members, Media, Pins, Links and Files): the X goes in the gap after the label,
+    // never over its last letters.
+    const HIDE_TAB = {cover:Object.assign({}, HIDE_MARK.cover, {top:-2, left:-4, right:-4, bottom:-2, borderRadius:10}),
+        badge:Object.assign({}, HIDE_MARK.badge, {top:"50%", marginTop:-9, right:-21, width:18, height:18, borderRadius:9, borderWidth:1.5})};
+    const HIDE_COMPACT_SPOTS = {"details.search":1, "details.mute":1, "details.settings":1, "details.more":1,
+        "dm.call":1, "dm.video":1, "dm.search":1, "dm.options":1};
     function HideMark(props) {
         const base = props.base, key = props.spot;
         // Only once it's laid out with a size: a button that draws nothing (a tag someone doesn't have) gets no floating X.
@@ -10833,10 +10843,11 @@
             if (next !== shown) setShown(next);
         };
         const badge = props.inset ? (props.trail ? [HIDE_INSET.badge, HIDE_TRAIL] : props.arrow ? [HIDE_INSET.badge, HIDE_ARROW] : HIDE_INSET.badge) :
-            props.head ? HIDE_HEAD.badge : HIDE_MARK.badge;
+            props.head ? HIDE_HEAD.badge : props.compact ? HIDE_COMPACT.badge : HIDE_MARK.badge;
+        const cover = props.inset ? HIDE_INSET.cover : props.head ? HIDE_HEAD.cover : props.compact ? HIDE_COMPACT.cover : HIDE_MARK.cover;
         return el(RN.View, {style:layout ? [{position:"relative"}, layout] : {position:"relative"}, collapsable:false, onLayout},
             own ? React.cloneElement(base, {onLayout:undefined}) : base,
-            shown ? el(RN.View, {pointerEvents:"none", style:props.inset ? HIDE_INSET.cover : props.head ? HIDE_HEAD.cover : HIDE_MARK.cover,
+            shown ? el(RN.View, {pointerEvents:"none", style:cover,
                 importantForAccessibility:"no-hide-descendants", accessibilityElementsHidden:true}) : null,
             shown ? el(HideBadge, {spot:key, before:props.before, style:badge}) : null);
     }
@@ -10848,7 +10859,8 @@
     function hideMarkFor(node, key) {
         // A message menu row is a row too; one with a chevron (Create Reminder, Apps) keeps its X clear of it.
         const row = HIDE_ROW_SPOTS[key] || (key !== "message.reactions" && key.indexOf("message.") === 0 ? (node && node.props && node.props.arrow ? 3 : 1) : 0);
-        return el(HideMark, {key:node && node.key != null ? node.key : key, spot:key, base:node, inset:!!row, trail:row === 2, arrow:row === 3});
+        return el(HideMark, {key:node && node.key != null ? node.key : key, spot:key, base:node, inset:!!row, trail:row === 2, arrow:row === 3,
+            compact:!row && !!HIDE_COMPACT_SPOTS[key]});
     }
     // Discord's Settings list (SettingsList 15733) reads its rows through toSettingListItems (15736) and redraws when its
     // blocklist (SettingBlocklistStore 15601) changes, so removed rows are left out there and a fresh blocklist redraws it.
@@ -11113,11 +11125,11 @@
     menuItemMark.call1 = (orig, self, props) => menuItemMarked(orig.call(self, props), props);
     menuItemMark.call2 = (orig, self, props, ref) => menuItemMarked(orig.call(self, props, ref), props);
     // A tab measures where it sits for the line under the selected one, so its mark is drawn inside it instead of around it.
-    function markInside(rendered, key) {
+    function markInside(rendered, key, look) {
         if (!rendered || !rendered.props) return rendered;
-        const kids = rendered.props.children;
-        const cover = el(RN.View, {key:"hide-cover", pointerEvents:"none", style:HIDE_MARK.cover, importantForAccessibility:"no-hide-descendants", accessibilityElementsHidden:true});
-        const badge = el(HideBadge, {key:"hide-x", spot:key, style:HIDE_MARK.badge});
+        const kids = rendered.props.children, mark = look || HIDE_MARK;
+        const cover = el(RN.View, {key:"hide-cover", pointerEvents:"none", style:mark.cover, importantForAccessibility:"no-hide-descendants", accessibilityElementsHidden:true});
+        const badge = el(HideBadge, {key:"hide-x", spot:key, style:mark.badge});
         const children = typeof kids === "function" ? function () { return [kids.apply(this, arguments), cover, badge]; } : [kids, cover, badge];
         return React.cloneElement(rendered, {style:[rendered.props.style, {position:"relative", overflow:"visible"}], children});
     }
@@ -11154,7 +11166,7 @@
         if (!rendered || !props || !props.state || !Array.isArray(props.state.items) || !hideEditing()) return rendered;
         const item = props.state.items[props.index];
         const key = !item ? null : profileTabItems(props.state.items) ? PROFILE_TABS[item.id] : "page" in item && "count" in item ? SEARCH_TAB_SPOTS[item.id] : null;
-        return key ? markInside(rendered, key) : rendered;
+        return key ? markInside(rendered, key, key.indexOf("details.") === 0 ? HIDE_TAB : null) : rendered;
     }
     function segmentedItemMark(orig, self, args) { return segmentedItemMarked(orig.apply(self, args), args[0]); }
     segmentedItemMark.call1 = (orig, self, props) => segmentedItemMarked(orig.call(self, props), props);
@@ -11619,8 +11631,17 @@
             if (!mode || typeof out.listActionRenderer !== "function") return out;
             if (mode === "gone") return Object.assign({}, out, {listActionRenderer:() => null, listActionHeight:() => 0});
             const render = out.listActionRenderer;
-            return Object.assign({}, out, {listActionRenderer:function () { const row = render.apply(this, arguments); return row ? hideMarkedRow(row, "details.newGroup") : row; }});
+            return Object.assign({}, out, {listActionRenderer:function () { return newGroupMarked(render.apply(this, arguments)); }});
         }, [out, mode]);
+    }
+    // Discord draws New Group inside a wrapper whose paddingTop is the gap above the member list, so the mark goes on the row
+    // inside it: around the wrapper it reached far above the row. Its X stays clear of the row's chevron.
+    function newGroupMarked(row) {
+        if (!row || !row.props) return row;
+        const child = row.props.children;
+        const mark = node => el(HideMark, {key:node.key != null ? node.key : "details.newGroup", spot:"details.newGroup", base:node, inset:true, arrow:true});
+        if (child && typeof child === "object" && !Array.isArray(child) && child.props) return React.cloneElement(row, {children:mark(child)});
+        return mark(row);
     }
     // With the voice message button removed, the send button acts as it does where voice messages aren't allowed.
     function withoutVoiceButton(props) {
