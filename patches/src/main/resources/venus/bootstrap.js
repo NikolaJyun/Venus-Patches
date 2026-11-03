@@ -23199,15 +23199,3 @@
     // Local diagnostics/test API; not a network endpoint and no client-mod globals.
     global.__venusPatches = Object.freeze({ revision, settings, features, status, setSetting, formatSize, getSize });
 })(globalThis);
-true, enumerable: true,
-            get: () => value, set: next => { defineValue(decorateDefine(next)); } });
-    }
-    function defineValue(value) {
-        Object.defineProperty(global, "__d", { configurable: true, enumerable: true, writable: true, value });
-    }
-    const existing = global.__d;
-    if (typeof existing === "function") defineValue(decorateDefine(existing));
-    else holdDefine(existing);
-    // Local diagnostics/test API; not a network endpoint and no client-mod globals.
-    global.__venusPatches = Object.freeze({ revision, settings, features, status, setSetting, formatSize, getSize });
-})(globalThis);
