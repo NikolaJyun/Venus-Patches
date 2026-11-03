@@ -20470,14 +20470,19 @@
         return settingsBody(ui, groups);
     }
     // Pause invites: the server icon's hold menu gets Pause invites (or Resume invites) for anyone who can manage the server.
-    // Discord's own switch lives in the server's Safety settings; this is PUT /guilds/:id/incident-actions, the same call.
-    const PAUSE_INVITES_SHEET = "VenusPauseInvites";
+    // Discord's own Safety menu only pauses for up to 24 hours (PUT /guilds/:id/incident-actions). This pauses with no end,
+    // like Equicord's pauseInvitesForever: INVITES_DISABLED in the server's features, which stays until someone resumes.
     function pauseInvitesGuild(id) { return serverCall(serverStore(2090), "getGuild", id) || null; }
+    function pauseInvitesFeatures(guild) {
+        const feat = guild && guild.features;
+        if (!feat) return [];
+        if (Array.isArray(feat)) return feat.slice();
+        try { return Array.from(feat); } catch (_) { return []; }
+    }
+    function pauseInvitesStamp(value) { return value instanceof Date ? value.getTime() : typeof value === "string" ? Date.parse(value) || 0 : 0; }
     function pauseInvitesPaused(guild) {
-        const feat = guild && guild.features, until = guild && guild.incidentsData && guild.incidentsData.invitesDisabledUntil;
-        const flagged = !!feat && (typeof feat.has === "function" ? feat.has("INVITES_DISABLED") : Array.isArray(feat) && feat.indexOf("INVITES_DISABLED") >= 0);
-        const stamp = until instanceof Date ? until.getTime() : typeof until === "string" ? Date.parse(until) : 0;
-        return flagged || stamp > Date.now();
+        const until = guild && guild.incidentsData && guild.incidentsData.invitesDisabledUntil;
+        return pauseInvitesFeatures(guild).indexOf("INVITES_DISABLED") >= 0 || pauseInvitesStamp(until) > Date.now();
     }
     function pauseInvitesAllowed(guild) {
         const P = inspectedExport(1087, "Permissions") || inspectedExport(1098, "Permissions"), perms = permissions || inspectedExport(4845, "default");
@@ -20490,23 +20495,24 @@
         if (!guild || !pauseInvitesAllowed(guild)) return items;
         const paused = pauseInvitesPaused(guild);
         return items.concat([{IconComponent:paused ? venusIcon(12093, "UndoIcon") : venusIcon(8676, "PauseIcon"), label:tr(paused ? "Resume invites" : "Pause invites"),
-            action:() => { if (paused) pauseInvitesSet(guildId, 0); else pauseInvitesAsk(guildId); }}]);
+            action:() => pauseInvitesSet(guildId, !paused)}]);
     }
-    function pauseInvitesAsk(guildId) {
-        const ui = reviewUI();
-        if (typeof ui.simpleSheet !== "function") { pauseInvitesSet(guildId, 24); return; }
-        const Clock = venusIcon(5150, "ClockIcon");
-        const options = [1, 6, 24].map(hours => ({label:pl(hours, "{n} hour", "{n} hours"), IconComponent:Clock, onPress:() => { hideReviewSheet(ui, PAUSE_INVITES_SHEET); pauseInvitesSet(guildId, hours); }}));
-        try { ui.simpleSheet({key:PAUSE_INVITES_SHEET, header:{title:tr("Pause invites for"), onClose:() => hideReviewSheet(ui, PAUSE_INVITES_SHEET)}, options}); } catch (_) {}
-    }
-    // hours 0 resumes. The server also holds a pause on DMs: it's sent back as it is, so this never changes it.
-    function pauseInvitesSet(guildId, hours) {
-        const guild = pauseInvitesGuild(guildId), data = guild && guild.incidentsData, dms = data && data.dmsDisabledUntil;
-        const dmsStamp = dms instanceof Date ? dms.getTime() : typeof dms === "string" ? Date.parse(dms) : 0;
-        const body = {invites_disabled_until:hours ? new Date(Date.now() + hours * 3600000).toISOString() : null,
-            dms_disabled_until:dmsStamp > Date.now() ? new Date(dmsStamp).toISOString() : null};
-        httpCall("put", {url:"/guilds/" + guildId + "/incident-actions", body}).then(() => {
-            haptic("IMPACT_LIGHT"); reviewToast(reviewUI(), hours ? "Invites paused" : "Invites resumed", venusIcon(6473, "CheckmarkLargeIcon"));
+    // Pausing adds INVITES_DISABLED. Resuming removes it and also ends a timed pause from Discord's own menu, so one tap
+    // always opens invites again. A pause on DMs is sent back as it is, so this never changes it.
+    function pauseInvitesSet(guildId, pause) {
+        const guild = pauseInvitesGuild(guildId);
+        if (!guild) return;
+        const features = pauseInvitesFeatures(guild).filter(f => f !== "INVITES_DISABLED");
+        if (pause) features.push("INVITES_DISABLED");
+        const calls = [httpCall("patch", {url:"/guilds/" + guildId, body:{features}})];
+        const data = guild.incidentsData, timed = pauseInvitesStamp(data && data.invitesDisabledUntil) > Date.now();
+        if (!pause && timed) {
+            const dms = pauseInvitesStamp(data && data.dmsDisabledUntil);
+            calls.push(httpCall("put", {url:"/guilds/" + guildId + "/incident-actions",
+                body:{invites_disabled_until:null, dms_disabled_until:dms > Date.now() ? new Date(dms).toISOString() : null}}));
+        }
+        Promise.all(calls).then(() => {
+            haptic("IMPACT_LIGHT"); reviewToast(reviewUI(), pause ? "Invites paused" : "Invites resumed", venusIcon(6473, "CheckmarkLargeIcon"));
         }, () => reviewToast(reviewUI(), "Couldn't change invites. Check that you can manage this server.", venusIcon(7838, "WarningIcon")));
     }
     // Fast delete channels: channel settings stops asking, and a channel's hold menu gets a Delete channel row.
