@@ -399,7 +399,7 @@ val voiceDownload = bundledPlugin("voiceDownload", "Download voice messages",
 
 @Suppress("unused")
 val cloneExpressions = bundledPlugin("cloneExpressions", "Clone emojis and stickers",
-    "Tap a custom emoji or sticker in chat to add it to one of your servers. Based on ExpressionCloner by Ven.")
+    "Tap a custom emoji or sticker in chat to add it to one of your servers. Based on ExpressionCloner by Ven.", default = false)
 
 @Suppress("unused")
 val dndBanners = bundledPlugin("dndBanners", "Banners in Do Not Disturb",
@@ -544,9 +544,10 @@ internal fun requireUnpatched(method: app.morphe.patcher.util.proxy.mutableTypes
 }
 
 // Each feature is its own selectable patch, bundled offline in the Venus runtime.
-private fun bundledPlugin(key: String, title: String, summary: String) = rawResourcePatch(
+private fun bundledPlugin(key: String, title: String, summary: String, default: Boolean = true) = rawResourcePatch(
     name = title,
-    description = summary
+    description = summary,
+    default = default,
 ) {
     compatibleWith(discord)
     section(PLUGINS)
