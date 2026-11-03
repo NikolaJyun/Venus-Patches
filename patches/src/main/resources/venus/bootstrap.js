@@ -13653,16 +13653,63 @@
         } catch (_) {}
         return user.premiumType === 2 ? realLimits.premium : realLimits.normal;
     }
-    // Splits at the last line break, else the last space, else anywhere. A code block cut in two is closed at
-    // the end of one part and opened again, with its language, at the start of the next.
-    const FENCE = /```([^\s`]{0,20})/g;
+    // Splits at the last line break, else the last space, else anywhere. Formatting cut in two is closed at the end of one
+    // part and opened again at the start of the next: a code block (with its language), inline code, a spoiler, and a
+    // ">>> " quote, which runs to the end of the message. An unclosed spoiler used to show its text in the clear, with
+    // literal || marks, and every part after the first lost the quote.
+    const SPLIT_MARKS = /```([^\s`]{0,20})|`|\|\|/g;
+    const SPLIT_QUOTE = /(?:^|\n)>>> /;
     // Discord's SILENT_RE (7367): "@silent" at the very start, followed by whitespace or the end.
     const SPLIT_SILENT = /^@silent(?:\s|$)/;
+    // What is still open at the end of a piece: a code block (with its language and where it opened), inline code, a
+    // spoiler. Inside a code block only ``` counts and inside inline code only `, like Discord's parser.
+    function splitMarks(piece) {
+        const state = {fence:false, language:"", opened:-1, inline:false, spoiler:false};
+        if (piece.indexOf("`") < 0 && piece.indexOf("||") < 0) return state;
+        let match;
+        SPLIT_MARKS.lastIndex = 0;
+        while ((match = SPLIT_MARKS.exec(piece))) {
+            const mark = match[0];
+            if (state.fence) { if (mark.length >= 3) state.fence = false; continue; }
+            if (state.inline) { if (mark === "`") state.inline = false; continue; }
+            if (mark === "||") state.spoiler = !state.spoiler;
+            else if (mark.length >= 3) { state.fence = true; state.language = match[1]; state.opened = match.index; }
+            else state.inline = true;
+        }
+        return state;
+    }
+    // Things a cut must not land inside: a mention, channel, role, slash command, timestamp or custom emoji (<...>), a masked
+    // link ([text](url)) and a plain link. One cut in two showed as raw text in both parts (half an emoji was ":123…>tail").
+    const SPLIT_TOKENS = /<a?:\w+:\d+>|<(?:@[!&]?|#)\d+>|<\/[^<>\n]+:\d+>|<t:-?\d+(?::[tTdDfFR])?>|<id:\w+>|\[[^\]\n]*\]\([^)\s]*\)|https?:\/\/[^\s<]+/g;
+    // Moves a cut back so it lands between whole characters and outside every token above. Joined emoji (ZWJ families,
+    // skin tones, flags' variation selectors) used to be cut into pieces that showed as two or three separate emoji.
+    function splitSafeCut(text, start, cut) {
+        const windowFrom = Math.max(start, cut - 2048);
+        if (text.indexOf("<", windowFrom) >= 0 || text.indexOf("[", windowFrom) >= 0 || text.indexOf("://", windowFrom) >= 0) {
+            SPLIT_TOKENS.lastIndex = windowFrom;
+            let match;
+            while ((match = SPLIT_TOKENS.exec(text)) && match.index < cut) {
+                const end = match.index + match[0].length;
+                // Only when the token fits on its own: a link longer than a whole part still has to be cut somewhere.
+                if (end > cut && match.index > start) { cut = match.index; break; }
+            }
+        }
+        for (let steps = 0; steps < 32 && cut - 1 > start; steps++) {
+            const next = text.charCodeAt(cut), prev = text.charCodeAt(cut - 1);
+            const skinTone = next === 0xD83C && (text.charCodeAt(cut + 1) & 0xFFF8) === 0xDFF8 && text.charCodeAt(cut + 1) >= 0xDFFB;
+            if (next >= 0xDC00 && next <= 0xDFFF || next === 0x200D || prev === 0x200D || next === 0xFE0F || next === 0x20E3 || skinTone) cut--;
+            else break;
+        }
+        return cut;
+    }
     function splitContent(text, limit) {
         const chunks = [];
+        const quoteMatch = SPLIT_QUOTE.exec(text);
+        const quoteFrom = quoteMatch ? quoteMatch.index + (quoteMatch[0].charCodeAt(0) === 10 ? 1 : 0) : -1;
         let start = 0, prefix = "";
         while (prefix.length + (text.length - start) > limit) {
-            const budget = limit - prefix.length - 4;
+            // Room for what a part may need to close: "\n```" or "`", then "||".
+            const budget = limit - prefix.length - 6;
             if (budget < 16) return null;
             const searchEnd = start + budget;
             let cut = text.lastIndexOf("\n", searchEnd);
@@ -13671,27 +13718,25 @@
                 if (space > cut) cut = space;
             }
             if (cut <= start) cut = searchEnd;
-            const code = text.charCodeAt(cut - 1);
-            if (code >= 0xD800 && code <= 0xDBFF && cut - 1 > start) cut--;
+            cut = splitSafeCut(text, start, cut);
             const from = start;
             let piece = prefix + text.slice(start, cut);
             start = cut;
             if (text[start] === "\n" || text[start] === " ") start++;
-            let open = false, language = "", opened = -1;
-            if (piece.indexOf("```") >= 0) {
-                let match;
-                FENCE.lastIndex = 0;
-                while ((match = FENCE.exec(piece))) { open = !open; if (open) { language = match[1]; opened = match.index; } }
-            }
+            let marks = splitMarks(piece);
             // A code block that opens right where the part ends would be an empty box here and start for real in the next
             // part: move the whole block to the next part instead.
-            if (open && opened > prefix.length && !piece.slice(opened + 3 + language.length).trim()) {
-                start = from + opened - prefix.length;
-                piece = piece.slice(0, opened);
-                open = false;
+            if (marks.fence && marks.opened > prefix.length && !piece.slice(marks.opened + 3 + marks.language.length).trim()) {
+                start = from + marks.opened - prefix.length;
+                piece = piece.slice(0, marks.opened);
+                marks = splitMarks(piece);
             }
             if (piece.charCodeAt(piece.length - 1) === 13) piece = piece.slice(0, -1); // the \r of a \r\n line break
-            if (open) { piece += "\n```"; prefix = "```" + language + "\n"; } else prefix = "";
+            // A spoiler or inline code that would close straight away has nothing left in this part: leave it to the next.
+            if (marks.fence) piece += "\n```"; else if (marks.inline) piece += "`";
+            if (marks.spoiler) piece += "||";
+            prefix = (quoteFrom >= 0 && quoteFrom < start ? ">>> " : "") + (marks.spoiler ? "||" : "") +
+                (marks.fence ? "```" + marks.language + "\n" : marks.inline ? "`" : "");
             if (piece.trim()) chunks.push(piece);
         }
         const last = prefix + (start ? text.slice(start) : text);
