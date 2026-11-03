@@ -12,6 +12,9 @@
 * **Discord - Show timeout duration:** Fixed the timeout tag lagging behind and saying 1m for a whole minute instead of counting down ([#145](https://github.com/VenusIsJaded/Venus-Patches/issues/145))
 * **Discord - Clone emojis and stickers:** Fixed custom emojis missing the Add to a server button that stickers had ([#145](https://github.com/VenusIsJaded/Venus-Patches/issues/145))
 * **Discord - Preview servers without joining:** Fixed the Preview button's text sitting off center on invites and next to the server ID field ([#145](https://github.com/VenusIsJaded/Venus-Patches/issues/145))
+* **Discord - Compress big files:** Fixed an upload waiting forever when the phone ran out of memory, and albums over four photos being refused
+* **Discord - Compress big files:** Fixed long videos being squeezed far below the size limit instead of filling it
+* **Discord - Remove anything:** Fixed removal marks spilling past New Group, covering the channel details tab labels and header buttons
 
 ## [1.21.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.20.0...v1.21.0) (2026-11-02)
 
