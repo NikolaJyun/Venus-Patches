@@ -2320,7 +2320,12 @@
         }, 1500, false);
     }
     // The Read all pill's label as laid out, and the numbers that decide it (a blank pill at density 2.75).
+    // Shares the row and pill layouts' cap: the server bar is a recycled list, so the label is laid out again on every
+    // scroll past it and every redraw, and with Debug logging on by default this used to add a line each time until it
+    // pushed everything else out of the log.
     function readAllLayoutLog(event) {
+        if (!settings.debugLog || readAllTrace.layouts >= 40) return;
+        readAllTrace.layouts++;
         try {
             const box = event && event.nativeEvent && event.nativeEvent.layout, label = tr("Read all");
             dlog("I", "readAll", "label \"" + label + "\" at " + readAllTextSize(label).fontSize + " sp laid out " + (box ? box.width.toFixed(2) + " x " + box.height.toFixed(2) + " dp" : "?") +
