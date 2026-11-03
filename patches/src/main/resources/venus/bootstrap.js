@@ -4733,8 +4733,14 @@
         if (!candidates.length && typeof api.guildReads.getMutableUnreadGuilds==="function") try { add(api.guildReads.getMutableUnreadGuilds()); } catch (_) {}
         const eventType=api.readTypes && api.readTypes.GUILD_EVENT != null ? api.readTypes.GUILD_EVENT : 1;
         const checkEvent=api.reads && typeof api.reads.hasUnread==="function";
+        // GuildReadStateStore (6362) recountGuild never puts a muted server in its unread set, so hasUnread(id) is
+        // false for it even while its channels are unread. Discord's own Mark as read (GuildActionSheetActions 14925,
+        // GuildUnreadAction) asks getGuildHasUnreadIgnoreMuted instead; Read all skipped muted servers, which stayed
+        // unread inside. It walks the server's channels, so it only runs for servers the cheap checks call read.
+        const ignoreMuted=typeof api.guildReads.getGuildHasUnreadIgnoreMuted==="function";
+        const mutedUnread=id => { try { return !!api.guildReads.getGuildHasUnreadIgnoreMuted(id); } catch (_) { return false; } };
         return candidates.filter(id => api.guildReads.hasUnread(id) || api.guildReads.getMentionCount(id) > 0 ||
-            (checkEvent && api.reads.hasUnread(id, eventType)));
+            (checkEvent && api.reads.hasUnread(id, eventType)) || (ignoreMuted && mutedUnread(id)));
     }
     function unreadDmIds(api) {
         const candidates=[], seen=new Set();

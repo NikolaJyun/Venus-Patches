@@ -15,6 +15,7 @@
 * **Discord - Compress big files:** Fixed an upload waiting forever when the phone ran out of memory, and albums over four photos being refused
 * **Discord - Compress big files:** Fixed long videos being squeezed far below the size limit instead of filling it
 * **Discord - Remove anything:** Fixed removal marks spilling past New Group, covering the channel details tab labels and header buttons
+* **Discord - Read all button:** Fixed muted servers being skipped, so their channels stayed unread after tapping Read all
 
 ## [1.21.0](https://github.com/VenusIsJaded/Venus-Patches/compare/v1.20.0...v1.21.0) (2026-11-02)
 
