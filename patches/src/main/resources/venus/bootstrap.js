@@ -54,7 +54,7 @@
     if (features.noConfirmPin) selectModules([5400, 1128]);
     if (features.listenAlong) targetModules[14082] = 1;
     if (features.clickableMentions) selectModules([1392, 2068, 2119, 12337]);
-    if (features.expandBar) selectModules([584, 1392, 12337, 12338, 12887, 12818]);
+    if (features.expandBar) selectModules([584, 1392, 2068, 2119, 12337, 12338, 12887, 12818]);
     if (features.silentLeave) selectModules([2068, 7290]);
     if (features.silentEdit || features.silentDelete) selectModules([584, 1392, 5532, 7445]);
     if (features.localEdit) selectModules([584, 1392, 5532, 8013, 9978]);
@@ -21185,6 +21185,16 @@
     const expandBar = {expanded:false, multiline:false, pill:false, content:0, shared:null, worklets:null, live:null, subscribed:false};
     // Room kept free above the open bar (the status bar and the channel header), plus a little air under the header.
     const EXPAND_BAR_RESERVE = 128;
+    // Threads and forum posts draw a second bar under the channel name (the post's title, Follow and the parent channel),
+    // which covered the top of the open bar and its collapse button (#145), so they keep that much more room free.
+    const EXPAND_BAR_THREAD_EXTRA = 64;
+    function expandBarReserve() {
+        const id = selectedChannelId();
+        let channel = null;
+        try { channel = id && channelStore && typeof channelStore.getChannel === "function" ? channelStore.getChannel(String(id)) : null; } catch (_) {}
+        const type = channel && channel.type;
+        return EXPAND_BAR_RESERVE + (type === 10 || type === 11 || type === 12 ? EXPAND_BAR_THREAD_EXTRA : 0);
+    }
     const expandBarHandlers = new WeakMap();
     const EXPAND_BAR_DARK = {button:{position:"absolute", top:4, right:6, width:32, height:32, borderRadius:16, alignItems:"center", justifyContent:"center"},
         pressed:{backgroundColor:"#4e50584d"}, icon:{color:"#b5bac1"}};
@@ -21284,7 +21294,7 @@
         const content = expandBar.content > 0 ? expandBar.content : min;
         try {
             let top = 0, timing = null, options = {duration:200};
-            if (w) { top = w.cap(expandBar.expanded ? EXPAND_BAR_RESERVE : 0); timing = w.withTiming; options = {duration:w.duration, easing:w.easing}; }
+            if (w) { top = w.cap(expandBar.expanded ? expandBarReserve() : 0); timing = w.withTiming; options = {duration:w.duration, easing:w.easing}; }
             if (!(top > 0)) {
                 // The height worklets aren't in place: use the window's height instead.
                 const win = RN && RN.Dimensions ? RN.Dimensions.get("window").height : 800;
@@ -21300,7 +21310,7 @@
         next = !!next;
         if (expandBar.expanded === next) return;
         expandBar.expanded = next;
-        if (expandBar.shared) try { expandBar.shared.set(next ? EXPAND_BAR_RESERVE : 0); } catch (_) {}
+        if (expandBar.shared) try { expandBar.shared.set(next ? expandBarReserve() : 0); } catch (_) {}
         expandBarApply();
         notify("expandBar");
     }
@@ -21406,7 +21416,12 @@
         if (expandBar.subscribed || !flux || typeof flux.subscribe !== "function") return;
         expandBar.subscribed = true;
         try {
-            flux.subscribe("CHANNEL_SELECT", () => { if (expandBar.expanded && settings.expandBarChats) expandBarSet(false); });
+            flux.subscribe("CHANNEL_SELECT", () => {
+                if (!expandBar.expanded) return;
+                if (settings.expandBarChats) { expandBarSet(false); return; }
+                // Still open in the next chat: its header may be taller or shorter (a thread), so the room above follows.
+                later(() => { if (!expandBar.expanded) return; if (expandBar.shared) try { expandBar.shared.set(expandBarReserve()); } catch (_) {} expandBarApply(); }, 0);
+            });
             // Only a message you send from this phone (Discord adds it to the chat before the server confirms it).
             flux.subscribe("MESSAGE_CREATE", event => { if (expandBar.expanded && settings.expandBarSending && event && event.optimistic === true) expandBarSet(false); });
             // Saving (or leaving) an edit puts your draft back in the bar, so it closes then too.
